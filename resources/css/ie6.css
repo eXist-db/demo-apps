@@ -1,0 +1,32 @@
+@charset "UTF-8";
+/* CSS Document */
+
+#bluebox p.download { padding: 5px; }
+#bluebox p.download a { background: url(../images/bluebox-dl.gif) no-repeat 50%; width: 120px; height: 30px; display: block; padding: 15px 0 0; }
+#bluebox p.download a:hover { background: url(../images/bluebox-dl.gif) no-repeat 50%; }
+
+.older { padding: 0; height: 40px; }
+.older a { background: url(../images/older-posts.gif) no-repeat 50%; padding: 1px 10px; display: block; font-size: 9px; }
+.older a:hover { background: url(../images/older-posts.gif) no-repeat 50%; color: #ffcb05; }
+
+
+#content { width: 680px; float: left; min-height: 600px; padding: 0 10px; overflow: hidden; }
+
+.blog-post { width: 600px; overflow: hidden; }
+
+
+#right { overflow: hidden; }
+
+
+.blog-post-text { width: 480px; float: left; margin: 0; }
+.blog-meta { width: 120px; float: left; }
+.blog-comments { border-bottom: 1px solid #CCC; padding: 0 0 14px; margin: 0; float: left; width: 700px; font-size: 10px; overflow: hidden; height: 20px;}
+.blog-comments a { background: url(../images/comments.gif) no-repeat 0 50%; padding: 5px 0 5px 30px; height: 20px; overflow: hidden; }
+
+
+h1 { display: block; float: left; width: 700px; }
+
+
+#main ul#twitter { margin: 10px 10px 20px; width: 200px; }
+#main ul#twitter li { list-style-type: none; background: url(../images/twitter-right.gif) no-repeat 50% 100%; padding: 4px 5px 18px; width: 190px; float: left; line-height: 15px; margin: 1px auto; }
+#main ul#twitter li.alt { background: url(../images/twitter-left.gif) no-repeat 50% 100%; }

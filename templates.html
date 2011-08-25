@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<div class="templates:surround?with=templates/page.html&amp;at=content">
+    <h1>Templating</h1>
+    <h2>Introduction</h2>
+    <p>The Demo application uses templating. All pages are plain HTML5. They do not include any XQuery or other executable code.
+    Instead, we use the <a class="templates:load-source" href="controller.xql">controller.xql</a> to send the HTML content through 
+    a templating library, which expands the HTML and calls our XQuery functions. The templating module scans the HTML for elements 
+    with class attributes with a certain structure and tries to translate them into XQuery function calls. In the simplest case,
+    a class attribute which triggers a function call just contains the name of a function in an XQuery library
+    known to the system. For example:</p>
+    <pre class="brush: xml">&lt;div class="demo:hello"&gt;&lt;/div&gt;</pre>
+    <p>The expanded output of this template call is shown below:</p>
+    <div class="demo:hello"/>
+    <p>Very often, you will also need to pass some (static) parameters to the template. This is done by appending
+    a query string to the template call:</p>
+    <pre class="brush: xml">&lt;div class="demo:multiply?n1=5&amp;n2=8"&gt;&lt;/div&gt;</pre>
+    <p>Again, the expanded output is shown below:</p>
+    <div class="demo:multiply?n1=5&amp;n2=8"/>
+    <h2>Pre-defined Template Commands</h2>
+    <p>The template module already defines a number of general-purpose template commands.</p>
+    <h3>templates:include</h3>
+    <pre class="brush: plain">templates:include?path=path-to-xml-resource</pre>
+    <p>Includes the content of the resource given by path into the current element. The path is <b>always</b>
+    interpreted relative to the current application directory or collection.</p>
+    <h3>templates:if-parameter-set</h3>
+    <pre class="brush: plain">templates:if-parameter-set?param=request-parameter</pre>
+    <p>Conditionally includes its content only if the given request parameter is set
+    and is not empty.</p>
+    <h3>templates:if-parameter-unset</h3>
+    <pre class="brush: plain">templates:if-parameter-unset?param=request-parameter</pre>
+    <p>Conditionally includes its content only if the given request parameter is <b>not</b> set
+    or is empty.</p>
+    <h3>templates:surround</h3>
+    <pre class="brush: plain">templates:surround?with=xml-resource&amp;at=id</pre>
+    <p>Surrounds its content with the contents of the given XML resource. The "at" parameter determines
+    where the content is inserted into the surrounding XML. It should match an existing HTML id in the template.</p>
+    <p>The surround template instruction is used by all pages of this demo application. The header, basic page structure and
+    menus are the same for all pages. Each page thus only contains a simple div with a template instruction:</p>
+    <pre class="brush: plain">templates:surround?with=templates/page.html&amp;at=content</pre>
+    <p>The instruction takes the content of the <a class="templates:load-source" href="templates.html">current element</a> 
+    and injects it into the <a class="templates:load-source" href="templates/page.html">template page</a>.</p>
+    <p>The XQuery function needs to have a special function signature. It should accept exactly three parameters:</p>
+    <pre class="brush: xquery">demo:hello($node as node()*, $params as element(parameters)?, $model as item()*)</pre>
+    <h2>Writing Template Functions</h2>
+    <p>An XQuery function which should be called via the templating system needs to have a special function signature. It 
+    should accept exactly three parameters:</p>
+    <pre class="brush: xquery">demo:hello($node as node()*, $params as element(parameters)?, $model as item()*)</pre>
+    <dl>
+        <dt>$node</dt>
+        <dd>The node which contained the template call.</dd>
+        <dt>$params</dt>
+        <dd>
+            <p>An XML fragment describing all parameters passed through the template call. The fragment has the following
+            structure:</p>
+            <pre class="brush: xml"><![CDATA[
+<parameters>
+    <param name="name1" value="value1"/>
+</parameters>]]></pre>
+        </dd>
+        <dt>$model</dt>
+        <dd>An arbitrary sequence which will be passed to nested template calls.</dd>
+    </dl>
+    <p>Template calls can be nested, but the outer template function needs to make sure all descendant XML nodes are passed
+    through the templating system. To do this, just call</p>
+    <pre class="brush: xquery">templates:process($children, $model)</pre>
+    <p>from within the template function. $children would contain the descendant nodes you want to include, $model may
+    contain arbitrary data you want to pass along to nested template calls.</p>
+</div>

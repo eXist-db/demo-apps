@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<div class="templates:surround?with=templates/page.html&amp;at=content">
+    <h1>Content Extraction and Binary Resource Indexing</h1>
+    <p>This page demonstrates how to query binary documents which have been indexed with Lucene after
+    extracting their text content. The app defines a trigger on the "data" collection below the
+    app root collection. To test the indexing, just upload a pdf to the collection and its contents
+    will be extracted and indexed automatically.</p>
+    <form action="" method="GET">
+        <input id="query" type="text" size="40" name="query" class="templates:form-control"/>
+        <button type="submit">Query</button>
+    </form>
+    <div class="templates:if-parameter-set?param=query">
+        <div class="cex:query"/>
+    </div>
+    <div class="source-links">
+        <p>View source: <a href="cex-demo.html" class="templates:load-source">this page</a>,
+        <a href="modules/cex.xql" class="templates:load-source">cex.xql</a>.</p>
+    </div>
+</div>
