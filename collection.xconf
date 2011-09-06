@@ -5,9 +5,4 @@
         <lucene>
         </lucene>
     </index>
-    <triggers>
-        <trigger class="org.exist.collections.triggers.XQueryTrigger">
-            <parameter name="url" value="xmldb:exist://localhost/db/demo/modules/cex-trigger.xql"/>
-        </trigger>
-    </triggers>
 </collection>
