@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<div class="templates:surround?with=templates/page.html&amp;at=content">
+    <h1>Searching Shakespeare</h1>
+    <p>Demonstrates basic full text indexing features, search results processing, keywords in context display.</p>
+    <form action="" method="POST">
+        <label for="query">Query:</label>
+        <input id="query" type="text" size="40" name="query" class="templates:form-control"/>
+        <label for="mode">Mode:</label>
+        <select name="mode" class="templates:form-control">
+            <option value="all">All</option>
+            <option value="any">Any</option>
+            <option value="phrase">Phrase</option>
+            <option value="near">Near</option>
+        </select>
+        <button type="submit">Query</button>
+    </form>
+    <div class="shakespeare:query">
+        <p>Found: <span id="hit-count" class="shakespeare:hit-count"/> matches.</p>
+        <div class="shakespeare:show-hits?howmany=20"/>
+    </div>
+    <div class="source-links">
+        <p>View source: <a href="shakespeare.html" class="templates:load-source">this page</a>,
+        <a href="modules/shakespeare.xql" class="templates:load-source">shakespeare.xql</a>.</p>
+    </div>
+    <script type="text/javascript">
+        /*
+         * We use the onScrollBeyond jQuery plugin to dynamically load
+         * additional search results when the users scrolls down the page.
+         */
+        var itemsPerPage = 10;
+        var current = 1;
+        var loading = false;
+        jQuery(document).ready(function () {
+            $("#results").onScrollBeyond(function () {
+                if (loading) {
+                    return;
+                }
+                loading = true;
+                current = current + itemsPerPage;
+                $.ajax("shakespeare-ajax.html", {
+                    data: { start: current },
+                    success: function (data) {
+                        $("#results").append(data);
+                        loading = false;
+                    }
+                });
+            });
+        });
+    </script>
+</div>

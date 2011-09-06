@@ -9,6 +9,7 @@ declare variable $modules :=
         <module prefix="config" uri="http://exist-db.org/xquery/apps/config" at="config.xql"/>
         <module prefix="demo" uri="http://exist-db.org/apps/demo" at="demo.xql"/>
         <module prefix="cex" uri="http://exist-db.org/apps/demo/cex" at="cex.xql"/>
+        <module prefix="shakespeare" uri="http://exist-db.org/apps/demo/shakespeare" at="shakespeare.xql"/>
     </modules>;
 
 let $content := request:get-data()

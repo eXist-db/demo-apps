@@ -4,6 +4,10 @@
         <fulltext default="none" attributes="no"/>
         <lucene>
             <fieldType id="page" store="yes"/>
+            <text qname="SCENE">
+                <ignore qname="SPEAKER"/>
+            </text>
+            <text qname="TITLE"/>
         </lucene>
     </index>
     <triggers>
