@@ -37,7 +37,6 @@ declare function trigger:index($uri as xs:anyURI) {
                     <doc>
                         <field name="page">{string-join($content//xhtml:body//text(), " ")}</field>
                     </doc>
-                let $log := util:log("DEBUG", ("$idxDoc: ", $idxDoc))
                 return
                     ft:index($uri, $idxDoc, true())
     else

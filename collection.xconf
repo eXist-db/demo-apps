@@ -3,6 +3,10 @@
     <index xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:mods="http://www.loc.gov/mods/v3">
         <fulltext default="none" attributes="no"/>
         <lucene>
+            <text qname="SCENE">
+                <ignore qname="SPEAKER"/>
+            </text>
+            <text qname="TITLE"/>
         </lucene>
     </index>
 </collection>

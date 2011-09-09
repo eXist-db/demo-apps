@@ -13,13 +13,13 @@ declare function cex:query($node as node()*, $params as element(parameters)?, $m
         return
             <div class="item">
                 <p class="itemhead">Document: {$result/@uri/string()} - Score: {$result/@score/string()}</p>
-                <p class="itemhead">Found matches in {count($fields)} fields. Only first 4 will be shown.</p>
+                <p class="itemhead">Found {count($fields)} matches in document. Only first 10 will be shown.</p>
                 {
-                    for $field in subsequence($fields, 1, 4)
-                    let $page := replace($field, "^\[\[(\d+).*", "$1")
+                    for $field in subsequence($fields, 1, 10)
+                    let $page := text:groups($field, "\[\[([0-9]+)")
                     return
                         <p>
-                            { if (matches($page, "^\d+$")) then concat("p. ", $page) else ()}
+                            { concat("page ", $page[2]) }
                             {kwic:summarize($field, <config width="40"/>)}
                         </p>
                 }
