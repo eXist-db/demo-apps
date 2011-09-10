@@ -10,9 +10,14 @@ declare function cex:query($node as node()*, $params as element(parameters)?, $m
         let $query := request:get-parameter("query", ())
         for $result in ft:search("/db/", concat('page:', $query))/search
         let $fields := $result/field
+        (: Retrieve title from title field if available :)
+        let $titleField := ft:get-field($result/@uri, "Title")
+        let $title := if ($titleField) then $titleField else replace($result/@uri, "^.*/([^/]+)$", "$1")
+        let $contentType := ft:get-field($result/@uri, "Content-Type")
         return
             <div class="item">
-                <p class="itemhead">Document: {$result/@uri/string()} - Score: {$result/@score/string()}</p>
+                <p class="itemhead">{$title} - Score: {$result/@score/string()}</p>
+                <p class="itemhead">Type: { $contentType }</p>
                 <p class="itemhead">Found {count($fields)} matches in document. Only first 10 will be shown.</p>
                 {
                     for $field in subsequence($fields, 1, 10)
