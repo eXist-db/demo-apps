@@ -12,5 +12,6 @@
     <repo:finish/>
     <repo:permissions user="admin" password="" group="dba" mode="0775"/>
     2011-07-05T16:34:06.11+02:00
-<repo:deployed>2011-09-09T21:40:32.215+02:00</repo:deployed>
+
+<deployed>2011-11-28T17:52:42.539+01:00</deployed>
 </repo:meta>

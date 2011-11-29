@@ -10,3 +10,9 @@ declare function demo:multiply($node as node()*, $params as element(parameters)?
     return
         number($p1) * number($p2)
 };
+
+declare function demo:error-handler-test($node as node(), $params as element(parameters)?, $model as item()*) {
+    let $input as xs:integer? := request:get-parameter("number", ())
+    return
+        $input            
+};

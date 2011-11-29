@@ -65,16 +65,51 @@ if ($exist:path eq "/") then
     <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
         <redirect url="index.html"/>
     </dispatch>
+    
+(:  Protected resource: user is required to log in with valid credentials.
+    If the login fails or no credentials were provided, the request is redirected
+    to the login.xml page. :)
+else if ($exist:resource eq 'protected.html') then
+    let $login := local:set-user()
+    return
+        if ($login) then
+            <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
+                {$login}
+                <view>
+                    <forward url="modules/view.xql"/>
+                </view>
+            </dispatch>
+        else
+            <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
+                <forward url="login.html"/>
+                <view>
+                  <forward url="modules/view.xql"/>
+                </view>
+            </dispatch>
+            
+else if ($exist:resource eq "bad-page.html") then
+    <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
+        <view>
+            <forward url="modules/view.xql"/>
+        </view>
+        <error-handler>
+            <forward url="error-page.html" method="get"/>
+            <forward url="modules/view.xql"/>
+        </error-handler>
+    </dispatch>
+
 else if (ends-with($exist:resource, ".html")) then
     <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
         <view>
             <forward url="modules/view.xql"/>
         </view>
     </dispatch>
+    
 else if (starts-with($exist:path, "/libs/")) then
     <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
         <forward url="/{substring-after($exist:path, '/libs/')}" absolute="yes"/>
     </dispatch>
+
 else
     <ignore xmlns="http://exist.sourceforge.net/NS/exist">
         <cache-control cache="yes"/>

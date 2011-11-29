@@ -215,3 +215,12 @@ declare function templates:form-control($node as node(), $params as element(para
         default return
             $node
 };
+
+declare function templates:error-description($node as node(), $params as element(parameters)?, $model as item()*) {
+    let $input := request:get-attribute("org.exist.forward.error")
+    return
+        element { node-name($node) } {
+            $node/@*,
+            util:parse($input)//message/string()
+        }
+};
