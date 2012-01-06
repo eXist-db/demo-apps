@@ -2,25 +2,31 @@
 <div class="templates:surround?with=templates/page.html&amp;at=content">
     <h1>Searching Shakespeare</h1>
     <p>Demonstrates basic full text indexing features, search results processing, keywords in context display.</p>
+    <div class="source-links">
+        <p>View source: <a href="shakespeare.html" class="templates:load-source">this page</a>,
+        <a href="modules/shakespeare.xql" class="templates:load-source">shakespeare.xql</a>.</p>
+    </div>
     <form action="" method="POST">
-        <label for="query">Query:</label>
-        <input id="query" type="text" size="40" name="query" class="templates:form-control"/>
-        <label for="mode">Mode:</label>
-        <select name="mode" class="templates:form-control">
-            <option value="all">All</option>
-            <option value="any">Any</option>
-            <option value="phrase">Phrase</option>
-            <option value="near">Near</option>
-        </select>
-        <button type="submit">Query</button>
+        <div class="inputrow">
+            <label for="query">Query:</label>
+            <input id="query" type="text" size="40" name="query" class="templates:form-control"/>
+        </div>
+        <div class="inputrow">
+            <label for="mode">Mode:</label>
+            <select name="mode" class="templates:form-control">
+                <option value="all">All</option>
+                <option value="any">Any</option>
+                <option value="phrase">Phrase</option>
+                <option value="near">Near</option>
+            </select>
+        </div>
+        <div class="inputrow">
+            <button type="submit">Query</button>
+        </div>
     </form>
     <div class="shakespeare:query">
         <p>Found: <span id="hit-count" class="shakespeare:hit-count"/> matches.</p>
         <div class="shakespeare:show-hits?howmany=20"/>
-    </div>
-    <div class="source-links">
-        <p>View source: <a href="shakespeare.html" class="templates:load-source">this page</a>,
-        <a href="modules/shakespeare.xql" class="templates:load-source">shakespeare.xql</a>.</p>
     </div>
     <script type="text/javascript">
         /*

@@ -6,6 +6,9 @@ import module namespace xdb = "http://exist-db.org/xquery/xmldb";
 declare variable $exist:path external;
 declare variable $exist:resource external;
 declare variable $exist:controller external;
+declare variable $exist:prefix external;
+
+declare variable $logout := request:get-parameter("logout", ());
 
 declare function local:is-logged-in() {
     exists(local:credentials-from-session())
@@ -15,7 +18,7 @@ declare function local:is-logged-in() {
     Retrieve current user credentials from HTTP session
 :)
 declare function local:credentials-from-session() as xs:string* {
-    (session:get-attribute("apps.user"), session:get-attribute("apps.password"))
+    (session:get-attribute("demo.user"), session:get-attribute("demo.password"))
 };
 
 (:~
@@ -23,8 +26,8 @@ declare function local:credentials-from-session() as xs:string* {
     fragment to pass user and password to the query.
 :)
 declare function local:set-credentials($user as xs:string, $password as xs:string?) as element()+ {
-    session:set-attribute("apps.user", $user), 
-    session:set-attribute("apps.password", $password),
+    session:set-attribute("demo.user", $user), 
+    session:set-attribute("demo.password", $password),
     <set-attribute name="xquery.user" value="{$user}"/>,
     <set-attribute name="xquery.password" value="{$password}"/>
 };
@@ -57,16 +60,20 @@ declare function local:set-user() as element()* {
             ()
 };
 
-declare function local:logout() as element() {
-    session:invalidate(),
-    <ok/>
+declare function local:logout() as empty() {
+    session:clear()
 };
 
+
+if ($logout) then
+    local:logout()
+else
+    (),
 if ($exist:path eq "/") then
     <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
         <redirect url="index.html"/>
     </dispatch>
-    
+
 (:  Protected resource: user is required to log in with valid credentials.
     If the login fails or no credentials were provided, the request is redirected
     to the login.xml page. :)
@@ -77,14 +84,22 @@ else if ($exist:resource eq 'protected.html') then
             <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
                 {$login}
                 <view>
-                    <forward url="{$exist:controller}/modules/view.xql"/>
+                    <forward url="{$exist:controller}/modules/view.xql">
+                        <set-attribute name="$exist:prefix" value="{$exist:prefix}"/>
+                        <set-attribute name="$exist:controller" value="{$exist:controller}"/>
+                        <set-header name="CacheControl" value="no-cache"/>
+                    </forward>
                 </view>
             </dispatch>
         else
             <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
                 <forward url="login.html"/>
                 <view>
-                  <forward url="{$exist:controller}/modules/view.xql"/>
+                    <forward url="{$exist:controller}/modules/view.xql">
+                        <set-attribute name="$exist:prefix" value="{$exist:prefix}"/>
+                        <set-attribute name="$exist:controller" value="{$exist:controller}"/>
+                        <set-header name="CacheControl" value="no-cache"/>
+                    </forward>
                 </view>
             </dispatch>
     

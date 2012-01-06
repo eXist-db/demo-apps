@@ -1,3 +1,5 @@
+xquery version "3.0";
+
 module namespace templates="http://exist-db.org/xquery/templates";
 
 (:~
@@ -167,6 +169,18 @@ declare function templates:if-parameter-unset($node as node(), $params as elemen
             $node
         else
             ()
+};
+
+declare function templates:if-module-missing($node as node(), $params as element(parameters)?, $model as item()*) {
+    let $at := $params/param[@name = "at"]/@value/string()
+    let $uri := $params/param[@name = "uri"]/@value/string()
+    return
+        try {
+            util:import-module($uri, "testmod", $at)
+        } catch * {
+            (: Module was not found: process content :)
+            templates:process($node/node(), $model)
+        }
 };
 
 declare function templates:load-source($node as node(), $params as element(parameters), $model as item()*) as node()* {
