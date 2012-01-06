@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<div class="templates:surround?with=templates/page.html&amp;at=content">
+    <h1>Using XQuery for Web Applications</h1>
+    <h2>Guessing Game using HTML templating</h2>
+    <p>This version of the number guessing game uses HTML templating to build the page. 
+        Compare it to the <a href="guess.xql">simple</a> version.
+    </p>
+    <h1>Guess a Number</h1>
+    <form action="">
+        <div class="inputrow">
+            <label for="guess">Number:</label>
+            <input type="text" name="guess" size="3" autofocus="autofocus" required="required"/>
+        </div>
+        <div class="inputrow">
+            <input type="submit"/>
+        </div>
+    </form>
+    <div class="guess:init">
+        <p class="guess:evaluate-guess">Evaluation result will be shown here</p>
+    </div>
+    <div class="source-links">
+        <p>View source: <a href="examples/web/guess.html" class="templates:load-source">HTML page</a>,
+        <a href="examples/web/guess-templates.xql" class="templates:load-source">XQuery module</a>.</p>
+    </div>
+</div>

@@ -5,6 +5,7 @@ import module namespace xdb = "http://exist-db.org/xquery/xmldb";
 
 declare variable $exist:path external;
 declare variable $exist:resource external;
+declare variable $exist:controller external;
 
 declare function local:is-logged-in() {
     exists(local:credentials-from-session())
@@ -76,38 +77,43 @@ else if ($exist:resource eq 'protected.html') then
             <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
                 {$login}
                 <view>
-                    <forward url="modules/view.xql"/>
+                    <forward url="{$exist:controller}/modules/view.xql"/>
                 </view>
             </dispatch>
         else
             <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
                 <forward url="login.html"/>
                 <view>
-                  <forward url="modules/view.xql"/>
+                  <forward url="{$exist:controller}/modules/view.xql"/>
                 </view>
             </dispatch>
-            
-else if ($exist:resource eq "bad-page.html") then
-    <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
-        <view>
-            <forward url="modules/view.xql"/>
-        </view>
-        <error-handler>
-            <forward url="error-page.html" method="get"/>
-            <forward url="modules/view.xql"/>
-        </error-handler>
-    </dispatch>
-
+    
+(: Pass all requests to HTML files through view.xql, which handles HTML templating :)
 else if (ends-with($exist:resource, ".html")) then
     <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
         <view>
-            <forward url="modules/view.xql"/>
+            <forward url="{$exist:controller}/modules/view.xql">
+                <set-attribute name="$exist:prefix" value="{$exist:prefix}"/>
+                <set-attribute name="$exist:controller" value="{$exist:controller}"/>
+            </forward>
         </view>
+        <error-handler>
+            <forward url="{$exist:controller}/error-page.html" method="get"/>
+            <forward url="{$exist:controller}/modules/view.xql"/>
+        </error-handler>
     </dispatch>
-    
-else if (starts-with($exist:path, "/libs/")) then
+
+(: Requests for javascript libraries are resolved to the file system :)
+else if (contains($exist:path, "/libs/")) then
     <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
         <forward url="/{substring-after($exist:path, '/libs/')}" absolute="yes"/>
+    </dispatch>
+
+(: images, css are contained in the top /resources/ collection. :)
+(: Relative path requests from sub-collections are redirected there :)
+else if (contains($exist:path, "/resources/")) then
+    <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
+        <forward url="{$exist:controller}/resources/{substring-after($exist:path, '/resources/')}"/>
     </dispatch>
 
 else

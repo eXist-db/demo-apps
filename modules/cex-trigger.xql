@@ -20,7 +20,6 @@ declare function trigger:index-callback($root as element(), $path as xs:anyURI, 
         case element(xhtml:meta) return
             ( trigger:do-index($root/@name, $root/@content/string(), $path), $page )
         case element(xhtml:title) return
-            let $log := util:log("DEBUG", ("TITLE: ", $root/text())) return
             ( trigger:do-index("Title", $root/text(), $path), $page)
         default return
             if ($root/@class eq 'page') then
