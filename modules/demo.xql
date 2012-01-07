@@ -16,3 +16,10 @@ declare function demo:error-handler-test($node as node(), $params as element(par
     return
         $input            
 };
+
+declare function demo:link-to-home($node as node(), $params as element(parameters)?, $model as item()*) {
+    <a href="{request:get-context-path()}/">{ 
+        $node/@* except $node/@href,
+        $node/node() 
+    }</a>
+};

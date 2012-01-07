@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html>
+    <head>
+        <title>Demo App</title>
+        <link rel="shortcut icon" href="resources/images/favicon.ico"/>
+        <link rel="stylesheet" type="text/css" href="resources/css/exist.css"/>
+        <link rel="stylesheet" type="text/css" href="libs/scripts/jquery/skin/ui.dynatree.css"/>
+        <script type="text/javascript" src="libs/scripts/jquery/jquery-1.6.2.min.js"/>
+        <script type="text/javascript" src="libs/scripts/jquery/jquery-ui-1.8.custom.min.js"/>
+        <script type="text/javascript" src="libs/scripts/jquery/jquery.dynatree-1.1.1.min.js"/>
+        <script type="text/javascript">
+            $(document).ready(function() {
+                $('#collection-tree').dynatree({
+                    persist: false,
+                    rootVisible: false,
+                    initAjax: {url: "json.xql" },
+                    clickFolderMode: 1,
+                    onPostInit: function(isReloading, isError) {
+                        var dbNode = this.getNodeByKey("/db");
+                        dbNode.activate();
+                    	dbNode.expand(true);
+                    }
+                });
+            });
+        </script>
+    </head>
+    <body class="templates:surround?with=templates/page.html&amp;at=content&amp;using=body">
+        <h1>JSON Serialization Demo</h1>
+        <p>eXist supports various serializers for writing out the results of an XQuery script. One of the
+        most useful is the JSON serializer, which transforms the XML output of an XQuery into JSON.</p>
+        <p>This example embeds the jQuery dynatree widget to display the current database collection hierarchy
+        as a tree. The tree is loaded via an AJAX call to the XQuery <a class="templates:load-source" href="examples/special/json.xql">json.xql</a>, which returns
+        data in the JSON format as expected by the dynatree widget.</p>
+        <div id="collection-tree"/>
+        <div class="source-links">
+            <p>View source: <a href="examples/special/json.html" class="templates:load-source">HTML page</a>,
+            <a href="examples/special/guess-templates.xql" class="templates:load-source">XQuery module</a>.</p>
+        </div>
+    </body>
+</html>

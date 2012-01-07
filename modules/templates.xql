@@ -128,8 +128,14 @@ declare function templates:include($node as node(), $params as element(parameter
 declare function templates:surround($node as node(), $params as element(parameters)?, $model as item()*) {
     let $with := $params/param[@name = "with"]/@value
     let $at := $params/param[@name = "at"]/@value
+    let $using := $params/param[@name = "using"]/@value
     let $path := concat($config:app-root, "/", $with)
-    let $merged := templates:process-surround(doc($path), $node, $at)
+    let $content :=
+        if ($using) then
+            doc($path)//*[@id = $using]
+        else
+            doc($path)
+    let $merged := templates:process-surround($content, $node, $at)
     return
         templates:process($merged, $model)
 };

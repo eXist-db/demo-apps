@@ -230,3 +230,7 @@ input:required:valid {
     background-repeat:no-repeat; 
     -moz-box-shadow:none; 
 }
+
+#collection-tree ul li, #collection-tree ul li ul li {
+    list-style-type: none;
+}
