@@ -76,7 +76,7 @@ if ($exist:path eq "/") then
 
 (:  Protected resource: user is required to log in with valid credentials.
     If the login fails or no credentials were provided, the request is redirected
-    to the login.xml page. :)
+    to the login.html page. :)
 else if ($exist:resource eq 'protected.html') then
     let $login := local:set-user()
     return
