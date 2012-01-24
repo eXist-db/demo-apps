@@ -6,6 +6,7 @@ declare option exist:serialize "method=html5 media-type=text/html";
 
 declare variable $modules :=
     <modules>
+        <module prefix="i18n" uri="http://exist-db.org/xquery/i18n/templates" at="i18n-templates.xql"/>
         <module prefix="config" uri="http://exist-db.org/xquery/apps/config" at="config.xql"/>
         <module prefix="demo" uri="http://exist-db.org/apps/demo" at="demo.xql"/>
         <module prefix="cex" uri="http://exist-db.org/apps/demo/cex" at="cex.xql"/>

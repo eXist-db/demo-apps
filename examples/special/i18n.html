@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<div xmlns:i18n="http://exist-db.org/xquery/i18n" class="templates:surround?with=templates/page.html&amp;at=content">
+    <div class="i18n:translate?lang=es&amp;catalogues=data/i18n">
+        <h1>i18n Module Examples</h1>
+        <p>The i18n XQuery module is a general-purpose library to internationalize an XML document.
+        For more information about the supported format read the <a href="i18n-docs.html">documentation</a>.</p>
+        <p>This page uses HTML templating. It calls the i18n module through a template instruction as follows:</p>
+        <pre class="brush: xml"><![CDATA[<div class="i18n:translate?lang=es&amp;catalogues=data/i18n">...</div>]]></pre>
+        <p>The following files are used:</p>
+        <table>
+            <tr>
+                <td>
+                    <a class="templates:load-source" href="examples/special/i18n.html">i18n.html</a>
+                </td>
+                <td>This document.</td>
+            </tr>
+            <tr>
+                <td>
+                    <a class="templates:load-source" href="modules/i18n.xql">i18n.xql</a>
+                </td>
+                <td>The i18n library module.</td>
+            </tr>
+            <tr>
+                <td>
+                    <a class="templates:load-source" href="data/i18n/collection_es.xml">collection_es.xml</a>
+                </td>
+                <td>The catalogue file for the Spanish translation.</td>
+            </tr>
+            <tr>
+                <td>
+                    <a class="templates:load-source" href="data/i18n/collection_de.xml">collection_de.xml</a>
+                </td>
+                <td>The catalogue file for the German translation.</td>
+            </tr>
+        </table>
+        <h2>i18n:text</h2>
+        <div class="section">
+            <p>Markup</p>
+            <div class="markup">
+                <pre>&lt;i18n:text key="translateSimpleText"&gt;Translate simple text&lt;/i18n:text&gt;</pre>
+            </div>
+            <p>Result</p>
+            <div class="result">
+                <i18n:text key="translateSimpleText">Translate simple text</i18n:text>
+            </div>
+        </div>
+        <h2>i18n:translate (numerical)</h2>
+        <div class="section">
+            <p>Markup</p>
+            <div class="markup">
+                <pre>&lt;i18n:translate&gt;
+    &lt;i18n:text key="translateTextWithNumericalPropertiesSample"&gt;Text to translate with {2} parameters to substitute (in {1} order)&lt;/i18n:text&gt;
+    &lt;i18n:param&gt;numerical&lt;/i18n:param&gt;
+    &lt;i18n:param&gt;2&lt;/i18n:param&gt;
+    &lt;/i18n:translate&gt;
+    </pre>
+            </div>
+            <p>Result</p>
+            <div class="result">
+                <i18n:translate>
+                    <i18n:text key="translateTextWithNumericalPropertiesSample">Text to translate with {2} parameters to substitute (in {1} order)</i18n:text>
+                    <i18n:param>numerical</i18n:param>
+                    <i18n:param>2</i18n:param>
+                </i18n:translate>
+            </div>
+        </div>
+        <h2>i18n:translate (alphabetical)</h2>
+        <div class="section">
+            <p>Markup</p>
+            <div class="markup">
+                <pre>&lt;i18n:translate&gt;
+    &lt;i18n:text key="translateTextWithAlphabeticalPropertiesSample"&gt;Text to translate with {number} parameters to substitute (in {alphabetical} order)&lt;/i18n:text&gt;
+    &lt;i18n:param key="alphabetical"&gt;alphabetical&lt;/i18n:param&gt;
+    &lt;i18n:param key="number"&gt;2&lt;/i18n:param&gt;
+    &lt;/i18n:translate&gt;</pre>
+            </div>
+            <p>Result</p>
+            <div class="result">
+                <i18n:translate>
+                    <i18n:text key="translateTextWithAlphabeticalPropertiesSample">Text to translate with {number} parameters to substitute (in {alphabetical} order)</i18n:text>
+                    <i18n:param key="alphabetical">alphabetical</i18n:param>
+                    <i18n:param key="number">2</i18n:param>
+                </i18n:translate>
+            </div>
+        </div>
+        <h2>i18n:translate (with translated parameter in numerical order)</h2>
+        <div class="section">
+            <p>Markup </p>
+            <div class="markup">
+                <pre>&lt;i18n:translate&gt;
+    &lt;i18n:text key="translateTextWithTranslatedNumericalPropertiesSample"&gt;Text to translate with {1} to substitute&lt;/i18n:text&gt;
+    &lt;i18n:param&gt;
+    &lt;i18n:text key="translatedParameterValue"&gt;translated Parameter&lt;/i18n:text&gt;
+    &lt;/i18n:param&gt;
+    &lt;/i18n:translate&gt;
+    </pre>
+            </div>
+            <p>Result</p>
+            <div class="result">
+                <i18n:translate>
+                    <i18n:text key="translateTextWithTranslatedNumericalPropertiesSample">Text to translate with {1} to substitute</i18n:text>
+                    <i18n:param>
+                        <i18n:text key="translatedParameterValue">translated Parameter</i18n:text>
+                    </i18n:param>
+                </i18n:translate>
+            </div>
+        </div>
+        <h2>i18n:translate (with translated parameter in alphabetical order)</h2>
+        <div class="section">
+            <p>Markup </p>
+            <div class="markup">
+                <pre>&lt;i18n:translate&gt;
+    &lt;i18n:text key="translateTextWithTranslatedAlphabeticalPropertiesSample"&gt;Text to translate with{translatedParameter} to substitute&lt;/i18n:text&gt;
+    &lt;i18n:param key="translatedParameter"&gt;
+    &lt;i18n:text key="translatedParameterValue"&gt;translated Parameter&lt;/i18n:text&gt;
+    &lt;/i18n:param&gt;
+    &lt;/i18n:translate&gt;</pre>
+            </div>
+            <p>Result</p>
+            <div class="result">
+                <i18n:translate>
+                    <i18n:text key="translateTextWithTranslatedAlphabeticalPropertiesSample">Text to translate with{translatedParameter} to substitute</i18n:text>
+                    <i18n:param key="translatedParameter">
+                        <i18n:text key="translatedParameterValue">translated Parameter</i18n:text>
+                    </i18n:param>
+                </i18n:translate>
+            </div>
+        </div>
+        <h2>Attribute translation</h2>
+        <div class="section">
+            <p>Markup </p>
+            <div class="markup">
+                <pre>&lt;div id="testLocalizedAttributes" name="i18n(key1)" title="i18n(key2,defaultValue1)" class="i18n(nonExistingKey,value_for_not_existing_key)"/&gt;</pre>
+            </div>
+            <p>Result (take a look at the markup to verify the result)</p>
+            <div class="result">
+                <div id="testLocalizedAttributes" name="i18n(key1)" title="i18n(key2,defaultValue1)" class="i18n(nonExistingKey,value_for_not_existing_key)">translated attributes</div>
+            </div>
+        </div>
+    </div>
+</div>

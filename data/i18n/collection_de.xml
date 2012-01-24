@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<catalogue xml:lang="de">
+    <demoApp>i18n Demo Anwendung</demoApp>
+    <welcome>Willkommen {username} bei der i18n Demo Anwendung</welcome>
+    <textToTranslate>zu übersetzender Text</textToTranslate>
+    <translateSimpleText>Einfachen Text übersetzen</translateSimpleText>
+    <translateTextWithProperties>Text mit einfachen  Properties übersetzen</translateTextWithProperties>
+    <translateTextWithNumericalPropertiesSample>Zu übersetzender Text mit {2} Parametern zum Ersetzen (in {1} Reihenfolge)</translateTextWithNumericalPropertiesSample>
+    <translateTextWithAlphabeticalPropertiesSample>Zu übersetzender Text mit {number} Parametern zum Ersetzen (nach {alphabetical} Schlüsseln)</translateTextWithAlphabeticalPropertiesSample>
+    <translateTextWithTranslatedNumericalPropertiesSample>Zu übersetzender Text mit zu {1}</translateTextWithTranslatedNumericalPropertiesSample>
+    <translateTextWithTranslatedAlphabeticalPropertiesSample>Zu übersetzender Text mit zu {translatedParameter}</translateTextWithTranslatedAlphabeticalPropertiesSample>
+    <translatedParameterValue>übersetzenden Parametern</translatedParameterValue>
+    <translateAttributes>Attribute übersetzen</translateAttributes>
+    <translateAttributeText>HTML DIV mit einer lokalisierten CSS Klasse und einem lokalisierten 'name' Attribut</translateAttributeText>
+    <key1>Schlüssel1</key1>
+    <key2>Schlüssel2</key2>
+    
+    <!-- Documentation -->
+    <documentationHeader>eXist i18n Dokumentation</documentationHeader>
+    <introduction>Einleitung</introduction>
+</catalogue>

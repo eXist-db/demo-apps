@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<div class="templates:surround?with=templates/page.html&amp;at=content">
+    <h1>eXist i18n XQuery Module Documentation</h1>
+<!-- INTRODUCTION -->
+    <h2 id="introduction">Introduction</h2>
+    <p>The eXist i18n module provides an easy to use mechanism to internationalize (i18n) any kind of XML document.</p>
+
+<!-- BRIEF DESCRIPTION-->
+    <h2 id="briefdescription">Brief description</h2>
+    <p>Following features are supported by the eXist i18n module</p>
+    <ul>
+        <li>Text translation</li>
+        <li>Parameter substitution within text translations</li>
+        <li>Usage of internationalized parameters</li>
+        <li>Attribute translation</li>
+    </ul>
+    <p>See the <a href="#reference">reference</a> and <a href="#configuration">configuration</a> sections to utilize the i18n extension within your application.</p>
+    <h2 id="reference">Reference</h2>
+    <p>All i18n tags or attributes use a key to retrieve localized text from the i18n catalogue. If no catalogue is available for a chosen language and there is no default catalogue configured then the 'defaultValue' is used. See the description
+of the i18n tags / attributes to see where to place the 'defaultValue'.</p>
+
+<!-- LANGUAGE CATALOGUES -->
+    <h3 id="catalogues">Language catalogues</h3>
+    <p>Catalogues are holding the language data and have the following (flat) structure:</p>
+    <pre class="brush: xml">&lt;catalogue xml:lang="de"&gt;
+&lt;Welcome&gt;Willkommen&lt;/Welcome&gt;
+&lt;Cancel&gt;Abbrechen&lt;/Cancel&gt;
+&lt;/catalogue&gt;</pre>
+    <p>The xml:lang attribute on the catalogue tag defines the language for the catalogue. The attribute value should correspond to ISO 639. The catalogue itself is made up of an flat list of tags, where the tag name represent the key and the node value the text to be used for
+internationalization.</p>
+
+<!-- TEXT TRANSLATION -->
+    <h3 id="textTranslation">Text translation</h3>
+    <pre class="brush: xml">&lt;i18n:text key="uniqueID"&gt;Text in default language&lt;/i18n:text&gt;</pre>
+    <p>The &lt;i18n:text&gt; tag is used to mark text to be translated. The attribute <i>@key</i> is used to find the respective translation
+from a specific catalogue. The text
+value of the &lt;i18n:text&gt; node can be used as default translation and is further displayed if no catalogue for a selected language exists (and no default language is configured).</p>
+
+<!-- PARAMETER SUBSTITUTION-->
+    <h3>Parameter substitution for text</h3>
+    <p>&lt;i18n:translate&gt; provides parameter substitution for internationalized text. The substitution can either be archived by the numerical order of the i18n:param tags or by character keys. Be aware that numerical and character parameter
+substitution must not be mixed within one i18n:translate tag.</p>
+    <h4>Numerical i18n:param substitution</h4>
+    <p>Parameters are referenced with numbers in angle brackets. Be aware that the i18n:param count starts with 1.</p>
+    <pre class="brush: xml">&lt;i18n:translate&gt;
+&lt;i18n:text key="textWithParam"&gt;{2} is prerequisite for {1}.(E.W. Dijkstra)&lt;/i18n:text&gt;
+&lt;i18n:param&gt;reliability&lt;/i18n:param&gt;
+&lt;i18n:param&gt;Simplicity&lt;/i18n:param&gt;	
+&lt;/i18n:translate&gt;</pre>
+    <p>The above example resolves to: 'Simplicity is prerequisite for reliability.(E.W. Dijkstra)</p>
+    <h4>Character i18n:param substitution</h4>
+    <p>Using character parameter substitution uses keys instead of the numerical order to substitute parameters. The order of the parameters  in the i18n:text tag does not matter.</p>
+    <pre class="brush: xml">&lt;i18n:translate&gt;
+&lt;i18n:text key="textWithParam"&gt;{key1} is prerequisite for {key2}.(E.W. Dijkstra)&lt;/i18n:text&gt;
+&lt;i18n:param key="key1"&gt;Simplicity&lt;/i18n:param&gt;
+&lt;i18n:param key="key2"&gt;reliability&lt;/i18n:param&gt;	
+&lt;/i18n:translate&gt;</pre>
+    <p>The above example resolves to: 'Simplicity is prerequisite for reliability.(E.W. Dijkstra)</p>
+    <h3>Translation of parameters</h3>
+    <p>i18n:params can be translated just like i18n:text tags.</p>
+    <pre class="brush: xml">&lt;i18n:translate&gt;
+&lt;i18n:text key="textWithParam"&gt;{key1} is prerequisite for reliability.(E.W. Dijkstra)&lt;/i18n:text&gt;
+&lt;i18n:param key="key1"&gt;
+&lt;i18n:text key="simplicity"&gt;Simplicity&lt;/i18n:text&gt;
+&lt;/i18n:param&gt;		
+&lt;/i18n:translate&gt;</pre>
+    <h3>Attribute translation</h3>
+    <p>Use i18n(key,defaultValue) to translate attributes where the parameter 'defaultValue' is optional.</p>
+    <pre class="brush: xml">&lt;div attr1="i18n(key1)" attr2="i18n(key2,defaultValue1)"/&gt;</pre>
+
+<!-- CONFIGURATION -->
+    <h2 id="configuration">Configuration</h2>
+<!-- connect i18n module -->
+    <h3>Automatically process XML</h3>
+    <p>The i18n xquery module is configured via the controller.xql in your application. A typical configuration to process any .html file
+in an application would look like this: </p>
+    <pre class="brush: xquery">xquery version "1.0";
+
+import module namespace request="http://exist-db.org/xquery/request";
+import module namespace xdb = "http://exist-db.org/xquery/xmldb";
+
+declare variable $exist:path external;
+declare variable $exist:resource external;
+
+if (ends-with($exist:resource, ".html")) then
+&lt;dispatch xmlns="http://exist.sourceforge.net/NS/exist"&gt;
+&lt;view&gt;
+&lt;forward url="/db/i18n/modules/view.xql"/&gt;
+&lt;/view&gt;
+&lt;/dispatch&gt;                                
+else
+&lt;ignore xmlns="http://exist.sourceforge.net/NS/exist"&gt;
+&lt;cache-control cache="yes"/&gt;
+&lt;/ignore&gt;</pre>
+    <h3>Usage of i18n via XQuery calls</h3>
+    <p>Another variant is to directly call the i18n:process function within the i18n module: </p>
+    <pre class="brush: xquery">(:~ i18n.xql: 
+: i18n processing on the given set of nodes. Call this function from
+: within other functions to enable recursive processing of i18n tags.
+:
+: @param $nodes - the nodes to process
+: @param $model - a sequence of items which will be passed to all called template functions. Use this to pass
+:                          information between templating instructions.
+: @param $selectedLang - chosen language, controls which i18n catalogue to load
+: @param $pathToCatalogues - path that points to the available i18n catalogues within the eXist database
+: @param $defaultLang - language that is used if no i18n catalogue can be found for the chosen language
+:)
+declare function i18n:process($nodes as node()*, $model as item()*, 
+      $selectedLang as xs:string, $pathToCatalogues as xs:string, 
+      $defaultLang as xs:string)</pre>
+    <p>The following sample shows how this could be done: </p>
+    <pre class="brush: xquery">xquery version "1.0";xquery version "1.0";
+
+import module namespace i18n = "http://exist-db.org/xquery/i18n" at "/db/i18n/modules/i18n.xql";
+
+declare option exist:serialize "method=xhtml media-type=text/html";
+(: get some html containing i18n tags :)
+let $content := doc('index.html')/*
+
+return
+i18n:process($content, (),'de','/db/i18n/data','es')</pre>
+    <h2 id="usage">Usage</h2>
+    <h3>Select language</h3>
+    <p>The language to use for internationalization can be chosen in various ways</p>
+    <ul>
+        <li>via http parameter 'lang', e.q http://exist/index.html?lang=de</li>
+        <li>as xquery parameter $selectedLang if the i18n module is called directly</li>
+        <li>xml:lang attribute on the root node of the markup to process</li>
+    </ul>
+    <h3>Path to i18n catalogues</h3>
+    <p>The path to the catalogue files can be given as follows:</p>
+    <ul>
+        <li>via http parameter 'cataloguesPath'</li>
+        <li>as xquery parameter $cataloguesPath if the i18n module is called directly</li>
+        <li>using the attribute i18n:catalogues on the root node of the processed markup</li>
+    </ul>
+    <h3>Default Language</h3>
+    <p>Chosing a default language (without placing it as inline markup within i18n tags) can be done with:</p>
+    <ul>
+        <li>via http parameter 'defaultLang'</li>
+        <li>as parameter $defaultLang if the i18n module is called directly</li>
+        <li>using the attribute i18n:default-lang on the root node of the processed markup</li>
+    </ul>
+</div>
