@@ -1,17 +1,16 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <catalogue xml:lang="es">
-    <demoApp>i18n Demo Aplicación</demoApp>
-    <welcome>Bienvenida {username} a la i18n Demo Aplicación</welcome>
-    <textToTranslate>Texto por traducir</textToTranslate>
-    <translateSimpleText>Traducir simple texto</translateSimpleText>
-    <translateTextWithProperties>Traducir simple texto con parámetros</translateTextWithProperties>
-    <translateTextWithNumericalPropertiesSample>Traducir simple texto con {2} parámetros (a '{1}' orden)</translateTextWithNumericalPropertiesSample>
-    <translateTextWithAlphabeticalPropertiesSample>Traducir simple texto con {number} parámetros (a '{alphabetical}' orden)</translateTextWithAlphabeticalPropertiesSample>
-    <translateTextWithTranslatedNumericalPropertiesSample>Traducir texto con {1}</translateTextWithTranslatedNumericalPropertiesSample>
-    <translateTextWithTranslatedAlphabeticalPropertiesSample>Traducir texto con {translatedParameter}</translateTextWithTranslatedAlphabeticalPropertiesSample>
-    <translatedParameterValue>parámetros por traducir</translatedParameterValue>
-    <translateAttributes>Traducir attributos</translateAttributes>
-    <translateAttributeText>Español Attribut</translateAttributeText>
-    <key1>llavae1</key1>
-    <key2>llavae2</key2>
+    <msg key="demoApp">i18n Demo Aplicación</msg>
+    <msg key="welcome">Bienvenida {username} a la i18n Demo Aplicación</msg>
+    <msg key="textToTranslate">Texto por traducir</msg>
+    <msg key="translateSimpleText">Traducir simple texto</msg>
+    <msg key="translateTextWithProperties">Traducir simple texto con parámetros</msg>
+    <msg key="translateTextWithNumericalPropertiesSample">Traducir simple texto con {2} parámetros (a '{1}' orden)</msg>
+    <msg key="translateTextWithAlphabeticalPropertiesSample">Traducir simple texto con {number} parámetros (a '{alphabetical}' orden)</msg>
+    <msg key="translateTextWithTranslatedNumericalPropertiesSample">Traducir texto con {1}</msg>
+    <msg key="translateTextWithTranslatedAlphabeticalPropertiesSample">Traducir texto con {translatedParameter}</msg>
+    <msg key="translatedParameterValue">parámetros por traducir</msg>
+    <msg key="translateAttributes">Traducir attributos</msg>
+    <msg key="translateAttributeText">Español Attribut</msg>
+    <msg key="key1">llavae1</msg>
+    <msg key="key2">llavae2</msg>
 </catalogue>

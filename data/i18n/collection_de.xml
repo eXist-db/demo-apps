@@ -1,21 +1,20 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <catalogue xml:lang="de">
-    <demoApp>i18n Demo Anwendung</demoApp>
-    <welcome>Willkommen {username} bei der i18n Demo Anwendung</welcome>
-    <textToTranslate>zu übersetzender Text</textToTranslate>
-    <translateSimpleText>Einfachen Text übersetzen</translateSimpleText>
-    <translateTextWithProperties>Text mit einfachen  Properties übersetzen</translateTextWithProperties>
-    <translateTextWithNumericalPropertiesSample>Zu übersetzender Text mit {2} Parametern zum Ersetzen (in {1} Reihenfolge)</translateTextWithNumericalPropertiesSample>
-    <translateTextWithAlphabeticalPropertiesSample>Zu übersetzender Text mit {number} Parametern zum Ersetzen (nach {alphabetical} Schlüsseln)</translateTextWithAlphabeticalPropertiesSample>
-    <translateTextWithTranslatedNumericalPropertiesSample>Zu übersetzender Text mit zu {1}</translateTextWithTranslatedNumericalPropertiesSample>
-    <translateTextWithTranslatedAlphabeticalPropertiesSample>Zu übersetzender Text mit zu {translatedParameter}</translateTextWithTranslatedAlphabeticalPropertiesSample>
-    <translatedParameterValue>übersetzenden Parametern</translatedParameterValue>
-    <translateAttributes>Attribute übersetzen</translateAttributes>
-    <translateAttributeText>HTML DIV mit einer lokalisierten CSS Klasse und einem lokalisierten 'name' Attribut</translateAttributeText>
-    <key1>Schlüssel1</key1>
-    <key2>Schlüssel2</key2>
+    <msg key="demoApp">i18n Demo Anwendung</msg>
+    <msg key="welcome">Willkommen {username} bei der i18n Demo Anwendung</msg>
+    <msg key="textToTranslate">zu übersetzender Text</msg>
+    <msg key="translateSimpleText">Einfachen Text übersetzen</msg>
+    <msg key="translateTextWithProperties">Text mit einfachen  Properties übersetzen</msg>
+    <msg key="translateTextWithNumericalPropertiesSample">Zu übersetzender Text mit {2} Parametern zum Ersetzen (in {1} Reihenfolge)</msg>
+    <msg key="translateTextWithAlphabeticalPropertiesSample">Zu übersetzender Text mit {number} Parametern zum Ersetzen (nach {alphabetical} Schlüsseln)</msg>
+    <msg key="translateTextWithTranslatedNumericalPropertiesSample">Zu übersetzender Text mit zu {1}</msg>
+    <msg key="translateTextWithTranslatedAlphabeticalPropertiesSample">Zu übersetzender Text mit zu {translatedParameter}</msg>
+    <msg key="translatedParameterValue">übersetzenden Parametern</msg>
+    <msg key="translateAttributes">Attribute übersetzen</msg>
+    <msg key="translateAttributeText">HTML DIV mit einer lokalisierten CSS Klasse und einem lokalisierten 'name' Attribut</msg>
+    <msg key="key1">Schlüssel1</msg>
+    <msg key="key2">Schlüssel2</msg>
     
     <!-- Documentation -->
-    <documentationHeader>eXist i18n Dokumentation</documentationHeader>
-    <introduction>Einleitung</introduction>
+    <msg key="documentationHeader">eXist i18n Dokumentation</msg>
+    <msg key="introduction">Einleitung</msg>
 </catalogue>

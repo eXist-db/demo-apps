@@ -86,8 +86,8 @@ declare function i18n:translateAttribute($attribute as attribute(), $node as nod
             else 
                 substring-before(substring-after($attribute,"i18n("),")")
         let $i18nValue :=   
-            if(exists($selectedCatalogue//*[local-name(.) eq $key])) then 
-                $selectedCatalogue//*[local-name(.) eq $key]/text() 
+            if(exists($selectedCatalogue//msg[@key eq $key])) then 
+                $selectedCatalogue//msg[@key eq $key]/text() 
             else 
                 substring-before(substring-after(substring-after($attribute,"i18n("),","),")")
         return 
@@ -104,8 +104,8 @@ declare function i18n:translateAttribute($attribute as attribute(), $node as nod
  : if no localized value is available, the default value is used
 :)
 declare function i18n:getLocalizedText($textNode as node(), $selectedCatalogue as node()){
-    if(exists($selectedCatalogue//*[local-name(.) eq $textNode/@key])) then 
-        $selectedCatalogue//*[local-name(.) eq $textNode/@key]/text() 
+    if(exists($selectedCatalogue//msg[@key eq $textNode/@key])) then 
+        $selectedCatalogue//msg[@key eq $textNode/@key]/text() 
     else 
         $textNode/text()
     
@@ -205,4 +205,3 @@ declare function i18n:getSelectedLanguage($node as node(),$selectedLang as xs:st
     else
         'en'
 };
-
