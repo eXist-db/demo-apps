@@ -23,11 +23,11 @@ of the i18n tags / attributes to see where to place the 'defaultValue'.</p>
     <h3 id="catalogues">Language catalogues</h3>
     <p>Catalogues are holding the language data and have the following (flat) structure:</p>
     <pre class="brush: xml">&lt;catalogue xml:lang="de"&gt;
-&lt;Welcome&gt;Willkommen&lt;/Welcome&gt;
-&lt;Cancel&gt;Abbrechen&lt;/Cancel&gt;
+&lt;mys key="Welcome"&gt;Willkommen&lt;/msg&gt;
+&lt;msg key="Cancel"&gt;Abbrechen&lt;/msg&gt;
 &lt;/catalogue&gt;</pre>
-    <p>The xml:lang attribute on the catalogue tag defines the language for the catalogue. The attribute value should correspond to ISO 639. The catalogue itself is made up of an flat list of tags, where the tag name represent the key and the node value the text to be used for
-internationalization.</p>
+    <p>The xml:lang attribute on the catalogue tag defines the language for the catalogue. The attribute value should correspond to ISO 639. The catalogue itself is made up of an flat list of msg tags. Each has an attribute 'key' with a unique value 
+        to identify the translated text. The translated text itself is placed as node value of the msg node.</p>
 
 <!-- TEXT TRANSLATION -->
     <h3 id="textTranslation">Text translation</h3>
