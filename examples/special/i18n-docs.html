@@ -99,13 +99,11 @@ else
 : within other functions to enable recursive processing of i18n tags.
 :
 : @param $nodes - the nodes to process
-: @param $model - a sequence of items which will be passed to all called template functions. Use this to pass
-:                          information between templating instructions.
 : @param $selectedLang - chosen language, controls which i18n catalogue to load
 : @param $pathToCatalogues - path that points to the available i18n catalogues within the eXist database
 : @param $defaultLang - language that is used if no i18n catalogue can be found for the chosen language
 :)
-declare function i18n:process($nodes as node()*, $model as item()*, 
+declare function i18n:process($nodes as node()*, 
       $selectedLang as xs:string, $pathToCatalogues as xs:string, 
       $defaultLang as xs:string)</pre>
     <p>The following sample shows how this could be done: </p>
@@ -118,7 +116,7 @@ declare option exist:serialize "method=xhtml media-type=text/html";
 let $content := doc('index.html')/*
 
 return
-i18n:process($content, (),'de','/db/i18n/data','es')</pre>
+i18n:process($content,'de','/db/i18n/data','es')</pre>
     <h2 id="usage">Usage</h2>
     <h3>Select language</h3>
     <p>The language to use for internationalization can be chosen in various ways</p>
