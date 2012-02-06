@@ -21,18 +21,80 @@
                     <div id="header">
                         <a class="demo:link-to-home" href="/" id="logo">eXistDB</a>
                     </div><!--/header-->
-                    <div id="navigation">
+                    <div id="navigation" class="templates:fix-links?root=context">
                         <ul id="nav" class="dropdown dropdown-horizontal">
                             <li class="dir" id="about">About Us
                             	<ul>
                                     <li>
-                                        <a href="credits.html">Who we are</a>
+                                        <a href="/credits.xml">Who we are</a>
                                     </li>
                                     <li>
-                                        <a href="acknowledge.html">Acknowledgements</a>
+                                        <a href="/acknowledge.xml">Acknowledgements</a>
                                     </li>
                                     <li>
                                         <a href="http://atomic.exist-db.org/blogs/eXist/Press/">Press/Contact</a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li class="dir" id="documentation">Documentation
+                              <ul>
+                                    <li>
+                                        <a href="/quickstart.xml">Quick Start</a>
+                                    </li>
+                                    <li>
+                                        <a href="/xquery/functions.xql">Function Library</a>
+                                    </li>
+                                    <li>
+                                        <a href="/documentation.xml">Main Documentation</a>
+                                    </li>
+                                    <li>
+                                        <a href="http://en.wikibooks.org/wiki/XQuery">XQuery Wikibook</a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li class="dir" id="examples">Demo
+                              <ul>
+                                    <li>
+                                        <a href="http://demo.exist-db.org/exist/examples.xml">Examples/Demos</a>
+                                    </li>
+                                    <li>
+                                        <a href="/eXide/">eXide (XQuery IDE)</a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li class="dir" id="community">
+                                <a href="#">Community</a>
+                                <ul>
+                                    <li>
+                                        <a href="/index.xml#mailing">Mailing List/IRC</a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li class="dir" id="development">
+                                <a href="#">Development</a>
+                                <ul>
+                                    <li>
+                                        <a href="/api/index.html">Javadocs</a>
+                                    </li>
+                                    <li>
+                                        <a href="http://sourceforge.net/tracker/?group_id=17691&amp;atid=117691">Bug Tracker</a>
+                                    </li>
+                                    <li>
+                                        <a href="http://sourceforge.net/svn/?group_id=17691">Subversion</a>
+                                    </li>
+                                    <li>
+                                        <a href="http://sourceforge.net/tracker/?atid=317691&amp;group_id=17691&amp;func=browse">Submit Patches</a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li class="dir" id="administration">
+                                <a href="#">Administration</a>
+                                <ul>
+                                    <li>
+                                        <a href="/admin/admin.xql">Admin</a>
+                                    </li>
+                                    <li>
+                                        <a href="/webstart/exist.jnlp">Webstart Client</a>
                                     </li>
                                 </ul>
                             </li>

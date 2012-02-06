@@ -262,10 +262,12 @@ declare function templates:error-description($node as node(), $params as element
 };
 
 declare function templates:fix-links($node as node(), $params as element(parameters)?, $model as item()*) {
-    let $root := substring-after(util:collection-name($node), $config:app-root)
-    let $steps := tokenize($root, "/")
-    let $prefix := 
-        concat(request:get-context-path(), request:get-attribute("$exist:prefix"), request:get-attribute("$exist:controller"))
+    let $root := $params/param[@name = "root"]/@value/string()
+    let $prefix :=
+        if ($root eq "context") then
+            request:get-context-path()
+        else
+            concat(request:get-context-path(), request:get-attribute("$exist:prefix"), request:get-attribute("$exist:controller"))
     let $temp := 
         element { node-name($node) } {
             $node/@* except $node/@class,
