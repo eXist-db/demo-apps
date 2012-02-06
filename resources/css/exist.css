@@ -87,7 +87,6 @@ body { font: 12px/20px Verdana, Arial, Helvetica, sans-serif; color: #222; backg
 #copyright { float: right; width: 220px; }
 #copyright p { padding: 0; color: #F3F3F3; }
 
-
 /* ---------------------------------------- TYPE ---------------------------------------- */
 
 #main ul { padding: 0 10px; }
@@ -101,7 +100,12 @@ body { font: 12px/20px Verdana, Arial, Helvetica, sans-serif; color: #222; backg
 
 p { padding: 5px 0; }
 
-h1 { font-size: 16px; padding: 0px 0 5px; margin: 0; font-weight: bold; font-family: "Century Gothic", Verdana, Helvetica, sans-serif; letter-spacing: 1px; }
+h1 { font: 38px "Quicksand", "Arial", "Helvetica", sans-serif;
+    color: #0083CB;
+    border-bottom: 1px solid #C7C7C7;
+    padding-bottom: 15px;
+    margin-bottom: 10px;
+}
 h2 { font-size: 1.2em; padding: 10px 0; font-weight: bold; font-family: "Century Gothic", Verdana, Helvetica, sans-serif; letter-spacing: 1px; }
 h3 { font-size: 1.2em; padding: 10px 0 5px; margin: 0 0 5px; font-weight: bold; border-bottom: 1px dotted; }
 h4 { font-size: 1.1em; padding: 10px 0; font-weight: bold; }
@@ -233,4 +237,9 @@ input:required:valid {
 
 #collection-tree ul li, #collection-tree ul li ul li {
     list-style-type: none;
+}
+
+.code a {
+    padding: 4px;
+    border: 1px solid #C7C7C7;
 }

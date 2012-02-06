@@ -6,6 +6,7 @@
         <link rel="stylesheet" type="text/css" href="resources/css/exist.css"/>
         <link href="resources/scripts/shCore.css" rel="stylesheet" type="text/css"/>
         <link href="resources/scripts/shThemeDefault.css" rel="stylesheet" type="text/css"/>
+        <link href="http://fonts.googleapis.com/css?family=Quicksand" rel="stylesheet" type="text/css"/>
         <script type="text/javascript" src="libs/scripts/jquery/jquery-1.6.2.min.js"/>
         <script type="text/javascript" src="resources/scripts/jquery.scrollExtend.min.js"/>
         <script type="text/javascript" src="resources/scripts/shCore.js"/>
@@ -21,7 +22,21 @@
                         <a class="demo:link-to-home" href="/" id="logo">eXistDB</a>
                     </div><!--/header-->
                     <div id="navigation">
-                        <ul id="nav" class="dropdown dropdown-horizontal"/>
+                        <ul id="nav" class="dropdown dropdown-horizontal">
+                            <li class="dir" id="about">About Us
+                            	<ul>
+                                    <li>
+                                        <a href="credits.html">Who we are</a>
+                                    </li>
+                                    <li>
+                                        <a href="acknowledge.html">Acknowledgements</a>
+                                    </li>
+                                    <li>
+                                        <a href="http://atomic.exist-db.org/blogs/eXist/Press/">Press/Contact</a>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
                     </div>
                     <div id="main">
                         <div id="content"/>
@@ -30,6 +45,9 @@
                                 <div id="r-bot" class="templates:fix-links">
                                     <h2>Demo Pages</h2>
                                     <ol>
+                                        <li>
+                                            <a href="/examples/basic/xquery3.html">XQuery 3.0 Examples</a>
+                                        </li>
                                         <li>
                                             <a href="/examples/web/index.html">Web Examples</a>
                                         </li>
@@ -60,10 +78,7 @@
                 </li>
             </ul>
             <div id="copyright">
-                <p>Copyright eXist 2011</p>
-                <p>
-                    <a href="http://www.jameshambly.com"> Designed by JamesHambly.com</a>
-                </p>
+                <p>Copyright eXist-db Project 2012</p>
             </div><!--/copyright-->
         </div><!--/footer-->
         <script type="text/javascript">

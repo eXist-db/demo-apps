@@ -189,11 +189,27 @@ declare function templates:if-module-missing($node as node(), $params as element
         }
 };
 
+declare function templates:display-source($node as node(), $params as element(parameters)?, $model as item()*) {
+    let $syntax := $params/param[@name = "lang"]/@value/string()
+    let $source := replace($node/string(), "^\s*(.*)\s*$", "$1")
+    let $context := request:get-context-path()
+    let $eXidePath := if (doc-available("/db/eXide/index.html")) then "apps/eXide" else "eXide"
+    return
+        <div class="code">
+            <pre class="brush: {if ($syntax) then $syntax else 'xquery'}">
+            { $source }
+            </pre>
+            <a href="{$context}/{$eXidePath}/index.html?snip={encode-for-uri($source)}" target="eXide"
+                title="Opens the code in eXide in new tab or existing tab if it is already open.">Edit</a>
+        </div>
+};
+
 declare function templates:load-source($node as node(), $params as element(parameters), $model as item()*) as node()* {
     let $href := $node/@href/string()
     let $context := request:get-context-path()
+    let $eXidePath := if (doc-available("/db/eXide/index.html")) then "apps/eXide" else "eXide"
     return
-        <a href="{$context}/eXide/index.html?open={$config:app-root}/{$href}" target="eXide">{$node/node()}</a>
+        <a href="{$context}/{$eXidePath}/index.html?open={$config:app-root}/{$href}" target="eXide">{$node/node()}</a>
 };
 
 (:~

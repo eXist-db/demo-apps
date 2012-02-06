@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<article class="templates:surround?with=templates/page.html&amp;at=content">
+    <h1 class="front-title">XQuery 3.0 Features</h1>
+    <p>XQuery 3.0 has been released as a working draft in December 2011. The new XQuery 3.0 specification
+    standardizes many of the features which had been available as extension modules in eXist and other 
+    implementations for quite a while, for example: higher-order functions or try/catch.</p>
+    <p>As of February 2012, we implemented a good part of the XQuery 3.0 syntax, including:</p>
+    <ul>
+        <li>Switch statements</li>
+        <li>Try/catch</li>
+        <li>Higher-order functions</li>
+        <li>Annotations</li>
+        <li>A bunch of new functions to complement above features</li>
+    </ul>
+    <p>The following sections present usage examples for those new features. If you click on the
+    edit link, the example snippet will be loaded into eXide so you can run, edit and play around
+    with it.</p>
+    <section>
+        <h2>Switch statements</h2>
+        <pre class="templates:display-source">
+xquery version "3.0";
+
+let $animal := "Duck"
+return
+    switch ($animal)
+       case "Cow" return "Moo"
+       case "Cat" return "Meow"
+       case "Duck" return "Quack"
+       case "Dog" case "Pitbull" return "Wuff"
+       default return "What's that odd noise?"
+        </pre>
+    </section>
+    <section>
+        <h2>String concatenation</h2>
+        <pre class="templates:display-source">xquery version "3.0";
+
+let $who := "world"
+return
+    "Hello " || $who || "!"
+        </pre>
+    </section>
+    <section>
+        <h2>Try/Catch</h2>
+        <section>
+            <h3>Basic example catching any errors:</h3>
+            <pre class="templates:display-source">xquery version "3.0";
+    
+    let $x := "Hello"
+    return
+        try {
+            $x cast as xs:integer
+        } catch * {
+            &lt;error&gt;Caught error {$err:code}: {$err:description}&lt;/error&gt;
+        }</pre>
+        </section>
+        <section>
+            <h3>Generating your own errors:</h3>
+            <pre class="templates:display-source">xquery version "3.0";
+    
+    declare namespace app="http://exist-db.org/myapp";
+    
+    declare variable $app:ERROR := xs:QName("app:error");
+    
+    try {
+        error($app:ERROR, "Ooops", "any data")
+    } catch app:error {
+        &lt;error&gt;Caught error {$err:code}: {$err:description}. Data: {$err:value}.&lt;/error&gt;
+    }</pre>
+        </section>
+    </section>
+    <section>
+        <h2>Higher-order Functions</h2>
+        <section>
+            <h3>Passing an inline function as parameter</h3>
+            <pre class="templates:display-source">xquery version "3.0";
+
+declare namespace ex="http://exist-db.org/xquery/ex";
+
+declare function ex:apply($func, $list) {
+    for $item in $list return $func($item)
+};
+
+(: Create an inline function and assign it to $f2 :)
+let $f2 := function($a) { upper-case($a) }
+return
+       ex:apply($f2, ("Hello", "world!"))
+            </pre>
+        </section>
+        <section>
+            <h3>Using a named function reference</h3>
+            <pre class="templates:display-source">xquery version "3.0";
+
+declare namespace ex="http://exist-db.org/xquery/ex";
+
+declare function ex:apply($func as function(item()) as item()*, $list) {
+    for $item in $list return $func($item)
+};
+
+(: Use function reference literal to find function at compile time :)
+let $fApply := ex:apply#2
+return
+       $fApply(function($a) { upper-case($a) }, ("Hello", "world!"))
+            </pre>
+        </section>
+        <section>
+            <h3>Using a dynamic function lookup</h3>
+            <pre class="templates:display-source">
+xquery version "3.0";
+
+declare namespace ex="http://exist-db.org/xquery/ex2";
+
+declare function ex:fold-left(
+        $f as function(item()*, item()) as item()*, 
+        $zero as item()*, 
+        $seq as item()*) as item()* {
+  if (fn:empty($seq)) then $zero
+  else ex:fold-left($f, $f($zero, $seq[1]), subsequence($seq, 2))
+};
+
+(: Function reference is resolved dynamically at runtime :)
+let $foldLeft := function-lookup(xs:QName("ex:fold-left"), 3)
+return
+    $foldLeft(function($a, $b) { $a * $b}, 1, 1 to 5)
+            </pre>
+        </section>
+    </section>
+    <div class="source-links">
+        <p>View source: <a href="index.html" class="templates:load-source">this page</a>.</p>
+    </div>
+</article>
