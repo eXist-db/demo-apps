@@ -7,7 +7,9 @@
                 <ignore qname="SPEAKER"/>
             </text>
             <text qname="TITLE"/>
+            <text qname="SPEECH"/>
         </lucene>
+        <create qname="SPEAKER" type="xs:string"/>
         <create qname="population" type="xs:integer"/>
         <create path="/mondial//population_growth" type="xs:double"/>
         <create qname="infant_mortality" type="xs:double"/>

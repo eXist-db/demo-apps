@@ -11,41 +11,41 @@
         <h2>Simple expressions using the full-text index</h2>
         <section>
             <h3>Find out where Juliet talks about love</h3>
-            <pre class="templates:display-source"><![CDATA[
+            <pre class="templates:display-source">
     //SPEECH[ft:query(., 'love')][SPEAKER = "JULIET"]
-            ]]></pre>
+            </pre>
         </section>
         <section>
             <h3>Search for a phrase</h3>
-            <pre class="templates:display-source"><![CDATA[
+            <pre class="templates:display-source">
     //SPEECH[ft:query(., '"fenny snake"')]
-]]></pre>
+</pre>
         </section>
         <section>
             <h3>More complex full-text query using an XML description</h3>
-            <pre class="templates:display-source"><![CDATA[
+            <pre class="templates:display-source">
 let $query :=
-    <query>
-        <near slop="20"><term>snake</term><near>tongue dog</near></near>
-    </query>
+    &lt;query&gt;
+        &lt;near slop="20"&gt;&lt;term&gt;snake&lt;/term&gt;&lt;near&gt;tongue dog&lt;/near&gt;&lt;/near&gt;
+    &lt;/query&gt;
 return //SPEECH[ft:query(., $query)]
-            ]]></pre>
+            </pre>
         </section>
         <section>
             <h3>Order results by full-text match score</h3>
-            <pre class="templates:display-source"><![CDATA[
+            <pre class="templates:display-source">
 for $m in //SPEECH[ft:query(., "boil bubble")]
 let $score := ft:score($m)
 order by $score descending
-return <m score="{$score}">{$m}</m>
-]]></pre>
+return &lt;m score="{$score}"&gt;{$m}&lt;/m&gt;
+</pre>
         </section>
     </section>
     <section>
         <h2>Functions and recursion</h2>
         <section>
             <h3>Compute the factorial of a given integer</h3>
-            <pre class="templates:display-source"><![CDATA[
+            <pre class="templates:display-source">
 xquery version "1.0";
 
 declare function local:fact($n as xs:integer) {
@@ -56,14 +56,14 @@ declare function local:fact($n as xs:integer) {
 };
 
 local:fact(6)
-            ]]></pre>
+            </pre>
         </section>
     </section>
     <section>
         <h2>Generating HTML</h2>
         <section>
             <h3>Create a 10x10 table and color the cells</h3>
-            <pre class="templates:display-source"><![CDATA[
+            <pre class="templates:display-source">
 xquery version "1.0";
 (: $Id: table.xq 6434 2007-08-28 18:59:23Z ellefj $ :)
 (: An example found in Saxon: creates a table with 10x10 cells :)
@@ -72,62 +72,62 @@ declare namespace f="http://my-namespaces.org";
 
 declare function f:background-color($x as xs:double, $y as xs:integer)
 as xs:string {    
-	if($x mod 2 + $y mod 2 <= 0) then "lightgreen"
-	else if($y mod 2 <= 0) then "yellow"
-	else if($x mod 2 <= 0) then "lightblue"
+	if($x mod 2 + $y mod 2 &lt;= 0) then "lightgreen"
+	else if($y mod 2 &lt;= 0) then "yellow"
+	else if($x mod 2 &lt;= 0) then "lightblue"
 	else "white"
 };
 
-<body>
-	<table>{
+&lt;body&gt;
+	&lt;table&gt;{
 	for $y in 1 to 10 return
-		<tr>
+		&lt;tr&gt;
 		{
 			for $x in 1 to 10 return
 				let $bg := f:background-color($x, $y),
 					$prod := $x * $y
 				return
-					<td bgcolor="{$bg}">
-						{if ($y > 1 and $x > 1) then $prod else <b>{$prod}</b>}
-					</td>
+					&lt;td bgcolor="{$bg}"&gt;
+						{if ($y &gt; 1 and $x &gt; 1) then $prod else &lt;b&gt;{$prod}&lt;/b&gt;}
+					&lt;/td&gt;
 		}
-		</tr>
-	}</table>
-</body>
-            ]]></pre>
+		&lt;/tr&gt;
+	}&lt;/table&gt;
+&lt;/body&gt;
+            </pre>
         </section>
         <section>
             <h3>Generate a table of contents for Hamlet</h3>
-            <pre class="templates:display-source"><![CDATA[
+            <pre class="templates:display-source">
 declare option exist:serialize "method=html5 media-type=text/html";
 
-<html>
-    <body>{
+&lt;html&gt;
+    &lt;body&gt;{
         for $act in doc("/db/demo/data/hamlet.xml")/PLAY/ACT
         return
-            <ul>
-                <li>
-                    <h2>{$act/TITLE/text()}</h2>
-                    <ul>
+            &lt;ul&gt;
+                &lt;li&gt;
+                    &lt;h2&gt;{$act/TITLE/text()}&lt;/h2&gt;
+                    &lt;ul&gt;
                     {
                         for $scene in $act/SCENE return
-                            <li>
-                                <h3>{$scene/TITLE/text()}</h3>
-                                <ul>
+                            &lt;li&gt;
+                                &lt;h3&gt;{$scene/TITLE/text()}&lt;/h3&gt;
+                                &lt;ul&gt;
                                 {
                                     for $speaker in distinct-values($scene//SPEAKER)
                                     order by $speaker return
-                                        <li>{$speaker}</li>
+                                        &lt;li&gt;{$speaker}&lt;/li&gt;
                                 }
-                                </ul>
-                            </li>
+                                &lt;/ul&gt;
+                            &lt;/li&gt;
                     }
-                    </ul>
-                </li>
-            </ul>
-    }</body>
-</html>
-]]></pre>
+                    &lt;/ul&gt;
+                &lt;/li&gt;
+            &lt;/ul&gt;
+    }&lt;/body&gt;
+&lt;/html&gt;
+</pre>
             <p>To view the output of this query as HTML, save it to the database from within eXide, e.g. as
             /db/test.xql. You can then call it by entering the following URL into your browser:</p>
             <p>
@@ -141,29 +141,29 @@ declare option exist:serialize "method=html5 media-type=text/html";
         database, a data set compiled by the Universität Göttingen.</p>
         <section>
             <h3>For each country, list the 3 cities with the highest population</h3>
-            <pre class="templates:display-source"><![CDATA[
+            <pre class="templates:display-source">
 xquery version "1.0";
 
-let $country := collection("/db/mondial")/mondial/country[name = 'Spain']
+let $country := collection("/db/demo/data")/mondial/country[name = 'Spain']
 for $province in $country/province
 order by $province/name
 return
-    <province>
+    &lt;province&gt;
         {$province/name}
 		{
 			for $city in $country//city[@province=$province/@id]
 			order by $city/name
 			return $city
 		}
-	</province>
-            ]]></pre>
+	&lt;/province&gt;
+            </pre>
         </section>
         <section>
             <h3>Find Spanish provinces and their cities</h3>
             <pre class="templates:display-source">
 xquery version "1.0";
 
-let $country := collection("/db/mondial")/mondial/country[name = 'Spain']
+let $country := collection("/db/demo/data")/mondial/country[name = 'Spain']
 for $province in $country/province
 order by $province/name
 return
@@ -179,22 +179,22 @@ return
         </section>
         <section>
             <h3>Show countries with highest roman catholic population</h3>
-            <pre class="templates:display-source"><![CDATA[
+            <pre class="templates:display-source">
 xquery version "1.0";
 
-let $country := collection("/db/mondial")/mondial/country[name = 'Spain']
+let $country := collection("/db/demo/data")/mondial/country[name = 'Spain']
 for $province in $country/province
 order by $province/name
 return
-    <province>
+    &lt;province&gt;
         {$province/name}
     	{
 			for $city in $country//city[@province=$province/@id]
 			order by $city/name
 			return $city
 		}
-	</province>
-            ]]></pre>
+	&lt;/province&gt;
+            </pre>
         </section>
     </section>
     <div class="source-links">
