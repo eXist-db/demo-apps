@@ -8,5 +8,10 @@
             </text>
             <text qname="TITLE"/>
         </lucene>
+        <create qname="population" type="xs:integer"/>
+        <create path="/mondial//population_growth" type="xs:double"/>
+        <create qname="infant_mortality" type="xs:double"/>
+        <create qname="inflation" type="xs:double"/>
+        <create qname="name" type="xs:string"/>
     </index>
 </collection>
