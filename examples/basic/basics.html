@@ -97,6 +97,47 @@ as xs:string {
             </pre>
         </section>
         <section>
+            <h3>Creates a 1x1 table</h3>
+            <pre class="templates:display-source"><![CDATA[
+xquery version "1.0";
+declare option exist:serialize "method=html5 media-type=text/html";
+declare variable $max := 20;
+
+<table border="1" width="100%">
+    <th>1 x 1</th>
+    {
+        for $i in (1 to $max)
+        return
+            <th>{ $i}</th>
+    }
+      
+    {
+        for $a in (1 to $max)  
+        return 
+            <tr>
+                <th>{ $a,"*"}</th>
+                
+                {
+                    for $b in (1 to $max)
+                    return
+                        if ($a = $b) then
+                            <td bgcolor="#F46978">{$a * $b}</td>
+                        else if ($a mod 2) then
+                            <td bgcolor="#A46978">{$a * $b}</td> 
+                        else
+                            <td bgcolor="#A09224">{$a * $b}</td> 
+                }            
+            </tr>
+  
+    }
+</table>]]></pre>
+            <p>To view the output of this query as HTML, save it to the database from within eXide, e.g. as
+            /db/test.xql. You can then call it by entering the following URL into your browser:</p>
+            <p>
+                <a href="http://localhost:8080/exist/rest/db/test.xql">http://localhost:8080/exist/rest/db/test.xql</a>
+            </p>
+        </section>
+        <section>
             <h3>Generate a table of contents for Hamlet</h3>
             <pre class="templates:display-source">
 declare option exist:serialize "method=html5 media-type=text/html";
@@ -142,21 +183,20 @@ declare option exist:serialize "method=html5 media-type=text/html";
         <section>
             <h3>For each country, list the 3 cities with the highest population</h3>
             <pre class="templates:display-source">
-xquery version "1.0";
-
-let $country := collection("/db/demo/data")/mondial/country[name = 'Spain']
-for $province in $country/province
-order by $province/name
+<![CDATA[(:  This script accesses the mondial database, which can be
+    found at http://dbis.informatik.uni-goettingen.de/Mondial/ :)
+for $country in /mondial/country
+let $cities := 
+    (for $city in $country//city[population] 
+    order by xs:integer($city/population[1]) descending 
+    return $city)
+order by $country/name
 return
-    &lt;province&gt;
-        {$province/name}
-		{
-			for $city in $country//city[@province=$province/@id]
-			order by $city/name
-			return $city
-		}
-	&lt;/province&gt;
-            </pre>
+    <country name="{$country/name}">
+    {
+        subsequence($cities, 1, 3)
+    }
+    </country>]]></pre>
         </section>
         <section>
             <h3>Find Spanish provinces and their cities</h3>
@@ -180,21 +220,14 @@ return
         <section>
             <h3>Show countries with highest roman catholic population</h3>
             <pre class="templates:display-source">
-xquery version "1.0";
-
-let $country := collection("/db/demo/data")/mondial/country[name = 'Spain']
-for $province in $country/province
-order by $province/name
+<![CDATA[for $country in /mondial/country
+where some $r in $country/religions satisfies $r = "Roman Catholic"
+order by $country/religions[. = "Roman Catholic"]/@percentage cast as xs:double descending
 return
-    &lt;province&gt;
-        {$province/name}
-    	{
-			for $city in $country//city[@province=$province/@id]
-			order by $city/name
-			return $city
-		}
-	&lt;/province&gt;
-            </pre>
+  <country name="{$country/name}">
+    {$country/religions}
+  </country>
+]]></pre>
         </section>
     </section>
     <div class="source-links">
