@@ -124,6 +124,71 @@ return
             </pre>
         </section>
     </section>
+    <section>
+        <h2>Basic higher-order functions</h2>
+        <p>The default function library provides a number of basic functions which take function items as arguments:</p>
+        <ul>
+            <li>map</li>
+            <li>filter</li>
+            <li>fold-left</li>
+            <li>fold-right</li>
+            <li>map-pairs</li>
+        </ul>
+        <section>
+            <h3>fn:map</h3>
+            <pre class="templates:display-source">
+map(function($a) { $a * $a }, 1 to 5)
+            </pre>
+        </section>
+        <section>
+            <h3>fn:filter</h3>
+            <pre class="templates:display-source">fn:filter(function($a) {$a mod 2 = 0}, 1 to 10)</pre>
+        </section>
+    </section>
+    <section>
+        <h2>Closures</h2>
+        <section>
+            <h3>Inline function using variable from local context</h3>
+            <pre class="templates:display-source">
+xquery version "3.0";
+
+declare function local:apply($names as xs:string*, $f as function(xs:string) as xs:string) {
+    for $name in $names
+    return
+        $f($name)
+};
+
+let $string := "Hello "
+let $f := function($name as xs:string) {
+    (: $string will be copied into the functions context :)
+    $string || $name
+}
+return
+    local:apply(("Hans", "Rudi"), $f)
+            </pre>
+        </section>
+    </section>
+    <section>
+        <h2>Partial function application</h2>
+        <p>When passing functions as arguments, it is often useful to be able to set certain fixed parameters when creating
+        the function reference. XQuery 3.0 allows this using ? as an argument placeholder.</p>
+        <section>
+            <h3>Multiply each item in a sequence with a base value</h3>
+            <pre class="templates:display-source">
+xquery version "3.0";
+            
+declare namespace ex="http://exist-db.org/xquery/ex";
+
+declare function ex:multiply($base, $number) {
+    $base * $number
+};
+
+let $fMultiply := ex:multiply(10, ?)
+return
+    map($fMultiply, 1 to 10)
+            </pre>
+        </section>
+    </section>
     <div class="source-links">
         <p>View source: <a href="index.html" class="templates:load-source">this page</a>.</p>
     </div>
