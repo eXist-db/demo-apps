@@ -1,3 +1,5 @@
+xquery version "3.0";
+
 module namespace trigger="http://exist-db.org/xquery/trigger";
 
 declare namespace xhtml="http://www.w3.org/1999/xhtml";
@@ -25,7 +27,7 @@ declare function trigger:index-callback($root as element(), $path as xs:anyURI, 
             if ($root/@class eq 'page') then
                 let $page := if (empty($page)) then 1 else $page + 1
                 return
-                    ( trigger:do-index("page", concat("[[", $page, "]]", $root//xhtml:p/string()), $path), $page )
+                    ( trigger:do-index("page", concat("[[", $page, "]]", string-join($root//xhtml:p/string(), " ")), $path), $page )
             else
                 $page
 };
@@ -35,7 +37,7 @@ declare function trigger:index($uri as xs:anyURI) {
         let $doc := util:binary-doc($uri)
         return
             if (ends-with($uri, ".pdf")) then
-                let $callback := util:function(xs:QName("trigger:index-callback"), 3)
+                let $callback := trigger:index-callback#3
                 let $namespaces := 
                     <namespaces><namespace prefix="xhtml" uri="http://www.w3.org/1999/xhtml"/></namespaces>
                 let $index :=
