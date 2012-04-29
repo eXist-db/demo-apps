@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <catalogue xml:lang="de">
     <msg key="demoApp">i18n Demo Anwendung</msg>
     <msg key="welcome">Willkommen {username} bei der i18n Demo Anwendung</msg>

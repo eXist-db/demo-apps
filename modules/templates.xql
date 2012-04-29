@@ -183,8 +183,8 @@ declare function templates:display-source($node as node(), $params as element(pa
             <pre class="brush: {if ($syntax) then $syntax else 'xquery'}">
             { $source }
             </pre>
-            <a href="{$context}/{$eXidePath}/index.html?snip={encode-for-uri($source)}" target="eXide"
-                title="Opens the code in eXide in new tab or existing tab if it is already open.">Edit</a>
+            <a class="btn" href="{$context}/{$eXidePath}/index.html?snip={encode-for-uri($source)}" target="eXide"
+                title="Opens the code in eXide in new tab or existing tab if it is already open.">Try it</a>
         </div>
 };
 
@@ -255,6 +255,7 @@ declare function templates:fix-links($node as node(), $params as element(paramet
     let $temp := 
         element { node-name($node) } {
             $node/@* except $node/@class,
+            attribute class { replace($node/@class, "\s*templates:fix-links[^\s]*", "")},
             for $child in $node/node() return templates:fix-links($child, $prefix)
         }
     return

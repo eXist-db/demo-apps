@@ -23,8 +23,9 @@
                     </div><!--/header-->
                     <div id="navigation" class="templates:fix-links?root=context">
                         <ul id="nav" class="dropdown dropdown-horizontal">
-                            <li class="dir" id="about">About Us
-                            	<ul>
+                            <li class="dir" id="about">
+                                <span>About Us</span>
+                                <ul>
                                     <li>
                                         <a href="/credits.xml">Who we are</a>
                                     </li>
@@ -36,8 +37,9 @@
                                     </li>
                                 </ul>
                             </li>
-                            <li class="dir" id="documentation">Documentation
-                              <ul>
+                            <li class="dir" id="documentation">
+                                <span>Documentation</span>
+                                <ul>
                                     <li>
                                         <a href="/quickstart.xml">Quick Start</a>
                                     </li>
@@ -52,18 +54,8 @@
                                     </li>
                                 </ul>
                             </li>
-                            <li class="dir" id="examples">Demo
-                              <ul>
-                                    <li>
-                                        <a href="http://demo.exist-db.org/exist/examples.xql">Examples/Demos</a>
-                                    </li>
-                                    <li>
-                                        <a href="/eXide/">eXide (XQuery IDE)</a>
-                                    </li>
-                                </ul>
-                            </li>
                             <li class="dir" id="community">
-                                <a href="#">Community</a>
+                                <span>Community</span>
                                 <ul>
                                     <li>
                                         <a href="/index.xml#mailing">Mailing List/IRC</a>
@@ -71,8 +63,11 @@
                                 </ul>
                             </li>
                             <li class="dir" id="development">
-                                <a href="#">Development</a>
+                                <span>Development</span>
                                 <ul>
+                                    <li>
+                                        <a href="/eXide/">eXide (XQuery IDE)</a>
+                                    </li>
                                     <li>
                                         <a href="/api/index.html">Javadocs</a>
                                     </li>
@@ -88,7 +83,7 @@
                                 </ul>
                             </li>
                             <li class="dir" id="administration">
-                                <a href="#">Administration</a>
+                                <span>Administration</span>
                                 <ul>
                                     <li>
                                         <a href="/admin/admin.xql">Admin</a>
@@ -100,11 +95,12 @@
                             </li>
                         </ul>
                     </div>
-                    <div id="main">
-                        <div id="content"/>
-                        <div id="right">
-                            <div id="r-top">
-                                <div id="r-bot" class="templates:fix-links">
+                    <div class="container" id="main">
+                        <div class="row" id="container-body">
+                            <!-- Page content will be injected into the div below -->
+                            <div class="span9" id="content"/>
+                            <div class="span3">
+                                <div class="box templates:fix-links">
                                     <h2>Demo Pages</h2>
                                     <ol>
                                         <li>
