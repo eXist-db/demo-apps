@@ -18,7 +18,7 @@ declare function cex:query($node as node()*, $params as element(parameters)?, $m
             <div class="item">
                 <p class="itemhead">{$title} - Score: {$result/@score/string()}</p>
                 <p class="itemhead">Type: { $contentType }</p>
-                <p class="itemhead">Found {count($fields)} matches in document. Only first 10 will be shown.</p>
+                <p class="itemhead">Found matches in {count($fields)} page{if (count($fields) gt 1) then 's' else ''} of the document. {if (count($fields) gt 10) then 'Only matches from the first 10 pages are shown.' else ''}</p>
                 {
                     for $field in subsequence($fields, 1, 10)
                     let $page := text:groups($field, "\[\[([0-9]+)")

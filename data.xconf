@@ -1,18 +1,7 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <collection xmlns="http://exist-db.org/collection-config/1.0">
-    <index xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:mods="http://www.loc.gov/mods/v3">
-        <fulltext default="none" attributes="no"/>
-        <lucene>
-            <fieldType id="page" store="yes"/>
-            <text qname="SCENE">
-                <ignore qname="SPEAKER"/>
-            </text>
-            <text qname="TITLE"/>
-        </lucene>
-    </index>
     <triggers>
         <trigger class="org.exist.collections.triggers.XQueryTrigger">
-            <parameter name="url" value="xmldb:exist://localhost/db/demo/modules/cex-trigger.xql"/>
+            <parameter name="url" value="xmldb:exist://localhost:8080/db/demo/modules/cex-trigger.xql"/>
         </trigger>
     </triggers>
 </collection>

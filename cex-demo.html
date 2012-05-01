@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <div class="templates:surround?with=templates/page.html&amp;at=content">
     <h1>Content Extraction and Binary Resource Indexing</h1>
     <div class="templates:if-module-missing?uri=http://exist-db.org/xquery/contentextraction&amp;at=java:org.exist.contentextraction.xquery.ContentExtractionModule">
@@ -9,12 +8,12 @@
 # Binary Content and Metadata Extraction Module
 include.feature.contentextraction = true</pre>
             <p>Next, call <code>build.sh/build.bat</code> from eXist's top directory to build the module. You should see in the output how the various 
-            libraries are downloaded and installed.</p>
+            libraries required are downloaded and installed.</p>
         </div>
     </div>
-    <p>This page demonstrates how to query binary documents which have been indexed with Lucene after
-    extracting their text content. The app defines a trigger on the "data" collection below the
-    app root collection. To test the indexing, just upload a pdf to the collection and its contents
+    <p>This page demonstrates how to query binary documents which have been indexed with Lucene after 
+    their text content has been extracted. The app defines a trigger on the "binary" collection below the "data" collection in the
+    app root collection. To test the indexing, upload a pdf to the collection and its contents
     will be extracted and indexed automatically.</p>
     <form action="" method="GET">
         <input id="query" type="text" size="40" name="query" class="templates:form-control"/>

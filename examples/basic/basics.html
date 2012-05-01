@@ -1,7 +1,6 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <article class="templates:surround?with=templates/page.html&amp;at=content">
     <h1 class="front-title">Basic XQuery Examples</h1>
-    <p>A collection of simple XQuery examples, which should help to get a first glimpse of what's possible
+    <p>This page contains a collection of simple XQuery examples which should give a first glimpse of what's possible
     with eXist and XQuery. To learn more about XQuery, we recommend to head over to the excellent
     <a href="http://en.wikibooks.org/wiki/XQuery">XQuery Wikibook</a> or buy one of the available books
     on XQuery.</p>
@@ -11,6 +10,7 @@
         <h2>Simple expressions using the full-text index</h2>
         <section>
             <h3>Find out where Juliet talks about love</h3>
+            <p>In the following, Jon Bosak's edition of the Shakespeare's Hamlet, Macbeth, and Romeo and Juilet are queried..</p>
             <pre class="templates:display-source">
     //SPEECH[ft:query(., 'love')][SPEAKER = "JULIET"]
             </pre>
@@ -22,17 +22,17 @@
 </pre>
         </section>
         <section>
-            <h3>More complex full-text query using an XML description</h3>
+            <h3>Find speeches in which "love" and "father" occur closely together, using XML query syntax:</h3>
             <pre class="templates:display-source">
 let $query :=
     &lt;query&gt;
-        &lt;near slop="20"&gt;&lt;term&gt;snake&lt;/term&gt;&lt;near&gt;tongue dog&lt;/near&gt;&lt;/near&gt;
+        &lt;near slop=&quot;20&quot;&gt;&lt;term&gt;love&lt;/term&gt;&lt;near&gt;father&lt;/near&gt;&lt;/near&gt;
     &lt;/query&gt;
 return //SPEECH[ft:query(., $query)]
             </pre>
         </section>
         <section>
-            <h3>Order results by full-text match score</h3>
+            <h3>Find speeches in which "boil" and "bubble" occur, ordering them by full-text match score</h3>
             <pre class="templates:display-source">
 for $m in //SPEECH[ft:query(., "boil bubble")]
 let $score := ft:score($m)
@@ -97,7 +97,7 @@ as xs:string {
             </pre>
         </section>
         <section>
-            <h3>Creates a 1x1 table</h3>
+            <h3>Create a multiplication table</h3>
             <pre class="templates:display-source"><![CDATA[
 xquery version "1.0";
 declare option exist:serialize "method=html5 media-type=text/html";
@@ -138,7 +138,7 @@ declare variable $max := 20;
             </p>
         </section>
         <section>
-            <h3>Generate a table of contents for Hamlet</h3>
+            <h3>Generate a list of the acts and scenes in Hamlet, with the roles appearing in each scene</h3>
             <pre class="templates:display-source">
 declare option exist:serialize "method=html5 media-type=text/html";
 
@@ -177,7 +177,7 @@ declare option exist:serialize "method=html5 media-type=text/html";
         </section>
     </section>
     <section>
-        <h2>Querying stored data</h2>
+        <h2>Querying a database</h2>
         <p>The following queries use the <a href="http://dbis.informatik.uni-goettingen.de/Mondial/">Mondial</a>
         database, a data set compiled by the Universität Göttingen.</p>
         <section>
@@ -199,7 +199,7 @@ return
     </country>]]></pre>
         </section>
         <section>
-            <h3>Find Spanish provinces and their cities</h3>
+            <h3>Find all Spanish provinces and their cities</h3>
             <pre class="templates:display-source">
 xquery version "1.0";
 
@@ -218,7 +218,7 @@ return
             </pre>
         </section>
         <section>
-            <h3>Show countries with highest roman catholic population</h3>
+            <h3>Find the countries with the largest Roman Catholic population</h3>
             <pre class="templates:display-source">
 <![CDATA[for $country in /mondial/country
 where some $r in $country/religions satisfies $r = "Roman Catholic"
