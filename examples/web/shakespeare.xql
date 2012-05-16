@@ -5,7 +5,6 @@ import module namespace templates="http://exist-db.org/xquery/templates" at "../
 import module namespace kwic="http://exist-db.org/xquery/kwic"
     at "resource:org/exist/xquery/lib/kwic.xql";
 
-declare variable $shakes:CALLBACK := util:function(xs:QName("shakes:filter"), 2);
 declare variable $shakes:SESSION := "shakespeare:results";
 
 (:~
@@ -14,15 +13,20 @@ declare variable $shakes:SESSION := "shakespeare:results";
 :)
 declare function shakes:query($node as node()*, $params as element(parameters)?, $model as item()*) {
     session:create(),
-    let $query := shakes:create-query()
-    let $hits :=
-        for $hit in collection($config:app-root)//SCENE[ft:query(., $query)]
-        order by ft:score($hit) descending
-        return $hit
+    let $queryStr := request:get-parameter("query", ())
+    let $mode := request:get-parameter("mode", "all")
+    let $hits := shakes:do-query($queryStr, $mode)
     let $store := session:set-attribute($shakes:SESSION, $hits)
     return
         (: Process nested templates :)
         <div id="results">{ templates:process($node/*, $hits) }</div>
+};
+
+declare function shakes:do-query($queryStr as xs:string?, $mode as xs:string) {
+    let $query := shakes:create-query($queryStr, $mode)
+    for $hit in collection($config:app-root)//SCENE[ft:query(., $query)]
+    order by ft:score($hit) descending
+    return $hit
 };
 
 (:~
@@ -48,7 +52,7 @@ declare function shakes:hit-count($node as node()*, $params as element(parameter
 declare function shakes:show-hits($node as node()*, $params as element(parameters)?, $model as item()*) {
     let $start := number(request:get-parameter("start", 1))
     for $hit at $p in subsequence($model, $start, 10)
-    let $kwic := kwic:summarize($hit, <config width="40" table="yes"/>, $shakes:CALLBACK)
+    let $kwic := kwic:summarize($hit, <config width="40" table="yes"/>, shakes:filter#2)
     return
         <div class="scene">
             <h3>{$hit/ancestor::PLAY/TITLE/text()}</h3>
@@ -70,13 +74,17 @@ declare function shakes:filter($node as node(), $mode as xs:string) as xs:string
       concat(' ', $node)
 };
 
-(:~
-    Helper function: create a lucene query from the user input
-:)
 declare function shakes:create-query() {
     let $queryStr := request:get-parameter("query", ())
     let $mode := request:get-parameter("mode", "all")
     return
+        shakes:create-query($queryStr, $mode)
+};
+
+(:~
+    Helper function: create a lucene query from the user input
+:)
+declare function shakes:create-query($queryStr as xs:string?, $mode as xs:string) {
         <query>
         {
             if ($mode eq 'any') then

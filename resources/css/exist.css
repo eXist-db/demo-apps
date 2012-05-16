@@ -240,3 +240,17 @@ input:required:valid {
     padding: 4px;
     border: 1px solid #C7C7C7;
 }
+
+.testresult td {
+    margin: 2px 4px;
+    padding: 8px 10px;
+}
+
+.testresult .fail {
+    background-color: #D7394C;
+    color: white;
+}
+
+.testresult .pass {
+    background-color: #69EB7F;
+}

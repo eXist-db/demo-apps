@@ -1,5 +1,8 @@
 module namespace demo="http://exist-db.org/apps/demo";
 
+import module namespace t="http://exist-db.org/apps/demo/shakespeare/tests" at "xmldb:exist:///db/demo/examples/tests/shakespeare-tests.xql";
+import module namespace test="http://exist-db.org/xquery/xqsuite" at "xmldb:exist:///db/xqsuite.xql";
+
 declare function demo:hello($node as node()*, $params as element(parameters)?, $model as item()*) {
     <span>Hello World!</span>
 };
@@ -22,4 +25,10 @@ declare function demo:link-to-home($node as node(), $params as element(parameter
         $node/@* except $node/@href,
         $node/node() 
     }</a>
+};
+
+declare function demo:run-tests($node as node(), $params as element(parameters)?, $model as item()*) {
+    let $results := test:suite(util:list-functions("http://exist-db.org/apps/demo/shakespeare/tests"))
+    return
+        test:to-html($results)
 };
