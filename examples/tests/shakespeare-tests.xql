@@ -5,7 +5,7 @@ xquery version "1.0";
 
 module namespace t="http://exist-db.org/apps/demo/shakespeare/tests";
 
-import module namespace test="http://exist-db.org/xquery/xqsuite" at "xmldb:exist:///db/xqsuite.xql";
+import module namespace test="http://exist-db.org/xquery/xqsuite" at "resource:org/exist/xquery/lib/xqsuite/xqsuite.xql";
 import module namespace shakes="http://exist-db.org/apps/demo/shakespeare" at 
     "../web/shakespeare.xql";
 
