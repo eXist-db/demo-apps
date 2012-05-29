@@ -12,9 +12,9 @@ import module namespace cex="http://exist-db.org/apps/demo/cex" at "cex.xql";
 
 declare option exist:serialize "method=html5 media-type=text/html";
 
-let $lookup := function($functionName as xs:string) {
+let $lookup := function($functionName as xs:string, $arity as xs:int) {
     try {
-        function-lookup(xs:QName($functionName), 3)
+        function-lookup(xs:QName($functionName), $arity)
     } catch * {
         ()
     }

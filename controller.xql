@@ -64,7 +64,6 @@ declare function local:logout() as empty() {
     session:clear()
 };
 
-
 if ($logout) then
     local:logout()
 else

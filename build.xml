@@ -5,4 +5,7 @@
         <mkdir dir="${build.dir}"/>
         <zip basedir="." destfile="${build.dir}/demo-0.1.xar" excludes="${build.dir}/*"/>
     </target>
+	<target name="clean">
+		<delete dir="${build.dir}"/>
+	</target>
 </project>

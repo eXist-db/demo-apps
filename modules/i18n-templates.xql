@@ -13,9 +13,7 @@ import module namespace config="http://exist-db.org/xquery/apps/config" at "conf
  :      lang=de Language selection
  :      catalogues=relative path    Path to the i18n catalogue XML files inside database
  :)
-declare function intl:translate($node as node(), $params as element(parameters)?, $model as item()*) {
-    let $selectedLang := $params/param[@name = "lang"]/@value
-    let $catalogues := $params/param[@name = "catalogues"]/@value
+declare function intl:translate($node as node(), $model as item()*, $lang as xs:string, $catalogues as xs:string) {
     let $cpath :=
         (: if path to catalogues is relative, resolve it relative to the app root :)
         if (starts-with($catalogues, "/")) then
@@ -23,7 +21,7 @@ declare function intl:translate($node as node(), $params as element(parameters)?
         else
             concat($config:app-root, "/", $catalogues)
     let $translated :=
-        i18n:process($node/*, $selectedLang, $cpath, ())
+        i18n:process($node/*, $lang, $cpath, ())
     return
         element { node-name($node) } {
             $node/@*,

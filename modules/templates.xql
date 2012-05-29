@@ -8,6 +8,7 @@ module namespace templates="http://exist-db.org/xquery/templates";
 import module namespace config="http://exist-db.org/xquery/apps/config" at "config.xqm";
 
 declare variable $templates:NOT_FOUND := QName("http://exist-db.org/xquery/templates", "NotFound");
+declare variable $templates:TOO_MANY_ARGS := QName("http://exist-db.org/xquery/templates", "TooManyArguments");
 
 (:~
  : Start processing the provided content. Template functions are looked up by calling the
@@ -44,7 +45,7 @@ declare function templates:process($nodes as node()*, $model as item()*) {
         templates:process($node, $resolver, $model)
 };
 
-declare function templates:process($node as node(), $resolver as function(xs:string) as item()?, $model as item()*) {
+declare %private function templates:process($node as node(), $resolver as function(xs:string) as item()?, $model as item()*) {
     typeswitch ($node)
         case document-node() return
             for $child in $node/node() return templates:process($child, $resolver, $model)
@@ -63,21 +64,21 @@ declare function templates:process($node as node(), $resolver as function(xs:str
             $node
 };
 
-declare function templates:get-instructions($class as xs:string?) as xs:string* {
+declare %private function templates:get-instructions($class as xs:string?) as xs:string* {
     for $name in tokenize($class, "\s+")
     where templates:is-qname($name)
     return
         $name
 };
 
-declare function templates:call($class as xs:string, $node as element(), $model as item()*, $resolver as function(xs:string) as item()?) {
+declare %private function templates:call($class as xs:string, $node as element(), $model as item()*, $resolver as function(xs:string) as item()?) {
     let $paramStr := substring-after($class, "?")
     let $parameters := templates:parse-parameters($paramStr)
     let $func := if ($paramStr) then substring-before($class, "?") else $class
-    let $call := $resolver($func)
+    let $call := templates:resolve(10, $func, $resolver)
     return
         if (exists($call)) then
-            $call($node, $parameters, $model)
+            templates:call-by-introspection($node, $parameters, $model, $call)
         else
             (: Templating function not found: just copy the element :)
             element { node-name($node) } {
@@ -85,7 +86,93 @@ declare function templates:call($class as xs:string, $node as element(), $model 
             }
 };
 
-declare function templates:parse-parameters($paramStr as xs:string?) as element(parameters) {
+declare %private function templates:call-by-introspection($node as element(), $parameters as element(parameters), $model as item()*, 
+    $fn as function(*)) {
+    let $inspect := util:inspect-function($fn)
+    let $args := templates:map-arguments($inspect, $parameters)
+    return
+        templates:call-with-args($fn, $args, $node, $model)
+};
+
+declare %private function templates:call-with-args($fn as function(*), $args as (function() as item()*)*, 
+    $node as element(), $model as item()*) {
+    switch (count($args))
+        case 0 return
+            $fn($node, $model)
+        case 1 return
+            $fn($node, $model, $args[1]())
+        case 2 return
+            $fn($node, $model, $args[1](), $args[2]())
+        case 3 return
+            $fn($node, $model, $args[1](), $args[2](), $args[3]())
+        case 4 return
+            $fn($node, $model, $args[1](), $args[2](), $args[3](), $args[4]())
+        case 5 return
+            $fn($node, $model, $args[1](), $args[2](), $args[3](), $args[4](), $args[5]())
+        case 6 return
+            $fn($node, $model, $args[1](), $args[2](), $args[3](), $args[4](), $args[5](), $args[6]())
+        default return
+            error($templates:TOO_MANY_ARGS, "Too many arguments to function " || function-name($fn))
+};
+
+declare %private function templates:map-arguments($inspect as element(function), $parameters as element(parameters)) {
+    let $args := $inspect/argument
+    return
+        if (count($args) > 2) then
+            for $arg in subsequence($inspect/argument, 3)
+            return
+                templates:map-argument($arg, $parameters)
+        else
+            ()
+};
+
+declare %private function templates:map-argument($arg as element(argument), $parameters as element(parameters)) 
+    as function() as item()* {
+    let $var := $arg/@var
+    let $type := $arg/@type/string()
+    let $param := 
+        string((
+            request:get-parameter($var, ()), 
+            $parameters/param[@name = $var]/@value,
+            templates:arg-from-annotation($var, $arg)
+        )[1])
+    let $data :=
+        try {
+            templates:cast($param, $type)
+        } catch * {
+            error($templates:TYPE_ERROR, "Failed to cast parameter value '" || $param || "' to the required target type for " ||
+                "template function parameter $" || $name || " of function " || ($arg/../@name) || ". Required type was: " ||
+                $type || ". " || $err:description)
+        }
+    return
+        function() {
+            $data
+        }
+};
+
+declare function templates:arg-from-annotation($var as xs:string, $arg as element(argument)) {
+    let $anno := 
+        $arg/../annotation[ends-with(@name, ":default")]
+            [@namespace = "http://exist-db.org/xquery/templates"]
+            [value[1] = $var]
+    return
+        string($anno/value[2])
+};
+
+declare %private function templates:resolve($arity as xs:int, $func as xs:string, 
+    $resolver as function(xs:string, xs:int) as function(*)) {
+    if ($arity < 2) then
+        ()
+    else
+        let $fn := $resolver($func, $arity)
+        return
+            if (exists($fn)) then
+                $fn
+            else
+                templates:resolve($arity - 1, $func, $resolver)
+};
+
+declare %private function templates:parse-parameters($paramStr as xs:string?) as element(parameters) {
     <parameters>
     {
         for $param in tokenize($paramStr, "&amp;")
@@ -98,21 +185,51 @@ declare function templates:parse-parameters($paramStr as xs:string?) as element(
     </parameters>
 };
 
-declare function templates:is-qname($class as xs:string) as xs:boolean {
+declare %private function templates:is-qname($class as xs:string) as xs:boolean {
     matches($class, "^[^:]+:[^:]+")
 };
 
-declare function templates:include($node as node(), $params as element(parameters)?, $model as item()*) {
-    let $relPath := $params/param[@name = "path"]/@value
-    let $path := concat($config:app-root, "/", $relPath)
+declare %private function templates:cast($values as item()*, $targetType as xs:string) {
+    for $value in $values
+    return
+        if ($targetType != "xs:string" and string-length($value) = 0) then
+            (: treat "" as empty sequence :)
+            ()
+        else
+            switch ($targetType)
+                case "xs:string" return
+                    string($value)
+                case "xs:integer" case "xs:int" case "xs:long" return
+                    xs:integer($value)
+                case "xs:decimal" return
+                    xs:decimal($value)
+                case "xs:float" case "xs:double" return
+                    xs:double($value)
+                case "xs:date" return
+                    xs:date($value)
+                case "xs:dateTime" return
+                    xs:dateTime($value)
+                case "xs:time" return
+                    xs:time($value)
+                case "element()" return
+                    util:parse($value)/*
+                case "text()" return
+                    text { string($value) }
+                default return
+                    $value
+};
+
+(:-----------------------------------------------------------------------------------
+ : Standard templates
+ :-----------------------------------------------------------------------------------:)
+ 
+declare function templates:include($node as node(), $model as item()*, $path as xs:string) {
+    let $path := concat($config:app-root, "/", $path)
     return
         templates:process(doc($path), $model)
 };
 
-declare function templates:surround($node as node(), $params as element(parameters)?, $model as item()*) {
-    let $with := $params/param[@name = "with"]/@value
-    let $at := $params/param[@name = "at"]/@value
-    let $using := $params/param[@name = "using"]/@value
+declare function templates:surround($node as node(), $model as item()*, $with as xs:string, $at as xs:string?, $using as xs:string?) {
     let $path := concat($config:app-root, "/", $with)
     let $content :=
         if ($using) then
@@ -141,9 +258,8 @@ declare function templates:process-surround($node as node(), $content as node(),
             $node
 };
 
-declare function templates:if-parameter-set($node as node(), $params as element(parameters), $model as item()*) as node()* {
-    let $paramName := $params/param[@name = "param"]/@value/string()
-    let $param := request:get-parameter($paramName, ())
+declare function templates:if-parameter-set($node as node(), $model as item()*, $param as xs:string) as node()* {
+    let $param := request:get-parameter($param, ())
     return
         if ($param and string-length($param) gt 0) then
             templates:process($node/node(), $model)
@@ -151,9 +267,8 @@ declare function templates:if-parameter-set($node as node(), $params as element(
             ()
 };
 
-declare function templates:if-parameter-unset($node as node(), $params as element(parameters), $model as item()*) as node()* {
-    let $paramName := $params/param[@name = "param"]/@value/string()
-    let $param := request:get-parameter($paramName, ())
+declare function templates:if-parameter-unset($node as node(), $model as item()*, $param as xs:string) as node()* {
+    let $param := request:get-parameter($param, ())
     return
         if (not($param) or string-length($param) eq 0) then
             $node
@@ -161,26 +276,22 @@ declare function templates:if-parameter-unset($node as node(), $params as elemen
             ()
 };
 
-declare function templates:if-module-missing($node as node(), $params as element(parameters)?, $model as item()*) {
-    let $at := $params/param[@name = "at"]/@value/string()
-    let $uri := $params/param[@name = "uri"]/@value/string()
-    return
-        try {
-            util:import-module($uri, "testmod", $at)
-        } catch * {
-            (: Module was not found: process content :)
-            templates:process($node/node(), $model)
-        }
+declare function templates:if-module-missing($node as node(), $model as item()*, $uri as xs:string, $at as xs:string) {
+    try {
+        util:import-module($uri, "testmod", $at)
+    } catch * {
+        (: Module was not found: process content :)
+        templates:process($node/node(), $model)
+    }
 };
 
-declare function templates:display-source($node as node(), $params as element(parameters)?, $model as item()*) {
-    let $syntax := $params/param[@name = "lang"]/@value/string()
+declare function templates:display-source($node as node(), $model as item()*, $lang as xs:string?) {
     let $source := replace($node/string(), "^\s*(.*)\s*$", "$1")
     let $context := request:get-context-path()
     let $eXidePath := if (doc-available("/db/eXide/index.html")) then "apps/eXide" else "eXide"
     return
         <div class="code">
-            <pre class="brush: {if ($syntax) then $syntax else 'xquery'}">
+            <pre class="brush: {if ($lang) then $lang else 'xquery'}">
             { $source }
             </pre>
             <a class="btn" href="{$context}/{$eXidePath}/index.html?snip={encode-for-uri($source)}" target="eXide"
@@ -188,7 +299,7 @@ declare function templates:display-source($node as node(), $params as element(pa
         </div>
 };
 
-declare function templates:load-source($node as node(), $params as element(parameters), $model as item()*) as node()* {
+declare function templates:load-source($node as node(), $model as item()*) as node()* {
     let $href := $node/@href/string()
     let $context := request:get-context-path()
     let $eXidePath := if (doc-available("/db/eXide/index.html")) then "apps/eXide" else "eXide"
@@ -200,7 +311,7 @@ declare function templates:load-source($node as node(), $params as element(param
     Processes input and select form controls, setting their value/selection to
     values found in the request - if present.
  :)
-declare function templates:form-control($node as node(), $params as element(parameters), $model as item()*) as node()* {
+declare function templates:form-control($node as node(), $model as item()*) as node()* {
     typeswitch ($node)
         case element(input) return
             let $name := $node/@name
@@ -236,7 +347,7 @@ declare function templates:form-control($node as node(), $params as element(para
             $node
 };
 
-declare function templates:error-description($node as node(), $params as element(parameters)?, $model as item()*) {
+declare function templates:error-description($node as node(), $model as item()*) {
     let $input := request:get-attribute("org.exist.forward.error")
     return
         element { node-name($node) } {
@@ -245,8 +356,7 @@ declare function templates:error-description($node as node(), $params as element
         }
 };
 
-declare function templates:fix-links($node as node(), $params as element(parameters)?, $model as item()*) {
-    let $root := $params/param[@name = "root"]/@value/string()
+declare function templates:fix-links($node as node(), $model as item()*, $root as xs:string) {
     let $prefix :=
         if ($root eq "context") then
             request:get-context-path()

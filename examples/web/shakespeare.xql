@@ -11,11 +11,9 @@ declare variable $shakes:SESSION := "shakespeare:results";
     Execute the query. The search results are not output immediately. Instead they
     are passed to nested templates through the $model parameter.
 :)
-declare function shakes:query($node as node()*, $params as element(parameters)?, $model as item()*) {
+declare function shakes:query($node as node()*, $model as item()*, $query as xs:string?, $mode as xs:string) {
     session:create(),
-    let $queryStr := request:get-parameter("query", ())
-    let $mode := request:get-parameter("mode", "all")
-    let $hits := shakes:do-query($queryStr, $mode)
+    let $hits := shakes:do-query($query, $mode)
     let $store := session:set-attribute($shakes:SESSION, $hits)
     return
         (: Process nested templates :)
@@ -33,7 +31,7 @@ declare function shakes:do-query($queryStr as xs:string?, $mode as xs:string) {
     Read the last query result from the HTTP session and pass it to nested templates
     in the $model parameter.
 :)
-declare function shakes:from-session($node as node()*, $params as element(parameters)?, $model as item()*) {
+declare function shakes:from-session($node as node()*, $model as item()*) {
     let $hits := session:get-attribute($shakes:SESSION)
     return
         templates:process($node/*, $hits)
@@ -42,15 +40,16 @@ declare function shakes:from-session($node as node()*, $params as element(parame
 (:~
     Create a span with the number of items in the current search result.
 :)
-declare function shakes:hit-count($node as node()*, $params as element(parameters)?, $model as item()*) {
+declare function shakes:hit-count($node as node()*, $model as item()*) {
     <span id="hit-count">{ count($model) }</span>
 };
 
 (:~
     Output the actual search result as a div, using the kwic module to summarize full text matches.
 :)
-declare function shakes:show-hits($node as node()*, $params as element(parameters)?, $model as item()*) {
-    let $start := number(request:get-parameter("start", 1))
+declare 
+    %templates:default("start", 1)
+function shakes:show-hits($node as node()*, $model as item()*, $start as xs:int) {
     for $hit at $p in subsequence($model, $start, 10)
     let $kwic := kwic:summarize($hit, <config width="40" table="yes"/>, shakes:filter#2)
     return
@@ -65,20 +64,13 @@ declare function shakes:show-hits($node as node()*, $params as element(parameter
 (:~
     Callback function called from the kwic module.
 :)
-declare function shakes:filter($node as node(), $mode as xs:string) as xs:string? {
+declare %private function shakes:filter($node as node(), $mode as xs:string) as xs:string? {
   if ($node/parent::SPEAKER or $node/parent::STAGEDIR) then 
       ()
   else if ($mode eq 'before') then 
       concat($node, ' ')
   else 
       concat(' ', $node)
-};
-
-declare function shakes:create-query() {
-    let $queryStr := request:get-parameter("query", ())
-    let $mode := request:get-parameter("mode", "all")
-    return
-        shakes:create-query($queryStr, $mode)
 };
 
 (:~
