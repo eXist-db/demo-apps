@@ -4,6 +4,9 @@ module namespace templates="http://exist-db.org/xquery/templates";
 
 (:~
  : HTML templating module
+ : 
+ : @version 2.0
+ : @author Wolfgang Meier
 :)
 import module namespace config="http://exist-db.org/xquery/apps/config" at "config.xqm";
 
@@ -91,7 +94,11 @@ declare %private function templates:call-by-introspection($node as element(), $p
     let $inspect := util:inspect-function($fn)
     let $args := templates:map-arguments($inspect, $parameters)
     return
-        templates:call-with-args($fn, $args, $node, $model)
+        templates:process-output(
+            $node,
+            templates:call-with-args($fn, $args, $node, $model),
+            $inspect
+        )
 };
 
 declare %private function templates:call-with-args($fn as function(*), $args as (function() as item()*)*, 
@@ -113,6 +120,26 @@ declare %private function templates:call-with-args($fn as function(*), $args as 
             $fn($node, $model, $args[1](), $args[2](), $args[3](), $args[4](), $args[5](), $args[6]())
         default return
             error($templates:TOO_MANY_ARGS, "Too many arguments to function " || function-name($fn))
+};
+
+declare %private function templates:process-output($node as element(), $output as item()*, $inspect as element(function)) {
+    let $anno := 
+        $inspect/annotation[ends-with(@name, ":output")]
+            [@namespace = "http://exist-db.org/xquery/templates"]
+    return
+        switch ($anno/value)
+            case "model" return
+                element { node-name($node) } {
+                    $node/@*,
+                    templates:process($node/node(), $output)
+                }
+            case "wrap" return
+                element { node-name($node) } {
+                    $node/@*,
+                    $output
+                }
+            default return
+                $output
 };
 
 declare %private function templates:map-arguments($inspect as element(function), $parameters as element(parameters)) {
@@ -150,13 +177,14 @@ declare %private function templates:map-argument($arg as element(argument), $par
         }
 };
 
-declare function templates:arg-from-annotation($var as xs:string, $arg as element(argument)) {
+declare %private function templates:arg-from-annotation($var as xs:string, $arg as element(argument)) {
     let $anno := 
         $arg/../annotation[ends-with(@name, ":default")]
             [@namespace = "http://exist-db.org/xquery/templates"]
             [value[1] = $var]
+    for $value in subsequence($anno/value, 2)
     return
-        string($anno/value[2])
+        string($value)
 };
 
 declare %private function templates:resolve($arity as xs:int, $func as xs:string, 
@@ -224,18 +252,16 @@ declare %private function templates:cast($values as item()*, $targetType as xs:s
  :-----------------------------------------------------------------------------------:)
  
 declare function templates:include($node as node(), $model as item()*, $path as xs:string) {
-    let $path := concat($config:app-root, "/", $path)
-    return
-        templates:process(doc($path), $model)
+    templates:process(config:resolve($path), $model)
 };
 
 declare function templates:surround($node as node(), $model as item()*, $with as xs:string, $at as xs:string?, $using as xs:string?) {
     let $path := concat($config:app-root, "/", $with)
     let $content :=
         if ($using) then
-            doc($path)//*[@id = $using]
+            config:resolve($with)//*[@id = $using]
         else
-            doc($path)
+            config:resolve($with)
     let $merged := templates:process-surround($content, $node, $at)
     return
         templates:process($merged, $model)

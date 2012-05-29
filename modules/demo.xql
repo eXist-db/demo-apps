@@ -29,7 +29,7 @@ declare function demo:hello($node as node()*, $model as item()*) as element(span
  : </ol>
  :)
 declare function demo:multiply($node as node()*, $model as item()*, $n1 as xs:int, $n2 as xs:int) {
-    $p1 * $p2
+    $n1 * $n2
 };
 
 declare function demo:error-handler-test($node as node(), $model as item()*, $number as xs:string?) {

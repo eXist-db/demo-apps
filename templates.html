@@ -3,10 +3,12 @@
     <h1>Templating</h1>
     <section>
         <h2>Introduction</h2>
-        <p>The Demo application uses templating. All pages are plain HTML5. They do not include any XQuery or other executable code.
-        Instead, we use the <a class="templates:load-source" href="controller.xql">controller.xql</a> to send the HTML content through 
-        a templating library, which expands the HTML and calls our XQuery functions. The templating module scans the HTML for elements 
-        with class attributes with a certain structure and tries to translate them into XQuery function calls. In the simplest case,
+        <p>The templating module is used throughout this and most of the other applications which ship with
+        eXist. Its design has one goal: a clean separation of concerns. All views are plain, valid HTML5. They do 
+        not include any XQuery or other executable code. Application code should go into separate XQuery modules
+        and will be called automagically by the templating framework.</p>
+        <p>The templating module scans the HTML for elements with class attributes following a simple convention
+        and tries to translate them into XQuery function calls. In the simplest case,
         a class attribute which triggers a function call just contains the name of a function in an XQuery library
         known to the system. For example:</p>
         <pre class="brush: xml">&lt;div class="demo:hello"&gt;&lt;/div&gt;</pre>
@@ -17,6 +19,9 @@
         <pre class="brush: xml">&lt;div class="demo:multiply?n1=5&amp;n2=8"&gt;&lt;/div&gt;</pre>
         <p>Again, the expanded output is shown below:</p>
         <div class="demo:multiply?n1=5&amp;n2=8"/>
+        <p>
+            <b>Note</b>: the <a href="modules/templates.xql" class="templates:load-source">templating module</a> is 
+        itself entirely written in XQuery, making heavy use of XQuery 3.0 features like higher-order functions.</p>
     </section>
     <section>
         <h2>Pre-defined Template Commands</h2>
@@ -42,36 +47,131 @@
         <p>The surround template instruction is used by all pages of this demo application. The header, basic page structure and
         menus are the same for all pages. Each page thus only contains a simple div with a template instruction:</p>
         <pre class="brush: plain">templates:surround?with=templates/page.html&amp;at=content</pre>
-        <p>The instruction takes the content of the <a class="templates:load-source" href="templates.html">current element</a> 
+        <p>The instruction takes the content of the current element
         and injects it into the <a class="templates:load-source" href="templates/page.html">template page</a>.</p>
-        <p>The XQuery function needs to have a special function signature. It should accept exactly three parameters:</p>
-        <pre class="brush: xquery">demo:hello($node as node()*, $params as element(parameters)?, $model as item()*)</pre>
+        <h3>templates:form-control</h3>
+        <pre class="brush: plain">templates:form-control</pre>
+        <p>Use on &lt;input&gt; and &lt;select&gt; elements: checks the HTTP request for a parameter matching the
+        name of the form control and fills it into the value of an input or selects the corresponding option
+        of a select.</p>
+        <h3>templates:display-source</h3>
+        <pre class="brush: plain">templates:display-source?lang=language</pre>
+        <p>Display the contents of the element as a code block with syntax highlighting. This also adds a button
+        which copies the code into eXide if clicked.</p>
+        <h3>templates:load-source</h3>
+        <pre class="brush: plain">templates:load-source</pre>
+        <p>Normally used with an &lt;a&gt; element: opens the document referenced in the href attribute in eXide.</p>
     </section>
     <section>
         <h2>Writing Template Functions</h2>
-        <p>An XQuery function which should be called via the templating system needs to have a special function signature. It 
-        should accept exactly three parameters:</p>
-        <pre class="brush: xquery">demo:hello($node as node(), $params as element(parameters)?, $model as item()*)</pre>
+        <p>The templating system is based on conventions: an XQuery function which should be called via the templating system 
+        needs to accept at least two default parameters:</p>
+        <pre class="brush: xquery">demo:hello($node as node(), $model as item()*)</pre>
         <dl>
             <dt>$node</dt>
-            <dd>The node which contained the template call.</dd>
-            <dt>$params</dt>
-            <dd>
-                <p>An XML fragment describing all parameters passed through the template call. The fragment has the following
-                structure:</p>
-                <pre class="brush: xml">
-    &lt;parameters&gt;
-        &lt;param name="name1" value="value1"/&gt;
-    &lt;/parameters&gt;</pre>
-            </dd>
+            <dd>the node which contained the class attribute which triggered the templating call.</dd>
             <dt>$model</dt>
-            <dd>An arbitrary sequence which will be passed to nested template calls.</dd>
+            <dd>is used to pass arbitrary information between template functions. See the section on "nesting templates"
+                below.
+            </dd>
         </dl>
+        <section>
+            <h3>
+                <a name="inject">Parameter Injection</a>
+            </h3>
+            <p>In addition to the default parameters, a templating function may take up to (currently) 8 additional parameters.
+            The templating system tries to determine a value for each of the additional parameters as follows:</p>
+            <ol>
+                <li>if the current HTTP request contains a (non-empty) parameter with the same name as the parameter variable,
+                    it is used to set the value of the variable
+                </li>
+                <li>if the static parameters passed to the template call contain a parameter matching the variable name, it will
+                    be used</li>
+                <li>if neither 1) nor 2) lead to a non-empty value, the function signature will be checked for an annotation
+                    <code>%templates:default("name", "value1", ..., "valueN")</code>. The first parameter of the annotation should match
+                    the name of the parameter variable. All other parameters of the annotation are taken as values for the
+                    variable.</li>
+            </ol>
+        </section>
+        <section>
+            <h3>Type conversion</h3>
+            <p>When injecting parameters, the templating module tries to convert all values to the type specified for the
+            parameter in the function signature. For example, the function:</p>
+            <pre class="brush: xquery">declare function demo:multiply($node as node()*, $model as item()*, $n1 as xs:int, $n2 as xs:int)</pre>
+            <p>defines two optional parameters, $n1 and $n2 with type <code>xs:int</code>. Request and static parameters will
+                always be strings, so the templating module needs to transform them into the desired target type. This works for
+                all atomic types as well as XML elements and text nodes.</p>
+        </section>
+    </section>
+    <section>
+        <h2>Nesting Templates</h2>
         <p>Template calls can be nested, but the outer template function needs to make sure all descendant XML nodes are passed
         through the templating system. To do this, just call</p>
         <pre class="brush: xquery">templates:process($children, $model)</pre>
         <p>from within the template function. $children would contain the descendant nodes you want to include, $model may
         contain arbitrary data you want to pass along to nested template calls.</p>
+        <p>The model is an important concept here: in a well designed application, all the information which is processed
+        by nested templates in a page should be contained in the model. For example, in the 
+        <a href="examples/web/shakespeare.html">Shakespeare</a> example, there's an outer template call to
+        <code>shakespeare:query</code>, which runs a query on the data. The template does not return the query
+        result, but instead just puts it into the model. Displaying the results to the user is done by the two
+        nested templates: <code>shakespeare:hit-count</code> and <code>shakespeare:show-hits</code>.</p>
+        <p>
+            <code>shakespeare:query</code> could be implemented like this:</p>
+        <pre class="brush: xquery"><![CDATA[
+declare function shakes:query($node as node()*, $model as item()*, $query as xs:string?, $mode as xs:string) {
+    session:create(),
+    let $hits := shakes:do-query($query, $mode)
+    let $store := session:set-attribute($shakes:SESSION, $hits)
+    return
+        element { node-name($node) } {
+            $node/@*,
+            templates:process($node/*, $hits)
+        }
+};
+    ]]></pre>
+        <p>This function runs the query and creates a new element with the same name and attributes as the current element,
+        sets the model to the query result, and returns control to the templating framework to process any children
+        of the current element. This is a frequently used pattern and - as we'll see in the next section, there's a shortcut
+        for it which will save us most of the code in the return statement.</p>
+    </section>
+    <section>
+        <h2>Annotations</h2>
+        <p>The templating module defines an XQuery function annotation to handle a common case as the one above:
+            <code>%templates:output(param)</code>, where param may be either "model" or "wrap".</p>
+        <section>
+            <h3>%templates:output("wrap")</h3>
+            <p>By default, a templating function is expected to return an HTML fragment which replaces the current element.
+                If you need to preserve the current element as a wrapper around the function's output, you usually have to 
+                manually create a new element with the same name and attributes as shown in the Shakespeare example
+                above. <code>%templates:output("wrap")</code> instructs the templating system to create this wrapper
+                element for you automatically.</p>
+        </section>
+        <section>
+            <h3>%templates:output("model")</h3>
+            <p>If this annotation is present, the templating module expects 
+                the function to return a new model instead of HTML. Similar to "wrap", it constructs a new element with 
+                the same name and  attributes as the current one, but it also sets the model to the value returned by the 
+                templating function and calls templates:process on any children.</p>
+            <p>The function "shakes:query" shown above can thus be simplified to:</p>
+            <pre class="brush: xquery"><![CDATA[
+declare
+    %templates:output("model")
+function shakes:query($node as node()*, $model as item()*, $query as xs:string?, $mode as xs:string) {
+    session:create(),
+    let $hits := shakes:do-query($query, $mode)
+    let $store := session:set-attribute($shakes:SESSION, $hits)
+    return
+        $hits
+};
+            ]]></pre>
+        </section>
+        <section>
+            <h3>%templates:default(name, value1, ..., valueN)</h3>
+            <p>As already discussed in the section on <a href="#inject">parameter injection</a>, this annotation is used to provide
+            static defaults for any optional parameter whose value cannot be determined by looking at the
+            HTTP request or static parameters.</p>
+        </section>
     </section>
     <section>
         <h2>Call the Templating Module</h2>
@@ -83,24 +183,28 @@
             <dt>$resolver</dt>
             <dd>A lookup function which will be called to find template functions.</dd>
             <dt>$model</dt>
-            <dd>The model: will be passed on to all called template functions.</dd>
+            <dd>The initial model: will be passed on to all called template functions.</dd>
         </dl>
         <p>The $resolver function has to be provided by the calling code because the templating module cannot access
-        the context of the calling module. It takes one string argument: the name of the templating function
-        to be called, and should return a function item if it could find the function, the empty sequence otherwise.
-        Normally $resolver would just call function-lookup to resolve the function name to a function item and return it,
-        but it is important that it catches any errors, e.g. caused by an invalid xs:QName.</p>
+        the context of the calling module and thus cannot see any of the function modules imported by the main
+        module. The function takes two arguments: the name of a function to look up and its arity, i.e.: the number of
+        arguments it takes. Normally $resolver will just call function-lookup to resolve the function name to a function 
+        item and return it (if found), but it is important that it catches any errors, e.g. caused by an invalid xs:QName.</p>
         <p>The main XQuery could thus look as simple as this:</p>
         <pre class="brush:xquery">
+xquery version "3.0";
+
+import module namespace templates="http://exist-db.org/xquery/templates" at "templates.xql";
+
 (: The following modules provide functions which will be called by the templating :)
-import module namespace i18n="http://exist-db.org/xquery/i18n/templates" at "i18n-templates.xql";
-import module namespace demo="http://exist-db.org/apps/demo" at "demo.xql";
+import module namespace shakespeare="http://exist-db.org/apps/demo/shakespeare" at "../examples/web/shakespeare.xql";
+import module namespace config="http://exist-db.org/xquery/apps/config" at "config.xqm";
 
 declare option exist:serialize "method=html5 media-type=text/html";
 
-let $lookup := function($functionName as xs:string) {
+let $lookup := function($functionName as xs:string, $arity as xs:int) {
     try {
-        function-lookup(xs:QName($functionName), 3)
+        function-lookup(xs:QName($functionName), $arity)
     } catch * {
         ()
     }
@@ -109,8 +213,44 @@ let $content := request:get-data()
 return
     templates:apply($content, $lookup, ())
 </pre>
+        <p>This main XQuery will usually be called through the <code>controller.xql</code>. All that is needed is
+        one controller rule which redirects all requests for HTML pages to our main query:</p>
+        <pre class="brush: xquery"><![CDATA[
+else if (ends-with($exist:resource, ".html")) then
+    <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
+        <view>
+            <forward url="{$exist:controller}/modules/view.xql">
+                <set-attribute name="$exist:prefix" value="{$exist:prefix}"/>
+                <set-attribute name="$exist:controller" value="{$exist:controller}"/>
+            </forward>
+        </view>
+        <error-handler>
+            <forward url="{$exist:controller}/error-page.html" method="get"/>
+            <forward url="{$exist:controller}/modules/view.xql"/>
+        </error-handler>
+    </dispatch>
+        ]]></pre>
     </section>
-    <div class="source-links">
-        <p>View source: <a href="templates.html" class="templates:load-source">this page</a>.</p>
-    </div>
+    <section>
+        <h2>Integration with eXide</h2>
+        <p>eXide automatically integrates the templating framework into a new application if "HTML Templates" is
+        selected in the "Application Properties":</p>
+        <figure>
+            <img src="resources/images/eXide-screenshot.png"/>
+        </figure>
+        <p>eXide generates a corresponding main XQuery and a controller. The templating will work out of the
+        box for all HTML views.</p>
+    </section>
+    <section>
+        <h2>Source Links</h2>
+        <ul>
+            <li>The <a href="modules/view.xql" class="templates:load-source">main XQuery</a> which triggers the
+            templating in this app.</li>
+            <li>Shakespeare app: the <a href="examples/web/shakespeare.html" class="templates:load-source">HTML</a>
+            and the <a href="examples/web/shakespeare.xql" class="templates:load-source">XQuery module</a> implementing
+            the templating functions.</li>
+            <li>The source code of the <a href="modules/templates.xql" class="templates:load-source">templating module</a>
+            itself.</li>
+        </ul>
+    </section>
 </article>

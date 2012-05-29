@@ -8,16 +8,20 @@ import module namespace kwic="http://exist-db.org/xquery/kwic"
 declare variable $shakes:SESSION := "shakespeare:results";
 
 (:~
-    Execute the query. The search results are not output immediately. Instead they
-    are passed to nested templates through the $model parameter.
-:)
-declare function shakes:query($node as node()*, $model as item()*, $query as xs:string?, $mode as xs:string) {
+ : Execute a query and pass the result to nested template functions. The annotation
+ : %templates:output("model") indicates that we want the output of the function
+ : to become the new model for any nested template functions. The templating
+ : module copies the current element and its attributes, then continues processing
+ : its children.
+ :)
+declare
+    %templates:output("model")
+function shakes:query($node as node()*, $model as item()*, $query as xs:string?, $mode as xs:string) {
     session:create(),
     let $hits := shakes:do-query($query, $mode)
     let $store := session:set-attribute($shakes:SESSION, $hits)
     return
-        (: Process nested templates :)
-        <div id="results">{ templates:process($node/*, $hits) }</div>
+        $hits
 };
 
 declare function shakes:do-query($queryStr as xs:string?, $mode as xs:string) {
@@ -31,21 +35,26 @@ declare function shakes:do-query($queryStr as xs:string?, $mode as xs:string) {
     Read the last query result from the HTTP session and pass it to nested templates
     in the $model parameter.
 :)
-declare function shakes:from-session($node as node()*, $model as item()*) {
-    let $hits := session:get-attribute($shakes:SESSION)
-    return
-        templates:process($node/*, $hits)
+declare 
+    %templates:output("model")
+function shakes:from-session($node as node()*, $model as item()*) {
+    session:get-attribute($shakes:SESSION)
 };
 
 (:~
-    Create a span with the number of items in the current search result.
-:)
-declare function shakes:hit-count($node as node()*, $model as item()*) {
-    <span id="hit-count">{ count($model) }</span>
+ : Create a span with the number of items in the current search result.
+ : The annotation %templates:output("wrap") tells the templating module
+ : to create a new element with the same name and attributes as $node,
+ : using the return value of the function as its content.
+ :)
+declare 
+    %templates:output("wrap")
+function shakes:hit-count($node as node()*, $model as item()*) {
+    count($model)
 };
 
 (:~
-    Output the actual search result as a div, using the kwic module to summarize full text matches.
+ : Output the actual search result as a div, using the kwic module to summarize full text matches.
 :)
 declare 
     %templates:default("start", 1)
