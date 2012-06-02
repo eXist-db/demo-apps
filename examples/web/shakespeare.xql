@@ -8,20 +8,22 @@ import module namespace kwic="http://exist-db.org/xquery/kwic"
 declare variable $shakes:SESSION := "shakespeare:results";
 
 (:~
- : Execute a query and pass the result to nested template functions. The annotation
- : %templates:output("model") indicates that we want the output of the function
- : to become the new model for any nested template functions. The templating
- : module copies the current element and its attributes, then continues processing
+ : Execute a query and pass the result to nested template functions. This function returns
+ : a map, not a node. The templating module recognizes this and will merge the map into
+ : the current model, then continue processing any children of $node.
+ :
+ : The annotation %templates:wrap indicates that the current element (in $node) should be preserved.
+ : The templating module copies the current element and its attributes, before processing
  : its children.
  :)
-declare
-    %templates:output("model")
-function shakes:query($node as node()*, $model as item()*, $query as xs:string?, $mode as xs:string) {
+declare 
+    %templates:wrap
+function shakes:query($node as node()*, $model as map(*), $query as xs:string?, $mode as xs:string) {
     session:create(),
     let $hits := shakes:do-query($query, $mode)
     let $store := session:set-attribute($shakes:SESSION, $hits)
     return
-        $hits
+        map:entry("hits", $hits)
 };
 
 declare function shakes:do-query($queryStr as xs:string?, $mode as xs:string) {
@@ -36,9 +38,9 @@ declare function shakes:do-query($queryStr as xs:string?, $mode as xs:string) {
     in the $model parameter.
 :)
 declare 
-    %templates:output("model")
-function shakes:from-session($node as node()*, $model as item()*) {
-    session:get-attribute($shakes:SESSION)
+    %templates:wrap
+function shakes:from-session($node as node()*, $model as map(*)) {
+    map:entry("hits", session:get-attribute($shakes:SESSION))
 };
 
 (:~
@@ -48,9 +50,9 @@ function shakes:from-session($node as node()*, $model as item()*) {
  : using the return value of the function as its content.
  :)
 declare 
-    %templates:output("wrap")
-function shakes:hit-count($node as node()*, $model as item()*) {
-    count($model)
+    %templates:wrap
+function shakes:hit-count($node as node()*, $model as map(*)) {
+    count($model("hits"))
 };
 
 (:~
@@ -58,8 +60,8 @@ function shakes:hit-count($node as node()*, $model as item()*) {
 :)
 declare 
     %templates:default("start", 1)
-function shakes:show-hits($node as node()*, $model as item()*, $start as xs:int) {
-    for $hit at $p in subsequence($model, $start, 10)
+function shakes:show-hits($node as node()*, $model as map(*), $start as xs:int) {
+    for $hit at $p in subsequence($model("hits"), $start, 10)
     let $kwic := kwic:summarize($hit, <config width="40" table="yes"/>, shakes:filter#2)
     return
         <div class="scene">

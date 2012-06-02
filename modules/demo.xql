@@ -11,7 +11,7 @@ import module namespace test="http://exist-db.org/xquery/xqsuite" at "xmldb:exis
  : @param $model an arbitrary sequence of items. Use this to pass required information between
  : tempate functions.
  :)
-declare function demo:hello($node as node()*, $model as item()*) as element(span) {
+declare function demo:hello($node as node()*, $model as map(*)) as element(span) {
     <span>Hello World!</span>
 };
 
@@ -28,25 +28,25 @@ declare function demo:hello($node as node()*, $model as item()*) as element(span
  :    the name of the parameter variable. Use the second parameter as value if it does.</li>
  : </ol>
  :)
-declare function demo:multiply($node as node()*, $model as item()*, $n1 as xs:int, $n2 as xs:int) {
+declare function demo:multiply($node as node()*, $model as map(*), $n1 as xs:int, $n2 as xs:int) {
     $n1 * $n2
 };
 
-declare function demo:error-handler-test($node as node(), $model as item()*, $number as xs:string?) {
+declare function demo:error-handler-test($node as node(), $model as map(*), $number as xs:string?) {
     if (exists($number)) then
         xs:int($number)
     else
         ()
 };
 
-declare function demo:link-to-home($node as node(), $model as item()*) {
+declare function demo:link-to-home($node as node(), $model as map(*)) {
     <a href="{request:get-context-path()}/">{ 
         $node/@* except $node/@href,
         $node/node() 
     }</a>
 };
 
-declare function demo:run-tests($node as node(), $model as item()*) {
+declare function demo:run-tests($node as node(), $model as map(*)) {
     let $results := test:suite(util:list-functions("http://exist-db.org/apps/demo/shakespeare/tests"))
     return
         test:to-html($results)

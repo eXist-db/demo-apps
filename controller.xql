@@ -86,7 +86,7 @@ else if ($exist:resource eq 'protected.html') then
                     <forward url="{$exist:controller}/modules/view.xql">
                         <set-attribute name="$exist:prefix" value="{$exist:prefix}"/>
                         <set-attribute name="$exist:controller" value="{$exist:controller}"/>
-                        <set-header name="CacheControl" value="no-cache"/>
+                        <set-header name="Cache-Control" value="no-cache"/>
                     </forward>
                 </view>
             </dispatch>
@@ -97,7 +97,7 @@ else if ($exist:resource eq 'protected.html') then
                     <forward url="{$exist:controller}/modules/view.xql">
                         <set-attribute name="$exist:prefix" value="{$exist:prefix}"/>
                         <set-attribute name="$exist:controller" value="{$exist:controller}"/>
-                        <set-header name="CacheControl" value="no-cache"/>
+                        <set-header name="Cache-Control" value="no-cache"/>
                     </forward>
                 </view>
             </dispatch>

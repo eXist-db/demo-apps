@@ -9,7 +9,7 @@ import module namespace templates="http://exist-db.org/xquery/templates" at "../
  :  and stores it into the session, then calls any nested templates with the
  :  generated number as $model.
  :)
-declare function guess:init($node as node(), $model as item()*) {
+declare function guess:init($node as node(), $model as map(*)) as map(*){
     session:create(),
     let $randSession := session:get-attribute("random")
     let $rand :=
@@ -18,13 +18,14 @@ declare function guess:init($node as node(), $model as item()*) {
         else
             guess:random(100)
     return
-        templates:process($node/node(), $rand)
+        map { "random" := $rand }
 };
 
 (:~
  :  Evaluate the guessed number, which is passed in as model.
  :)
-declare function guess:evaluate-guess($node as node(), $random as xs:integer, $guess as xs:integer) {
+declare function guess:evaluate-guess($node as node(), $model as map(*), $guess as xs:integer) {
+    let $random := $model("random")
     let $count as xs:integer := session:get-attribute("guesses") + 1
     return (
         session:set-attribute("guesses", $count),

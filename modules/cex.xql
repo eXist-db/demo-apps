@@ -4,7 +4,7 @@ import module namespace config="http://exist-db.org/xquery/apps/config" at "conf
 import module namespace kwic="http://exist-db.org/xquery/kwic"
     at "resource:org/exist/xquery/lib/kwic.xql";
 
-declare function cex:query($node as node()*, $model as item()*, $query as xs:string?) {
+declare function cex:query($node as node()*, $model as map(*), $query as xs:string?) {
     <div class="cex-results">
     {
         for $result in ft:search("/db/", concat('page:', $query))/search

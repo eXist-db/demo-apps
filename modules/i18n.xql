@@ -22,7 +22,7 @@ module namespace i18n = 'http://exist-db.org/xquery/i18n';
 declare function i18n:apply($content as node()+, $modules as element(modules), $model as item()*) {   
     let $null := (
         request:set-attribute("$i18n:modules", $modules)
-    )    
+    )
     for $root in $content              
         return            
             i18n:process($root, (),(),())
