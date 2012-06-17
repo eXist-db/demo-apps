@@ -45,27 +45,27 @@ return
             <h3>Basic example catching any errors:</h3>
             <pre class="templates:display-source">xquery version "3.0";
     
-    let $x := "Hello"
-    return
-        try {
-            $x cast as xs:integer
-        } catch * {
-            &lt;error&gt;Caught error {$err:code}: {$err:description}&lt;/error&gt;
+let $x := "Hello"
+return
+    try {
+        $x cast as xs:integer
+    } catch * {
+        &lt;error&gt;Caught error {$err:code}: {$err:description}&lt;/error&gt;
         }</pre>
         </section>
         <section>
             <h3>Generating your own errors:</h3>
             <pre class="templates:display-source">xquery version "3.0";
     
-    declare namespace app="http://exist-db.org/myapp";
-    
-    declare variable $app:ERROR := xs:QName("app:error");
-    
-    try {
-        error($app:ERROR, "Ooops", "any data")
-    } catch app:error {
-        &lt;error&gt;Caught error {$err:code}: {$err:description}. Data: {$err:value}.&lt;/error&gt;
-    }</pre>
+declare namespace app="http://exist-db.org/myapp";
+
+declare variable $app:ERROR := xs:QName("app:error");
+
+try {
+    error($app:ERROR, "Ooops", "any data")
+} catch app:error {
+    &lt;error&gt;Caught error {$err:code}: {$err:description}. Data: {$err:value}.&lt;/error&gt;
+}</pre>
         </section>
     </section>
     <section>
@@ -113,8 +113,8 @@ declare function ex:fold-left(
         $f as function(item()*, item()) as item()*, 
         $zero as item()*, 
         $seq as item()*) as item()* {
-  if (fn:empty($seq)) then $zero
-  else ex:fold-left($f, $f($zero, $seq[1]), subsequence($seq, 2))
+    if (fn:empty($seq)) then $zero
+    else ex:fold-left($f, $f($zero, $seq[1]), subsequence($seq, 2))
 };
 
 (: Function reference is resolved dynamically at runtime :)
