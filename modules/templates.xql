@@ -12,10 +12,17 @@ import module namespace config="http://exist-db.org/xquery/apps/config" at "conf
 
 declare variable $templates:CONFIG_STOP_ON_ERROR := "stop-on-error";
 
-declare variable $templates:CONFIGURATION := QName("http://exist-db.org/xquery/templates", "configuration");
+declare variable $templates:CONFIGURATION := "configuration";
 declare variable $templates:CONFIGURATION_ERROR := QName("http://exist-db.org/xquery/templates", "ConfigurationError");
 declare variable $templates:NOT_FOUND := QName("http://exist-db.org/xquery/templates", "NotFound");
 declare variable $templates:TOO_MANY_ARGS := QName("http://exist-db.org/xquery/templates", "TooManyArguments");
+declare variable $templates:PROCESSING_ERROR := QName("http://exist-db.org/xquery/templates", "ProcessingError");
+
+declare variable $templates:root-collection :=
+    let $root := request:get-attribute("templating.root")
+    return
+        if ($root) then $root else $config:app-root
+;
 
 (:~
  : Start processing the provided content. Template functions are looked up by calling the
@@ -30,7 +37,7 @@ declare variable $templates:TOO_MANY_ARGS := QName("http://exist-db.org/xquery/t
  : @param $model a sequence of items which will be passed to all called template functions. Use this to pass
  : information between templating instructions.
 :)
-declare function templates:apply($content as node()+, $resolver as function(xs:string) as item()?, $model as map(*)?,
+declare function templates:apply($content as node()+, $resolver as function(xs:string, xs:int) as item()?, $model as map(*)?,
     $configuration as map(*)?) {
     let $model := if ($model) then $model else map:new()
     let $configuration := 
@@ -44,7 +51,7 @@ declare function templates:apply($content as node()+, $resolver as function(xs:s
         templates:process($root, $model)
 };
 
-declare function templates:apply($content as node()+, $resolver as function(xs:string) as item()?, $model as map(*)?) {
+declare function templates:apply($content as node()+, $resolver as function(xs:string, xs:int) as item()?, $model as map(*)?) {
     templates:apply($content, $resolver, $model, ())
 };
 
@@ -57,6 +64,7 @@ declare function templates:apply($content as node()+, $resolver as function(xs:s
  : information between templating instructions.
 :)
 declare function templates:process($nodes as node()*, $model as map(*)) {
+    let $config := templates:get-configuration($model, "")
     for $node in $nodes
     return
         typeswitch ($node)
@@ -84,11 +92,19 @@ declare %private function templates:get-instructions($class as xs:string?) as xs
         $name
 };
 
+declare %private function templates:get-configuration($model as map(*), $func as xs:string) {
+    if (not(map:contains($model, $templates:CONFIGURATION))) then
+        error($templates:CONFIGURATION_ERROR, "Configuration map not found in model. Tried to call: " || $func)
+    else
+        $model($templates:CONFIGURATION)
+};
+
 declare %private function templates:call($class as xs:string, $node as element(), $model as map(*)) {
     let $paramStr := substring-after($class, "?")
     let $parameters := templates:parse-parameters($paramStr)
     let $func := if ($paramStr) then substring-before($class, "?") else $class
-    let $call := templates:resolve(10, $func, $model($templates:CONFIGURATION)("resolve"))
+    let $config := templates:get-configuration($model, $func)
+    let $call := templates:resolve($func, $config("resolve"))
     return
         if (exists($call)) then
             templates:call-by-introspection($node, $parameters, $model, $call)
@@ -101,7 +117,7 @@ declare %private function templates:call($class as xs:string, $node as element()
             }
 };
 
-declare %private function templates:call-by-introspection($node as element(), $parameters as element(parameters), $model as map(*), 
+declare %private function templates:call-by-introspection($node as element(), $parameters as map(xs:string, xs:string), $model as map(*), 
     $fn as function(*)) {
     let $inspect := util:inspect-function($fn)
     let $args := templates:map-arguments($inspect, $parameters)
@@ -162,27 +178,31 @@ declare %private function templates:process-output($node as element(), $model as
             $output
 };
 
-declare %private function templates:map-arguments($inspect as element(function), $parameters as element(parameters)) {
+declare %private function templates:map-arguments($inspect as element(function), $parameters as map(xs:string, xs:string)) {
     let $args := $inspect/argument
     return
         if (count($args) > 2) then
-            for $arg in subsequence($inspect/argument, 3)
+            for $arg in subsequence($args, 3)
             return
                 templates:map-argument($arg, $parameters)
         else
             ()
 };
 
-declare %private function templates:map-argument($arg as element(argument), $parameters as element(parameters)) 
+declare %private function templates:map-argument($arg as element(argument), $parameters as map(xs:string, xs:string)) 
     as function() as item()* {
     let $var := $arg/@var
     let $type := $arg/@type/string()
-    let $param := 
+    let $paramFromContext := 
         (
             request:get-parameter($var, ()), 
-            $parameters/param[@name = $var]/@value,
-            templates:arg-from-annotation($var, $arg)
+            $parameters($var)
         )[1]
+    let $param :=
+        if ($paramFromContext) then
+            $paramFromContext
+        else
+            templates:arg-from-annotation($var, $arg)
     let $data :=
         try {
             templates:cast($param, $type)
@@ -207,9 +227,13 @@ declare %private function templates:arg-from-annotation($var as xs:string, $arg 
         string($value)
 };
 
+declare %private function templates:resolve($func as xs:string, $resolver as function(xs:string, xs:int) as function(*)) {
+    templates:resolve(2, $func, $resolver)
+};
+
 declare %private function templates:resolve($arity as xs:int, $func as xs:string, 
     $resolver as function(xs:string, xs:int) as function(*)) {
-    if ($arity < 2) then
+    if ($arity > 10) then
         ()
     else
         let $fn := $resolver($func, $arity)
@@ -217,20 +241,18 @@ declare %private function templates:resolve($arity as xs:int, $func as xs:string
             if (exists($fn)) then
                 $fn
             else
-                templates:resolve($arity - 1, $func, $resolver)
+                templates:resolve($arity + 1, $func, $resolver)
 };
 
-declare %private function templates:parse-parameters($paramStr as xs:string?) as element(parameters) {
-    <parameters>
-    {
+declare %private function templates:parse-parameters($paramStr as xs:string?) as map(xs:string, xs:string) {
+    map:new(
         for $param in tokenize($paramStr, "&amp;")
         let $key := substring-before($param, "=")
         let $value := substring-after($param, "=")
         where $key
         return
-            <param name="{$key}" value="{$value}"/>
-    }
-    </parameters>
+            map:entry($key, $value)
+    )
 };
 
 declare %private function templates:is-qname($class as xs:string) as xs:boolean {
@@ -272,22 +294,37 @@ declare %private function templates:cast($values as item()*, $targetType as xs:s
  :-----------------------------------------------------------------------------------:)
  
 declare function templates:include($node as node(), $model as map(*), $path as xs:string) {
-    templates:process(config:resolve($path), $model)
+    let $path := 
+        if (starts-with($path, "/")) then
+            (: Search template relative to app root :)
+            concat($config:app-root, "/", $path)
+        else
+            (: Locate template relative to HTML file :)
+            concat($templates:root-collection, "/", $path)
+    return
+        templates:process(doc($path), $model)
+
 };
 
 declare function templates:surround($node as node(), $model as map(*), $with as xs:string, $at as xs:string?, $using as xs:string?) {
-    let $path := concat($config:app-root, "/", $with)
+    let $path :=
+        if (starts-with($with, "/")) then
+            (: Search template relative to app root :)
+            concat($config:app-root, $with)
+        else
+            (: Locate template relative to HTML file :)
+            concat($templates:root-collection, "/", $with)
     let $content :=
         if ($using) then
-            config:resolve($with)//*[@id = $using]
+            doc($path)//*[@id = $using]
         else
-            config:resolve($with)
+            doc($path)
     let $merged := templates:process-surround($content, $node, $at)
     return
         templates:process($merged, $model)
 };
 
-declare function templates:process-surround($node as node(), $content as node(), $at as xs:string) {
+declare %private function templates:process-surround($node as node(), $content as node(), $at as xs:string) {
     typeswitch ($node)
         case document-node() return
             for $child in $node/node() return templates:process-surround($child, $content, $at)
@@ -318,6 +355,16 @@ declare function templates:if-parameter-unset($node as node(), $model as item()*
     return
         if (not($param) or string-length($param) eq 0) then
             $node
+        else
+            ()
+};
+
+declare function templates:if-attribute-set($node as node(), $model as map(*), $attribute as xs:string) {
+    let $isSet :=
+        (exists($attribute) and request:get-attribute($attribute))
+    return
+        if ($isSet) then
+            templates:process($node/node(), $model)
         else
             ()
 };
@@ -402,37 +449,55 @@ declare function templates:error-description($node as node(), $model as map(*)) 
         }
 };
 
-declare function templates:fix-links($node as node(), $model as map(*), $root as xs:string) {
-    let $prefix :=
-        if ($root eq "context") then
-            request:get-context-path()
-        else
-            concat(request:get-context-path(), request:get-attribute("$exist:prefix"), request:get-attribute("$exist:controller"))
-    let $temp := 
-        element { node-name($node) } {
-            $node/@* except $node/@class,
-            attribute class { replace($node/@class, "\s*templates:fix-links[^\s]*", "")},
-            for $child in $node/node() return templates:fix-links($child, $prefix)
-        }
-    return
-        templates:process($temp, $model)
+declare function templates:expand-links($node as node(), $model as map(*), $external as xs:string?) {
+    templates:expand-links($node, $external)
 };
 
-declare function templates:fix-links($node as node(), $prefix as xs:string) {
+declare %private function templates:expand-links($node as node(), $external as xs:string?) {
     typeswitch ($node)
         case element(a) return
             let $href := $node/@href
-            return
+            let $expanded :=
                 if (starts-with($href, "/")) then
-                    <a href="{$prefix}{$href}">
-                    { $node/@* except $href, $node/node() }
-                    </a>
+                    concat(request:get-context-path(), $href)
                 else
-                    $node
+                    templates:expand-link($href, $external)
+            return
+                <a href="{$expanded}">
+                { $node/@* except $href, $node/node() }
+                </a>
         case element() return
             element { node-name($node) } {
-                $node/@*, for $child in $node/node() return templates:fix-links($child, $prefix)
+                $node/@*, for $child in $node/node() return templates:expand-links($child, $external)
             }
         default return
             $node
+};
+
+declare %private function templates:expand-link($href as xs:string, $external as xs:string?) {
+    string-join(
+        let $analyzed := analyze-string($href, "^\{([^\{\}]+)\}")
+        for $component in $analyzed/*/*
+        let $log := util:log("DEBUG", ("Component: ", $component))
+        return
+            typeswitch($component)
+                case element(fn:match) return
+                    let $name := $component/fn:group/string()
+                    let $app := collection(concat("/db/", $name))
+                    return
+                        if ($app) then
+                            concat(request:get-context-path(), request:get-attribute("$exist:prefix"), "/", $name)
+                        else
+                            $external
+                default return
+                    $component/text()
+        , ""
+    )
+};
+
+declare function templates:copy-node($node as element(), $model as item()*) {
+    element { node-name($node) } {
+        $node/@*,
+        templates:process($node/*, $model)
+    }
 };

@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <html>
     <head>
-        <title>Demo App</title>
+        <title class="config:app-title">App Title</title>
+        <meta class="config:app-meta"/>
         <link rel="shortcut icon" href="resources/images/favicon.ico"/>
         <link rel="stylesheet" type="text/css" href="resources/css/exist.css"/>
         <link href="resources/scripts/shCore.css" rel="stylesheet" type="text/css"/>
         <link href="resources/scripts/shThemeDefault.css" rel="stylesheet" type="text/css"/>
-        <link href="http://fonts.googleapis.com/css?family=Quicksand" rel="stylesheet" type="text/css"/>
         <script type="text/javascript" src="libs/scripts/jquery/jquery-1.7.1.min.js"/>
         <script type="text/javascript" src="resources/scripts/jquery.scrollExtend.min.js"/>
         <script type="text/javascript" src="resources/scripts/shCore.js"/>
@@ -19,18 +19,18 @@
             <div id="grey-bot">
                 <div id="container">
                     <div id="header">
-                        <a class="demo:link-to-home" href="/" id="logo">eXistDB</a>
+                        <a class="templates:expand-links" href="/" id="logo">eXistDB</a>
                     </div><!--/header-->
-                    <div id="navigation" class="templates:fix-links?root=context">
+                    <div id="navigation" class="templates:expand-links?external=http://exist-db.org">
                         <ul id="nav" class="dropdown dropdown-horizontal">
                             <li class="dir" id="about">
                                 <span>About Us</span>
                                 <ul>
                                     <li>
-                                        <a href="/credits.xml">Who we are</a>
+                                        <a href="{doc}/credits.xml">Who we are</a>
                                     </li>
                                     <li>
-                                        <a href="/acknowledge.xml">Acknowledgements</a>
+                                        <a href="{doc}/acknowledge.xml">Acknowledgements</a>
                                     </li>
                                     <li>
                                         <a href="http://atomic.exist-db.org/blogs/eXist/Press/">Press/Contact</a>
@@ -41,13 +41,13 @@
                                 <span>Documentation</span>
                                 <ul>
                                     <li>
-                                        <a href="/quickstart.xml">Quick Start</a>
+                                        <a href="{doc}/quickstart.xml">Quick Start</a>
                                     </li>
                                     <li>
-                                        <a href="/xquery/functions.xql">Function Library</a>
+                                        <a href="{xqfdocs}/">Function Library</a>
                                     </li>
                                     <li>
-                                        <a href="/documentation.xml">Main Documentation</a>
+                                        <a href="{doc}/documentation.xml">Main Documentation</a>
                                     </li>
                                     <li>
                                         <a href="http://en.wikibooks.org/wiki/XQuery">XQuery Wikibook</a>
@@ -69,7 +69,7 @@
                                         <a href="/eXide/">eXide (XQuery IDE)</a>
                                     </li>
                                     <li>
-                                        <a href="/api/index.html">Javadocs</a>
+                                        <a href="http://exist-db.org/api/index.html">Javadocs</a>
                                     </li>
                                     <li>
                                         <a href="http://sourceforge.net/tracker/?group_id=17691&amp;atid=117691">Bug Tracker</a>
@@ -100,32 +100,32 @@
                             <!-- Page content will be injected into the div below -->
                             <div class="span9" id="content"/>
                             <div class="span3">
-                                <div class="box templates:fix-links">
+                                <div class="box templates:expand-links">
                                     <h2>Demo Pages</h2>
                                     <ol>
                                         <li>
-                                            <a href="/examples/basic/basics.html">Basic XQuery Examples</a>
+                                            <a href="{demo}/examples/basic/basics.html">Basic XQuery Examples</a>
                                         </li>
                                         <li>
-                                            <a href="/examples/basic/xquery3.html">XQuery 3.0 Examples</a>
+                                            <a href="{demo}/examples/basic/xquery3.html">XQuery 3.0 Examples</a>
                                         </li>
                                         <li>
-                                            <a href="/examples/web/index.html">Web Examples</a>
+                                            <a href="{demo}/examples/web/index.html">Web Examples</a>
                                         </li>
                                         <li>
-                                            <a href="/examples/urlrewriting/index.html">URL Rewriting</a>
+                                            <a href="{demo}/examples/urlrewriting/index.html">URL Rewriting</a>
                                         </li>
                                         <li>
-                                            <a href="/examples/special/index.html">Special Features</a>
+                                            <a href="{demo}/examples/special/index.html">Special Features</a>
                                         </li>
                                         <li>
-                                            <a href="/templates.html">Templating</a>
+                                            <a href="{demo}/templates.html">Templating</a>
                                         </li>
                                         <li>
-                                            <a href="/cex-demo.html">Content Extraction</a>
+                                            <a href="{demo}/cex-demo.html">Content Extraction</a>
                                         </li>
                                         <li>
-                                            <a href="/examples/tests/test.html">Unit Testing</a>
+                                            <a href="{demo}/examples/tests/test.html">Unit Testing</a>
                                         </li>
                                     </ol>
                                 </div>
@@ -138,7 +138,7 @@
         <div id="footer">
             <ul>
                 <li>
-                    <a class="demo:link-to-home" href="/">Homepage</a>
+                    <a class="templates:expand-links" href="/">Homepage</a>
                 </li>
             </ul>
             <div id="copyright">
