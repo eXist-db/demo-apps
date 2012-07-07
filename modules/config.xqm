@@ -61,10 +61,10 @@ declare %templates:wrap function config:app-title($node as node(), $model as map
 };
 
 declare function config:app-meta($node as node(), $model as map(*)) as element()* {
-    <meta name="description">{$config:repo-descriptor/repo:description/text()}</meta>,
+    <meta name="description" content="{$config:repo-descriptor/repo:description/text()}"/>,
     for $author in $config:repo-descriptor/repo:author
     return
-        <meta name="creator">{$author/text()}</meta>
+        <meta name="creator" content="{$author/text()}"/>
 };
 
 (:~

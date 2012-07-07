@@ -10,7 +10,10 @@ import module namespace demo="http://exist-db.org/apps/demo" at "demo.xql";
 import module namespace guess="http://exist-db.org/apps/demo/guess" at "../examples/web/guess-templates.xql";
 import module namespace cex="http://exist-db.org/apps/demo/cex" at "cex.xql";
 
-declare option exist:serialize "method=html5 media-type=text/html";
+declare namespace output = "http://www.w3.org/2010/xslt-xquery-serialization";
+
+declare option output:method "html5";
+declare option output:media-type "text/html";
 
 let $lookup := function($functionName as xs:string, $arity as xs:int) {
     try {

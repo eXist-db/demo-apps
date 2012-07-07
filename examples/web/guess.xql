@@ -9,7 +9,10 @@ import module namespace session="http://exist-db.org/xquery/session";
 import module namespace util="http://exist-db.org/xquery/util";
 import module namespace config="http://exist-db.org/xquery/apps/config" at "../../modules/config.xqm";
 
-declare option exist:serialize "method=html5 enforce-xhtml=yes";
+declare namespace output = "http://www.w3.org/2010/xslt-xquery-serialization";
+
+declare option output:method "html5";
+declare option output:media-type "text/html";
 
 declare function local:random($max as xs:integer) 
 as empty()

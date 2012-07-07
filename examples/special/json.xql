@@ -1,9 +1,11 @@
 xquery version "1.0";
 
+declare namespace output = "http://www.w3.org/2010/xslt-xquery-serialization";
 declare namespace json="http://www.json.org";
 
 (: Switch to JSON serialization :)
-declare option exist:serialize "method=json media-type=text/javascript";
+declare option output:method "json";
+declare option output:media-type "text/javascript";
 
 (:~
  : Travers the sub collections of the specified root collection.
