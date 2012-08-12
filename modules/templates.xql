@@ -193,13 +193,14 @@ declare %private function templates:map-argument($arg as element(argument), $par
     as function() as item()* {
     let $var := $arg/@var
     let $type := $arg/@type/string()
-    let $paramFromContext := 
-        (
-            request:get-parameter($var, ()), 
+    let $reqParam := request:get-parameter($var, ())
+    let $paramFromContext :=
+        if (exists($reqParam)) then
+            $reqParam
+        else
             $parameters($var)
-        )[1]
     let $param :=
-        if ($paramFromContext) then
+        if (exists($paramFromContext)) then
             $paramFromContext
         else
             templates:arg-from-annotation($var, $arg)
