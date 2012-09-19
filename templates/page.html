@@ -21,19 +21,16 @@
                     <div id="header">
                         <a class="templates:expand-links" href="/" id="logo">eXistDB</a>
                     </div><!--/header-->
-                    <div id="navigation" class="templates:expand-links?external=http://exist-db.org">
+                    <div id="navigation" class="templates:expand-links?base=http://exist-db.org/">
                         <ul id="nav" class="dropdown dropdown-horizontal">
                             <li class="dir" id="about">
-                                <span>About Us</span>
+                                <span>Home</span>
                                 <ul>
                                     <li>
-                                        <a href="{doc}/credits.xml">Who we are</a>
+                                        <a href="{dashboard}">Dashboard</a>
                                     </li>
                                     <li>
-                                        <a href="{doc}/acknowledge.xml">Acknowledgements</a>
-                                    </li>
-                                    <li>
-                                        <a href="http://atomic.exist-db.org/blogs/eXist/Press/">Press/Contact</a>
+                                        <a href="http://exist-db.org">eXist-db Home</a>
                                     </li>
                                 </ul>
                             </li>
@@ -41,24 +38,13 @@
                                 <span>Documentation</span>
                                 <ul>
                                     <li>
-                                        <a href="{doc}/quickstart.xml">Quick Start</a>
+                                        <a href="{doc|documentation.xml}">Documentation</a>
                                     </li>
                                     <li>
-                                        <a href="{xqfdocs}/">Function Library</a>
-                                    </li>
-                                    <li>
-                                        <a href="{doc}/documentation.xml">Main Documentation</a>
+                                        <a href="{xqfdoc}">XQuery Function Library</a>
                                     </li>
                                     <li>
                                         <a href="http://en.wikibooks.org/wiki/XQuery">XQuery Wikibook</a>
-                                    </li>
-                                </ul>
-                            </li>
-                            <li class="dir" id="community">
-                                <span>Community</span>
-                                <ul>
-                                    <li>
-                                        <a href="/index.xml#mailing">Mailing List/IRC</a>
                                     </li>
                                 </ul>
                             </li>
@@ -66,7 +52,7 @@
                                 <span>Development</span>
                                 <ul>
                                     <li>
-                                        <a href="/eXide/">eXide (XQuery IDE)</a>
+                                        <a href="{eXide}">eXide (XQuery IDE)</a>
                                     </li>
                                     <li>
                                         <a href="http://exist-db.org/api/index.html">Javadocs</a>
@@ -86,10 +72,13 @@
                                 <span>Administration</span>
                                 <ul>
                                     <li>
-                                        <a href="/admin/admin.xql">Admin</a>
+                                        <a href="{dashboard}">Dashboard</a>
                                     </li>
                                     <li>
                                         <a href="/webstart/exist.jnlp">Webstart Client</a>
+                                    </li>
+                                    <li>
+                                        <a href="/admin/">Admin Web Client</a>
                                     </li>
                                 </ul>
                             </li>

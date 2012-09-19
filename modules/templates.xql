@@ -450,11 +450,11 @@ declare function templates:error-description($node as node(), $model as map(*)) 
         }
 };
 
-declare function templates:expand-links($node as node(), $model as map(*), $external as xs:string?) {
-    templates:expand-links($node, $external)
+declare function templates:expand-links($node as node(), $model as map(*), $base as xs:string?) {
+    templates:expand-links($node, $base)
 };
 
-declare %private function templates:expand-links($node as node(), $external as xs:string?) {
+declare %private function templates:expand-links($node as node(), $base as xs:string?) {
     typeswitch ($node)
         case element(a) return
             let $href := $node/@href
@@ -462,34 +462,37 @@ declare %private function templates:expand-links($node as node(), $external as x
                 if (starts-with($href, "/")) then
                     concat(request:get-context-path(), $href)
                 else
-                    templates:expand-link($href, $external)
+                    templates:expand-link($href, $base)
             return
                 <a href="{$expanded}">
                 { $node/@* except $href, $node/node() }
                 </a>
         case element() return
             element { node-name($node) } {
-                $node/@*, for $child in $node/node() return templates:expand-links($child, $external)
+                $node/@*, for $child in $node/node() return templates:expand-links($child, $base)
             }
         default return
             $node
 };
 
-declare %private function templates:expand-link($href as xs:string, $external as xs:string?) {
+declare %private function templates:expand-link($href as xs:string, $base as xs:string?) {
     string-join(
         let $analyzed := analyze-string($href, "^\{([^\{\}]+)\}")
         for $component in $analyzed/*/*
-        let $log := util:log("DEBUG", ("Component: ", $component))
         return
             typeswitch($component)
                 case element(fn:match) return
-                    let $name := $component/fn:group/string()
+                    let $arg := $component/fn:group/string()
+                    let $name := if (contains($arg, "|")) then substring-before($arg, "|") else $arg
+                    let $fallback := substring-after($arg, "|")
                     let $app := collection(concat("/db/", $name))
                     return
                         if ($app) then
-                            concat(request:get-context-path(), request:get-attribute("$exist:prefix"), "/", $name)
+                            concat(request:get-context-path(), request:get-attribute("$exist:prefix"), "/", $name, "/")
+                        else if ($fallback) then
+                            $base || $fallback
                         else
-                            $external
+                            concat(request:get-context-path(), "/404.html")
                 default return
                     $component/text()
         , ""
