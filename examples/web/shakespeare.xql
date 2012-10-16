@@ -18,7 +18,7 @@ declare variable $shakes:SESSION := "shakespeare:results";
  :)
 declare 
     %templates:wrap
-function shakes:query($node as node()*, $model as map(*), $query as xs:string?, $mode as xs:string) {
+function shakes:query($node as node()*, $model as map(*), $query as xs:string?, $mode as xs:string?) {
     session:create(),
     let $hits := shakes:do-query($query, $mode)
     let $store := session:set-attribute($shakes:SESSION, $hits)
@@ -26,7 +26,7 @@ function shakes:query($node as node()*, $model as map(*), $query as xs:string?, 
         map:entry("hits", $hits)
 };
 
-declare function shakes:do-query($queryStr as xs:string?, $mode as xs:string) {
+declare function shakes:do-query($queryStr as xs:string?, $mode as xs:string?) {
     let $query := shakes:create-query($queryStr, $mode)
     for $hit in collection($config:app-root)//SCENE[ft:query(., $query)]
     order by ft:score($hit) descending
@@ -75,7 +75,7 @@ function shakes:show-hits($node as node()*, $model as map(*), $start as xs:int) 
 (:~
     Callback function called from the kwic module.
 :)
-declare %private function shakes:filter($node as node(), $mode as xs:string) as xs:string? {
+declare %private function shakes:filter($node as node(), $mode as xs:string?) as xs:string? {
   if ($node/parent::SPEAKER or $node/parent::STAGEDIR) then 
       ()
   else if ($mode eq 'before') then 
@@ -87,7 +87,7 @@ declare %private function shakes:filter($node as node(), $mode as xs:string) as 
 (:~
     Helper function: create a lucene query from the user input
 :)
-declare function shakes:create-query($queryStr as xs:string?, $mode as xs:string) {
+declare function shakes:create-query($queryStr as xs:string?, $mode as xs:string?) {
         <query>
         {
             if ($mode eq 'any') then

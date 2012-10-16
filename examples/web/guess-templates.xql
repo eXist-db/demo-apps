@@ -24,7 +24,7 @@ declare function guess:init($node as node(), $model as map(*)) as map(*){
 (:~
  :  Evaluate the guessed number, which is passed in as model.
  :)
-declare function guess:evaluate-guess($node as node(), $model as map(*), $guess as xs:integer) {
+declare function guess:evaluate-guess($node as node(), $model as map(*), $guess as xs:integer?) {
     let $random := $model("random")
     let $count as xs:integer := session:get-attribute("guesses") + 1
     return (

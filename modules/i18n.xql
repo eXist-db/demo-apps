@@ -36,7 +36,7 @@ declare function i18n:apply($content as node()+, $modules as element(modules), $
  : @param $model a sequence of items which will be passed to all called template functions. Use this to pass
  : information between templating instructions.
 :)
-declare function i18n:process($nodes as node()*, $selectedLang as xs:string,$pathToCatalogues as xs:string, $defaultLang as xs:string) {        
+declare function i18n:process($nodes as node()*, $selectedLang as xs:string,$pathToCatalogues as xs:string, $defaultLang as xs:string?) {        
     for $node in $nodes              
         let $selectedCatalogue := i18n:getLanguageCollection($nodes,$selectedLang, $pathToCatalogues,$defaultLang)  
         return        
@@ -162,7 +162,7 @@ declare function i18n:replaceParam($node as node(), $param as node(),$paramKey a
             i18n:translate($node, $result,$selectedCatalogue)
 };
 
-declare function i18n:getLanguageCollection($node as node(),$selectedLang as xs:string,$pathToCatalogues as xs:string, $defaultLang as xs:string) {
+declare function i18n:getLanguageCollection($node as node()*,$selectedLang as xs:string,$pathToCatalogues as xs:string, $defaultLang as xs:string?) {
   let $tmpNode :=  typeswitch ($node)
         case document-node() return $node/node()                         
         default return $node
@@ -182,7 +182,7 @@ declare function i18n:getLanguageCollection($node as node(),$selectedLang as xs:
 
 };
 
-declare function i18n:getPathToCatalgogues($node as node(),$pathToCatalogues as xs:string){
+declare function i18n:getPathToCatalgogues($node as node()*,$pathToCatalogues as xs:string){
     if(string-length($pathToCatalogues) gt 0) then        
         $pathToCatalogues
     else if(string-length(request:get-parameter("cataloguesPath", "")) gt 0) then 
@@ -192,7 +192,7 @@ declare function i18n:getPathToCatalgogues($node as node(),$pathToCatalogues as 
     else 'ERROR: no path to language catalogues given'
 };
 
-declare function i18n:getSelectedLanguage($node as node(),$selectedLang as xs:string) {    
+declare function i18n:getSelectedLanguage($node as node()*,$selectedLang as xs:string) {    
     if(string-length(request:get-parameter("lang", "")) gt 0) then
         (: use http parameter lang as selected language :)
         request:get-parameter("lang", "")
