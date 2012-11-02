@@ -64,7 +64,7 @@ function shakes:show-hits($node as node()*, $model as map(*), $start as xs:int) 
     for $hit at $p in subsequence($model("hits"), $start, 10)
     let $kwic := kwic:summarize($hit, <config width="40" table="yes"/>, shakes:filter#2)
     return
-        <div class="scene">
+        <div class="scene" xmlns="http://www.w3.org/1999/xhtml">
             <h3>{$hit/ancestor::PLAY/TITLE/text()}</h3>
             <h4>{$hit/TITLE/text()}</h4>
             <span class="number">{$start + $p - 1}</span>

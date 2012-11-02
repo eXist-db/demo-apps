@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<div xmlns="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:xf="http://www.w3.org/2002/xforms" class="templates:surround?with=templates/page.html&amp;at=main">
+    <xf:model>
+        <xf:instance xmlns="" id="all">
+            <addresses/>
+        </xf:instance>
+        <xf:instance xmlns="" id="template">
+            <address>
+                <name/>
+                <street/>
+                <city/>
+            </address>
+        </xf:instance>
+        <xf:instance xmlns="" id="search">
+            <parameters>
+                <query/>
+                <field>name</field>
+            </parameters>
+        </xf:instance>
+        <xf:bind id="address-id" nodeset="//address/@id" relevant="true()"/>
+        <!-- Submissions -->
+        <!-- Load list of addresses -->
+        <xf:submission id="load" resource="{$restxq}address" method="get" replace="instance">
+            <xf:message ev:event="xforms-submit-done" level="ephemeral">Address list loaded.</xf:message>
+        </xf:submission>
+        <!-- Save an address -->
+        <xf:submission id="save" resource="{$restxq}address" method="put" replace="instance" ref="//address[index('address-repeat')]">
+            <xf:message ev:event="xforms-submit-done" level="ephemeral">Address saved.</xf:message>
+            <xf:message ev:event="xforms-submit-error" level="ephemeral">An error occurred.</xf:message>
+        </xf:submission>
+        <!-- Delete an address -->
+        <xf:submission id="delete" resource="{$restxq}address/{instance('all')//address[index('address-repeat')]/@id}" method="delete" replace="instance">
+            <xf:message ev:event="xforms-submit-done" level="ephemeral">Address deleted.</xf:message>
+            <xf:message ev:event="xforms-submit-error" level="ephemeral">An error occurred.</xf:message>
+        </xf:submission>
+        <!-- Search addresses -->
+        <xf:submission id="search" resource="{$restxq}search" method="get" serialization="application/x-www-form-urlencoded" ref="instance('search')" targetref="instance('all')" replace="instance">
+            <xf:message ev:event="xforms-submit-done" level="ephemeral">Address list loaded.</xf:message>
+        </xf:submission>
+        <!-- Initial loading of the address list when form is ready -->
+        <xf:action ev:event="xforms-ready">
+            <xf:send submission="load"/>
+        </xf:action>
+    </xf:model>
+    <div class="row-fluid">
+        <div id="content" class="span8">
+            <div class="page-header">
+                <h1>XForms with RestXQ Demo</h1>
+            </div>
+            <h2>Manage Addresses</h2>
+            <table>
+                <tr>
+                    <td>
+                        <xf:select1 ref="instance('search')/field">
+                            <xf:label/>
+                            <xf:item>
+                                <xf:label>Name</xf:label>
+                                <xf:value>name</xf:value>
+                            </xf:item>
+                            <xf:item>
+                                <xf:label>Street</xf:label>
+                                <xf:value>street</xf:value>
+                            </xf:item>
+                            <xf:item>
+                                <xf:label>City</xf:label>
+                                <xf:value>city</xf:value>
+                            </xf:item>
+                        </xf:select1>
+                    </td>
+                    <td>
+                        <xf:input class="search" ref="instance('search')/query" incremental="true">
+                            <xf:label/>
+                            <xf:hint>Filter displayed addresses by entering a few characters contained
+                            in a name, street or city.</xf:hint>
+                            <xf:send submission="search" ev:event="xforms-value-changed"/>
+                        </xf:input>
+                    </td>
+                </tr>
+            </table>
+            <table class="addresses">
+                <thead>
+                    <th>Name</th>
+                    <th>Street</th>
+                    <th>City</th>
+                </thead>
+                <tbody id="address-repeat" xf:repeat-nodeset="//address">
+                    <tr>
+                        <td>
+                            <xf:output ref="name"/>
+                        </td>
+                        <td>
+                            <xf:output ref="street"/>
+                        </td>
+                        <td>
+                            <xf:output ref="city"/>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <xf:group appearance="minimal" class="action-buttons">
+                <xf:submit submission="delete">
+                    <xf:label>Delete</xf:label>
+                </xf:submit>
+                <xf:trigger>
+                    <xf:label>New</xf:label>
+                    <xf:action>
+                        <xf:insert nodeset="//address" at="last()" position="after" origin="instance('template')"/>
+                    </xf:action>
+                </xf:trigger>
+            </xf:group>
+            <xf:group ref="//address[index('address-repeat')]" appearance="full" class="edit">
+                <xf:input ref="name">
+                    <xf:label>Name:</xf:label>
+                </xf:input>
+                <xf:input ref="street">
+                    <xf:label>Street:</xf:label>
+                </xf:input>
+                <xf:input ref="city">
+                    <xf:label>City:</xf:label>
+                </xf:input>
+            </xf:group>
+            <xf:submit submission="save">
+                <xf:label>Save</xf:label>
+            </xf:submit>
+        </div>
+        <div class="span4">
+            <div class="well">
+                <p>A simple XForms application which talks to a RESTXQ service defining the following endpoints:</p>
+                <ul>
+                    <li>GET /address</li>
+                    <li>GET /address/{$id}</li>
+                    <li>PUT /address</li>
+                    <li>DELETE /address/{$id}</li>
+                    <li>GET /search?query=&amp;field=</li>
+                </ul>
+                <p>It uses a number of XForms submissions to retrieve data, search, save or delete entries.</p>
+                <p>The XForms code is in <a href="examples/xforms/demo.html" class="templates:load-source">demo.html</a>. The RestXQ endpoints
+                    are defined in <a href="examples/xforms/restxq-demo.xql" class="templates:load-source">restxq-demo.xql</a>.
+                </p>
+                <p>The form can transparently switch between two RestXQ implementations:</p>
+                <table class="switch-endpoints">
+                    <tr>
+                        <td>
+                            <a href="demo.html?restxq=/exist/restxq/" class="btn btn-small">Java RestXQ</a>
+                        </td>
+                        <td>RestXQ implemented in Java</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <a href="demo.html" class="btn btn-small">RestXQ XQuery</a>
+                        </td>
+                        <td>RestXQ implemented in XQuery</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

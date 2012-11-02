@@ -254,3 +254,23 @@ input:required:valid {
 .testresult .pass {
     background-color: #69EB7F;
 }
+
+.addresses {
+    width: 100%;
+    margin: 10px 0;
+    border-top: 1px solid #777;
+    border-bottom: 1px solid #777;
+    padding: 10px 0;
+}
+
+.addresses th {
+    font-weight: bold;
+}
+
+.search {
+    margin-bottom: 4px;
+}
+
+.switch-endpoints td {
+    padding-right: 1em;
+}

@@ -455,29 +455,32 @@ declare function templates:expand-links($node as node(), $model as map(*), $base
 };
 
 declare %private function templates:expand-links($node as node(), $base as xs:string?) {
-    typeswitch ($node)
-        case element(a) return
-            let $href := $node/@href
-            let $expanded :=
-                if (starts-with($href, "/")) then
-                    concat(request:get-context-path(), $href)
-                else
-                    templates:expand-link($href, $base)
-            return
-                <a href="{$expanded}">
-                { $node/@* except $href, $node/node() }
-                </a>
-        case element() return
-            element { node-name($node) } {
-                $node/@*, for $child in $node/node() return templates:expand-links($child, $base)
-            }
-        default return
-            $node
+    if ($node instance of element()) then
+        let $node-name := node-name($node)
+        return
+            if (local-name-from-QName($node-name) = "a") then
+                let $href := $node/@href
+                let $expanded :=
+                    if (starts-with($href, "/")) then
+                        concat(request:get-context-path(), $href)
+                    else
+                        templates:expand-link($href, $base)
+                return
+                    <a href="{$expanded}">
+                    { $node/@* except $href, $node/node() }
+                    </a>
+            else
+                element { node-name($node) } {
+                    $node/@*, for $child in $node/node() return templates:expand-links($child, $base)
+                }
+    else
+        $node
 };
 
 declare %private function templates:expand-link($href as xs:string, $base as xs:string?) {
     string-join(
         let $analyzed := analyze-string($href, "^\{([^\{\}]+)\}")
+        let $log := util:log("WARN", $analyzed)
         for $component in $analyzed/*/*
         return
             typeswitch($component)

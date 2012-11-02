@@ -15,5 +15,12 @@
         <create qname="infant_mortality" type="xs:double"/>
         <create qname="inflation" type="xs:double"/>
         <create qname="name" type="xs:string"/>
+        <ngram qname="name"/>
+        <ngram qname="street"/>
+        <ngram qname="city"/>
+        <ngram qname="address"/>
     </index>
+    <triggers>
+        <trigger class="org.exist.extensions.exquery.restxq.impl.RestXqTrigger"/>
+    </triggers>
 </collection>
