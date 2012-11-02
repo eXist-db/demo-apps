@@ -398,7 +398,10 @@ declare function templates:load-source($node as node(), $model as map(*)) as nod
     let $context := request:get-context-path()
     let $eXidePath := if (doc-available("/db/eXide/index.html")) then "apps/eXide" else "eXide"
     return
-        <a href="{$context}/{$eXidePath}/index.html?open={$config:app-root}/{$href}" target="eXide">{$node/node()}</a>
+        element { node-name($node) } {
+            attribute href { $context || "/" || $eXidePath || "/index.html?open=" || $config:app-root || "/" || $href },
+            $node/node()
+        }
 };
 
 (:~
@@ -466,11 +469,12 @@ declare %private function templates:expand-links($node as node(), $base as xs:st
                     else
                         templates:expand-link($href, $base)
                 return
-                    <a href="{$expanded}">
-                    { $node/@* except $href, $node/node() }
-                    </a>
+                    element { $node-name } {
+                        attribute href { $expanded },
+                        $node/@* except $href, $node/node()
+                    }
             else
-                element { node-name($node) } {
+                element { $node-name } {
                     $node/@*, for $child in $node/node() return templates:expand-links($child, $base)
                 }
     else

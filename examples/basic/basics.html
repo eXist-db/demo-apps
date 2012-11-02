@@ -1,4 +1,5 @@
-<article class="templates:surround?with=templates/page.html&amp;at=content">
+<?xml version="1.0" encoding="UTF-8"?>
+<article xmlns="http://www.w3.org/1999/xhtml" class="templates:surround?with=templates/page.html&amp;at=content">
     <h1 class="front-title">Basic XQuery Examples</h1>
     <p>This page contains a collection of simple XQuery examples which should give a first glimpse of what's possible
     with eXist and XQuery. To learn more about XQuery, we recommend to head over to the excellent
@@ -26,7 +27,7 @@
             <pre class="templates:display-source">
 let $query :=
     &lt;query&gt;
-        &lt;near slop=&quot;20&quot;&gt;&lt;term&gt;love&lt;/term&gt;&lt;near&gt;father&lt;/near&gt;&lt;/near&gt;
+        &lt;near slop="20"&gt;&lt;term&gt;love&lt;/term&gt;&lt;near&gt;father&lt;/near&gt;&lt;/near&gt;
     &lt;/query&gt;
 return //SPEECH[ft:query(., $query)]
             </pre>
@@ -98,39 +99,39 @@ as xs:string {
         </section>
         <section>
             <h3>Create a multiplication table</h3>
-            <pre class="templates:display-source"><![CDATA[
+            <pre class="templates:display-source">
 xquery version "1.0";
 declare option exist:serialize "method=html5 media-type=text/html";
 declare variable $max := 20;
 
-<table border="1" width="100%">
-    <th>1 x 1</th>
+&lt;table border="1" width="100%"&gt;
+    &lt;th&gt;1 x 1&lt;/th&gt;
     {
         for $i in (1 to $max)
         return
-            <th>{ $i}</th>
+            &lt;th&gt;{ $i}&lt;/th&gt;
     }
       
     {
         for $a in (1 to $max)  
         return 
-            <tr>
-                <th>{ $a,"*"}</th>
+            &lt;tr&gt;
+                &lt;th&gt;{ $a,"*"}&lt;/th&gt;
                 
                 {
                     for $b in (1 to $max)
                     return
                         if ($a = $b) then
-                            <td bgcolor="#F46978">{$a * $b}</td>
+                            &lt;td bgcolor="#F46978"&gt;{$a * $b}&lt;/td&gt;
                         else if ($a mod 2) then
-                            <td bgcolor="#A46978">{$a * $b}</td> 
+                            &lt;td bgcolor="#A46978"&gt;{$a * $b}&lt;/td&gt; 
                         else
-                            <td bgcolor="#A09224">{$a * $b}</td> 
+                            &lt;td bgcolor="#A09224"&gt;{$a * $b}&lt;/td&gt; 
                 }            
-            </tr>
+            &lt;/tr&gt;
   
     }
-</table>]]></pre>
+&lt;/table&gt;</pre>
             <p>To view the output of this query as HTML, save it to the database from within eXide, e.g. as
             /db/test.xql. You can then call it by entering the following URL into your browser:</p>
             <p>
@@ -183,7 +184,7 @@ declare option exist:serialize "method=html5 media-type=text/html";
         <section>
             <h3>For each country, list the 3 cities with the highest population</h3>
             <pre class="templates:display-source">
-<![CDATA[(:  This script accesses the mondial database, which can be
+(:  This script accesses the mondial database, which can be
     found at http://dbis.informatik.uni-goettingen.de/Mondial/ :)
 for $country in /mondial/country
 let $cities := 
@@ -192,11 +193,11 @@ let $cities :=
     return $city)
 order by $country/name
 return
-    <country name="{$country/name}">
+    &lt;country name="{$country/name}"&gt;
     {
         subsequence($cities, 1, 3)
     }
-    </country>]]></pre>
+    &lt;/country&gt;</pre>
         </section>
         <section>
             <h3>Find all Spanish provinces and their cities</h3>
@@ -220,14 +221,14 @@ return
         <section>
             <h3>Find the countries with the largest Roman Catholic population</h3>
             <pre class="templates:display-source">
-<![CDATA[for $country in /mondial/country
+for $country in /mondial/country
 where some $r in $country/religions satisfies $r = "Roman Catholic"
 order by $country/religions[. = "Roman Catholic"]/@percentage cast as xs:double descending
 return
-  <country name="{$country/name}">
+  &lt;country name="{$country/name}"&gt;
     {$country/religions}
-  </country>
-]]></pre>
+  &lt;/country&gt;
+</pre>
         </section>
     </section>
     <div class="source-links">
