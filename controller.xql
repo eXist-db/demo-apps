@@ -116,11 +116,10 @@ else if (ends-with($exist:resource, ".html")) then
             <forward url="{$exist:controller}/modules/view.xql"/>
         </error-handler>
     </dispatch>
-
-(: Requests for javascript libraries are resolved to the file system :)
-else if (contains($exist:path, "/libs/")) then
+        
+else if (contains($exist:path, "/$shared/")) then
     <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
-        <forward url="/{substring-after($exist:path, '/libs/')}" absolute="yes"/>
+        <forward url="/shared-resources/{substring-after($exist:path, '/$shared/')}"/>
     </dispatch>
 
 (: images, css are contained in the top /resources/ collection. :)

@@ -17,7 +17,7 @@
     with it.</p>
     <section>
         <h2>Switch statements</h2>
-        <pre class="templates:display-source">
+        <pre class="demo:display-source">
 xquery version "3.0";
 
 let $animal := "Duck"
@@ -32,7 +32,7 @@ return
     </section>
     <section>
         <h2>String concatenation</h2>
-        <pre class="templates:display-source">xquery version "3.0";
+        <pre class="demo:display-source">xquery version "3.0";
 
 let $who := "world"
 return
@@ -43,7 +43,7 @@ return
         <h2>Try/Catch</h2>
         <section>
             <h3>Basic example catching any errors:</h3>
-            <pre class="templates:display-source">xquery version "3.0";
+            <pre class="demo:display-source">xquery version "3.0";
     
 let $x := "Hello"
 return
@@ -55,7 +55,7 @@ return
         </section>
         <section>
             <h3>Generating your own errors:</h3>
-            <pre class="templates:display-source">xquery version "3.0";
+            <pre class="demo:display-source">xquery version "3.0";
     
 declare namespace app="http://exist-db.org/myapp";
 
@@ -72,7 +72,7 @@ try {
         <h2>Higher-order Functions</h2>
         <section>
             <h3>Passing an inline function as parameter</h3>
-            <pre class="templates:display-source">xquery version "3.0";
+            <pre class="demo:display-source">xquery version "3.0";
 
 declare namespace ex="http://exist-db.org/xquery/ex";
 
@@ -88,7 +88,7 @@ return
         </section>
         <section>
             <h3>Using a named function reference</h3>
-            <pre class="templates:display-source">xquery version "3.0";
+            <pre class="demo:display-source">xquery version "3.0";
 
 declare namespace ex="http://exist-db.org/xquery/ex";
 
@@ -104,7 +104,7 @@ return
         </section>
         <section>
             <h3>Using a dynamic function lookup</h3>
-            <pre class="templates:display-source">
+            <pre class="demo:display-source">
 xquery version "3.0";
 
 declare namespace ex="http://exist-db.org/xquery/ex2";
@@ -136,20 +136,20 @@ return
         </ul>
         <section>
             <h3>fn:map</h3>
-            <pre class="templates:display-source">
+            <pre class="demo:display-source">
 map(function($a) { $a * $a }, 1 to 5)
             </pre>
         </section>
         <section>
             <h3>fn:filter</h3>
-            <pre class="templates:display-source">fn:filter(function($a) {$a mod 2 = 0}, 1 to 10)</pre>
+            <pre class="demo:display-source">fn:filter(function($a) {$a mod 2 = 0}, 1 to 10)</pre>
         </section>
     </section>
     <section>
         <h2>Closures</h2>
         <section>
             <h3>Inline function using variable from local context</h3>
-            <pre class="templates:display-source">
+            <pre class="demo:display-source">
 xquery version "3.0";
 
 declare function local:apply($names as xs:string*, $f as function(xs:string) as xs:string) {
@@ -174,7 +174,7 @@ return
         the function reference. XQuery 3.0 allows this using ? as an argument placeholder.</p>
         <section>
             <h3>Multiply each item in a sequence with a base value</h3>
-            <pre class="templates:display-source">
+            <pre class="demo:display-source">
 xquery version "3.0";
             
 declare namespace ex="http://exist-db.org/xquery/ex";

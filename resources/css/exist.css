@@ -127,8 +127,6 @@ blockquote { padding: 10px 15px 0 15px; border: 1px solid #abe1ff; background: #
 blockquote h3 { padding: 0; border: 0; margin: 0; font-size: 12px; color: #0083cb }
 blockquote p { padding: 0 0 10px; }
 
-.code { font: 13px/20px bold "Courier New", Courier, monospace; }
-
 /* ---------------------------------------- Local styles ----------------------------------- */
 form { margin: 20px 0; }
 
@@ -236,9 +234,32 @@ input:required:valid {
     list-style-type: none;
 }
 
+.code { 
+    font: 14px/20px "Ubuntu Mono", Menlo, Consolas, "Courier New", Courier, monospace;
+    background: #444444 url($shared/resources/images/noise.png);
+    padding: 8.5px;
+    width: 100%;
+    margin: 18px 0 18px;
+}
+
 .code a {
     padding: 4px;
     border: 1px solid #C7C7C7;
+}
+
+.source .toolbar {
+    padding-left: 18px;
+    border-left: 4px solid #C7C7C7;
+}
+
+.output {
+    margin: 8px 0;
+}
+
+.output .code {
+    max-height: 200px;
+    overflow: auto;
+    background: #ffffff;
 }
 
 .testresult td {

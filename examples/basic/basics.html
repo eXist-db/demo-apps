@@ -12,19 +12,19 @@
         <section>
             <h3>Find out where Juliet talks about love</h3>
             <p>In the following, Jon Bosak's edition of the Shakespeare's Hamlet, Macbeth, and Romeo and Juilet are queried..</p>
-            <pre class="templates:display-source">
+            <pre class="demo:display-source">
     //SPEECH[ft:query(., 'love')][SPEAKER = "JULIET"]
             </pre>
         </section>
         <section>
             <h3>Search for a phrase</h3>
-            <pre class="templates:display-source">
+            <pre class="demo:display-source">
     //SPEECH[ft:query(., '"fenny snake"')]
 </pre>
         </section>
         <section>
             <h3>Find speeches in which "love" and "father" occur closely together, using XML query syntax:</h3>
-            <pre class="templates:display-source">
+            <pre class="demo:display-source">
 let $query :=
     &lt;query&gt;
         &lt;near slop="20"&gt;&lt;term&gt;love&lt;/term&gt;&lt;near&gt;father&lt;/near&gt;&lt;/near&gt;
@@ -34,7 +34,7 @@ return //SPEECH[ft:query(., $query)]
         </section>
         <section>
             <h3>Find speeches in which "boil" and "bubble" occur, ordering them by full-text match score</h3>
-            <pre class="templates:display-source">
+            <pre class="demo:display-source">
 for $m in //SPEECH[ft:query(., "boil bubble")]
 let $score := ft:score($m)
 order by $score descending
@@ -46,7 +46,7 @@ return &lt;m score="{$score}"&gt;{$m}&lt;/m&gt;
         <h2>Functions and recursion</h2>
         <section>
             <h3>Compute the factorial of a given integer</h3>
-            <pre class="templates:display-source">
+            <pre class="demo:display-source">
 xquery version "1.0";
 
 declare function local:fact($n as xs:integer) {
@@ -64,7 +64,7 @@ local:fact(6)
         <h2>Generating HTML</h2>
         <section>
             <h3>Create a 10x10 table and color the cells</h3>
-            <pre class="templates:display-source">
+            <pre class="demo:display-source?type=html">
 xquery version "1.0";
 (: $Id: table.xq 6434 2007-08-28 18:59:23Z ellefj $ :)
 (: An example found in Saxon: creates a table with 10x10 cells :)
@@ -99,7 +99,7 @@ as xs:string {
         </section>
         <section>
             <h3>Create a multiplication table</h3>
-            <pre class="templates:display-source">
+            <pre class="demo:display-source?type=html">
 xquery version "1.0";
 declare option exist:serialize "method=html5 media-type=text/html";
 declare variable $max := 20;
@@ -132,15 +132,10 @@ declare variable $max := 20;
   
     }
 &lt;/table&gt;</pre>
-            <p>To view the output of this query as HTML, save it to the database from within eXide, e.g. as
-            /db/test.xql. You can then call it by entering the following URL into your browser:</p>
-            <p>
-                <a href="http://localhost:8080/exist/rest/db/test.xql">http://localhost:8080/exist/rest/db/test.xql</a>
-            </p>
         </section>
         <section>
             <h3>Generate a list of the acts and scenes in Hamlet, with the roles appearing in each scene</h3>
-            <pre class="templates:display-source">
+            <pre class="demo:display-source?type=html">
 declare option exist:serialize "method=html5 media-type=text/html";
 
 &lt;html&gt;
@@ -183,7 +178,7 @@ declare option exist:serialize "method=html5 media-type=text/html";
         database, a data set compiled by the Universität Göttingen.</p>
         <section>
             <h3>For each country, list the 3 cities with the highest population</h3>
-            <pre class="templates:display-source">
+            <pre class="demo:display-source">
 (:  This script accesses the mondial database, which can be
     found at http://dbis.informatik.uni-goettingen.de/Mondial/ :)
 for $country in /mondial/country
@@ -201,7 +196,7 @@ return
         </section>
         <section>
             <h3>Find all Spanish provinces and their cities</h3>
-            <pre class="templates:display-source">
+            <pre class="demo:display-source">
 xquery version "1.0";
 
 let $country := collection("/db/demo/data")/mondial/country[name = 'Spain']
@@ -220,7 +215,7 @@ return
         </section>
         <section>
             <h3>Find the countries with the largest Roman Catholic population</h3>
-            <pre class="templates:display-source">
+            <pre class="demo:display-source">
 for $country in /mondial/country
 where some $r in $country/religions satisfies $r = "Roman Catholic"
 order by $country/religions[. = "Roman Catholic"]/@percentage cast as xs:double descending

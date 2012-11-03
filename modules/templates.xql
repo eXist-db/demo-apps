@@ -379,20 +379,6 @@ declare function templates:if-module-missing($node as node(), $model as map(*), 
     }
 };
 
-declare function templates:display-source($node as node(), $model as map(*), $lang as xs:string?) {
-    let $source := replace($node/string(), "^\s*(.*)\s*$", "$1")
-    let $context := request:get-context-path()
-    let $eXidePath := if (doc-available("/db/eXide/index.html")) then "apps/eXide" else "eXide"
-    return
-        <div class="code">
-            <pre class="brush: {if ($lang) then $lang else 'xquery'}">
-            { $source }
-            </pre>
-            <a class="btn" href="{$context}/{$eXidePath}/index.html?snip={encode-for-uri($source)}" target="eXide"
-                title="Opens the code in eXide in new tab or existing tab if it is already open.">Try it</a>
-        </div>
-};
-
 declare function templates:load-source($node as node(), $model as map(*)) as node()* {
     let $href := $node/@href/string()
     let $context := request:get-context-path()
