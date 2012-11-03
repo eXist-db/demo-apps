@@ -5,7 +5,7 @@ import module namespace templates="http://exist-db.org/xquery/templates";
 (: The following modules provide functions which will be called by the templating :)
 import module namespace shakespeare="http://exist-db.org/apps/demo/shakespeare" at "../examples/web/shakespeare.xql";
 import module namespace i18n="http://exist-db.org/xquery/i18n/templates" at "i18n-templates.xql";
-import module namespace config="http://exist-db.org/xquery/apps/config";
+import module namespace config="http://exist-db.org/xquery/apps/config" at "config.xqm";
 import module namespace demo="http://exist-db.org/apps/demo" at "demo.xql";
 import module namespace guess="http://exist-db.org/apps/demo/guess" at "../examples/web/guess-templates.xql";
 import module namespace cex="http://exist-db.org/apps/demo/cex" at "cex.xql";
