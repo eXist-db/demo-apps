@@ -30,9 +30,9 @@ $(document).ready(function() {
                     if (type === "xml") {
                         var pre = document.createElement("div");
                         pre.className = "code";
-                        pre.dataset.language = "xml";
                         pre.appendChild(document.createTextNode(data));
                         output.html(pre);
+                        $(pre).data("language", "xml");
                         $(pre).highlight({ theme: "dawn" });
                     } else
                         output.html(data);
