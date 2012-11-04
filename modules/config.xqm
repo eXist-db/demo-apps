@@ -6,7 +6,8 @@ xquery version "3.0";
  :)
 module namespace config="http://exist-db.org/xquery/apps/config";
 
-declare namespace templates="http://exist-db.org/xquery/templates";
+import module namespace templates="http://exist-db.org/xquery/templates";
+
 declare namespace repo="http://exist-db.org/xquery/repo";
 declare namespace expath="http://expath.org/ns/pkg";
 
@@ -96,8 +97,11 @@ declare function config:app-info($node as node(), $model as map(*)) {
         </table>
 };
 
-declare function config:expand-links($node as node(), $model as map(*), $base as xs:string?) {
-    config:expand-links($node, $base)
+declare %templates:wrap function config:expand-links($node as node(), $model as map(*), $base as xs:string?) {
+    let $processed := templates:process($node/node(), $model)
+    for $node in $processed
+    return
+        config:expand-links($node, $base)
 };
 
 declare %private function config:expand-links($node as node(), $base as xs:string?) {

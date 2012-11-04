@@ -237,7 +237,7 @@ input:required:valid {
     border: 1px solid #C7C7C7;
 }
 
-.source .toolbar {
+.source .toolbar, .example-output {
     padding-left: 18px;
     border-left: 4px solid #C7C7C7;
 }
@@ -251,7 +251,7 @@ input:required:valid {
     overflow: auto;
     background: #ffffff;
 }
-
+    
 .testresult td {
     margin: 2px 4px;
     padding: 8px 10px;

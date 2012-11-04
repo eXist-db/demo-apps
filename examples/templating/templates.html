@@ -5,6 +5,9 @@
         eXist. Its design has one goal: a clean separation of concerns. All views are plain, valid HTML5. They do 
         not include any XQuery or other executable code. Application code should go into separate XQuery modules
         and will be called automagically by the templating framework.</p>
+    <p>This document provides a number of simple, working examples. For a detailed description of the features of the
+        templating framework, refer to the <a href="{doc}/templating.xml">documentation</a>.
+    </p>
     <p>The templating module scans the HTML for elements with class attributes following a simple convention
         and tries to translate them into XQuery function calls. In the simplest case,
         a class attribute which triggers a function call just contains the name of a function in an XQuery library
@@ -23,19 +26,19 @@
         <dt>$model</dt>
         <dd>Application data which may have been provided by template functions further up in the document (see below)</dd>
     </dl>
-    <div class="code" data-language="xquery"><![CDATA[
+    <div class="code" data-language="xquery">
 declare function ex:hello($node as node()*, $model as map(*)) as element(span) {
-    <span>Hello World!</span>
-};]]></div>
+    &lt;span&gt;Hello World!&lt;/span&gt;
+};</div>
     <section>
         <h2>Parameter Injection</h2>
         <p>Very often, you will also need to pass static parameters to the template. This is done by appending
         a query string to the template call:</p>
         <div class="code" data-language="xml">&lt;div class="ex:multiply?n1=5&amp;n2=8"&gt;&lt;/div&gt;</div>
         <p>This calls the following function:</p>
-        <div class="code" data-language="xquery"><![CDATA[declare function ex:multiply($node as node()*, $model as map(*), $n1 as xs:int, $n2 as xs:int) {
+        <div class="code" data-language="xquery">declare function ex:multiply($node as node()*, $model as map(*), $n1 as xs:int, $n2 as xs:int) {
     $n1 * $n2
-};]]></div>
+};</div>
         <p>Parameters can be static or dynamic. Static parameters are specified in the HTML as in the example above.
         Dynamic parameters are read from the HTTP request or HTTP session. The templating framework automatically
         tries to determine a value for a given function parameter by looking at those alternatives in turn. If you add
@@ -51,7 +54,7 @@ declare function ex:hello($node as node()*, $model as map(*)) as element(span) {
         element will be lost unless you copy it. To avoid manually copying the wrapper element, the <code>%templates:wrap</code>
         annotation does just that.</p>
         <p>There's also an annotation <code>%templates:default</code> to define a fallback value for a parameter.</p>
-        <div class="code" data-language="xquery"><![CDATA[declare 
+        <div class="code" data-language="xquery">declare 
     %templates:wrap %templates:default("language", "en")
 function ex:hello-world($node as node(), $model as map(*), $language as xs:string, $user as xs:string) as xs:string {
     switch($language)
@@ -61,9 +64,9 @@ function ex:hello-world($node as node(), $model as map(*), $language as xs:strin
             "Ciao " || $user
         default return
             "Hello " || $user
-};]]></div>
+};</div>
         <p>This function could be called with:</p>
-        <div class="code" data-language="xml"><![CDATA[<div class="hi ex:hello-world?user=Mary></div>]]></div>
+        <div class="code" data-language="xml">&lt;div class="hi ex:hello-world?user=Mary&gt;&lt;/div&gt;</div>
         <p>Please note the extra class "hi", which should color the div. Without %templates:wrap,
         it would have been lost. Output below:</p>
         <div class="example-output hi ex:hello-world?user=Mary"/>
@@ -71,20 +74,20 @@ function ex:hello-world($node as node(), $model as map(*), $language as xs:strin
     <section>
         <h2>Nested Template Calls</h2>
         <p>Templating calls can be nested, which enables us to build more complex HTML structures. For example:</p>
-        <div class="code" data-language="xml"><![CDATA[
-<table class="ex:addresses">
-    <tr class="templates:each?from=addresses&amp;to=address">
-        <td class="ex:print-name"></td>
-        <td class="ex:print-street"></td>
-        <td class="ex:print-city"></td>
-    </tr>
-</table>]]></div>
+        <div class="code" data-language="xml">
+&lt;table class="ex:addresses"&gt;
+    &lt;tr class="templates:each?from=addresses&amp;amp;to=address"&gt;
+        &lt;td class="ex:print-name"&gt;&lt;/td&gt;
+        &lt;td class="ex:print-street"&gt;&lt;/td&gt;
+        &lt;td class="ex:print-city"&gt;&lt;/td&gt;
+    &lt;/tr&gt;
+&lt;/table&gt;</div>
         <p>
             <code>ex:addresses</code> retrieves a set of addresses from the database and puts them into the <code>$model</code>.
         <code>templates:each</code> iterates through the model items and processes its inner HTML once for each item. 
         Finally, the <code>ex:print-name</code> and friends print out a specific field of the address.</p>
         <p>The corresponding XQuery functions are:</p>
-        <div class="code" data-language="xquery"><![CDATA[
+        <div class="code" data-language="xquery">
 declare
     %templates:wrap
 function ex:addresses($node as node(), $model as map(*)) as map(*) {
@@ -108,7 +111,7 @@ declare
 function ex:print-street($node as node(), $model as map(*)) {
     $model("address")/street/string()
 };
-]]></div>
+</div>
         <p>Again, the HTML output is displayed below:</p>
         <div class="example-output">
             <table class="ex:addresses">
@@ -123,6 +126,8 @@ function ex:print-street($node as node(), $model as map(*)) {
     <section>
         <h2>Source Links</h2>
         <ul>
+            <li>The <a href="examples/templating/examples.xql" class="templates:load-source">template functions</a>
+                used for the examples in this page.</li>
             <li>The <a href="modules/view.xql" class="templates:load-source">main XQuery</a> which triggers the
             templating in this app.</li>
             <li>Shakespeare app: the <a href="examples/web/shakespeare.html" class="templates:load-source">HTML</a>
