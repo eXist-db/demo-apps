@@ -140,7 +140,7 @@ declare %private function config:expand-link($href as xs:string, $base as xs:str
                     let $app := collection(concat("/db/", $name))
                     return
                         if ($app) then
-                            concat(request:get-context-path(), request:get-attribute("$exist:prefix"), "/", $name, "/")
+                            concat(request:get-context-path(), request:get-attribute("$exist:prefix"), "/", $name)
                         else if ($fallback) then
                             $base || $fallback
                         else

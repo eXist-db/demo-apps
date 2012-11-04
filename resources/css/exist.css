@@ -1,9 +1,9 @@
 @charset "utf-8";
 /* CSS Document */
 
+@import url('$shared/resources/css/fonts.css');
 @import url('bootstrap.min.css');
 @import url('dropdowns.css');
-@import url('$shared/resources/css/fonts.css');
 
 /* ---------------------------------------- LAYOUT ---------------------------------------- */
 
