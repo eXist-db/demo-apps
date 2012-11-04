@@ -5,7 +5,7 @@
         <p>The i18n XQuery module is a general-purpose library to internationalize an XML document.
         For more information about the supported format read the <a href="i18n-docs.html">documentation</a>.</p>
         <p>This page uses HTML templating. It calls the i18n module through a template instruction as follows:</p>
-        <pre class="brush: xml"><![CDATA[<div class="i18n:translate?lang=es&amp;catalogues=data/i18n">...</div>]]></pre>
+        <pre class="brush: xml">&lt;div class="i18n:translate?lang=es&amp;amp;catalogues=data/i18n"&gt;...&lt;/div&gt;</pre>
         <p>The following files are used:</p>
         <table>
             <tr>
@@ -40,7 +40,7 @@
                 <pre>&lt;i18n:text key="translateSimpleText"&gt;Translate simple text&lt;/i18n:text&gt;</pre>
             </div>
             <p>Result</p>
-            <div class="result">
+            <div class="example-output">
                 <i18n:text key="translateSimpleText">Translate simple text</i18n:text>
             </div>
         </div>
@@ -56,7 +56,7 @@
     </pre>
             </div>
             <p>Result</p>
-            <div class="result">
+            <div class="example-output">
                 <i18n:translate>
                     <i18n:text key="translateTextWithNumericalPropertiesSample">Text to translate with {2} parameters to substitute (in {1} order)</i18n:text>
                     <i18n:param>numerical</i18n:param>
@@ -75,7 +75,7 @@
     &lt;/i18n:translate&gt;</pre>
             </div>
             <p>Result</p>
-            <div class="result">
+            <div class="example-output">
                 <i18n:translate>
                     <i18n:text key="translateTextWithAlphabeticalPropertiesSample">Text to translate with {number} parameters to substitute (in {alphabetical} order)</i18n:text>
                     <i18n:param key="alphabetical">alphabetical</i18n:param>
@@ -96,7 +96,7 @@
     </pre>
             </div>
             <p>Result</p>
-            <div class="result">
+            <div class="example-output">
                 <i18n:translate>
                     <i18n:text key="translateTextWithTranslatedNumericalPropertiesSample">Text to translate with {1} to substitute</i18n:text>
                     <i18n:param>
@@ -117,7 +117,7 @@
     &lt;/i18n:translate&gt;</pre>
             </div>
             <p>Result</p>
-            <div class="result">
+            <div class="example-output">
                 <i18n:translate>
                     <i18n:text key="translateTextWithTranslatedAlphabeticalPropertiesSample">Text to translate with{translatedParameter} to substitute</i18n:text>
                     <i18n:param key="translatedParameter">
@@ -133,7 +133,7 @@
                 <pre>&lt;div id="testLocalizedAttributes" name="i18n(key1)" title="i18n(key2,defaultValue1)" class="i18n(nonExistingKey,value_for_not_existing_key)"/&gt;</pre>
             </div>
             <p>Result (take a look at the markup to verify the result)</p>
-            <div class="result">
+            <div class="example-output">
                 <div id="testLocalizedAttributes" name="i18n(key1)" title="i18n(key2,defaultValue1)" class="i18n(nonExistingKey,value_for_not_existing_key)">translated attributes</div>
             </div>
         </div>

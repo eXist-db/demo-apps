@@ -9,12 +9,17 @@ import module namespace config="http://exist-db.org/xquery/apps/config" at "conf
 import module namespace demo="http://exist-db.org/apps/demo" at "demo.xql";
 import module namespace guess="http://exist-db.org/apps/demo/guess" at "../examples/web/guess-templates.xql";
 import module namespace cex="http://exist-db.org/apps/demo/cex" at "cex.xql";
+import module namespace ex="http://exist-db.org/apps/demo/templating/examples" at "../examples/templating/examples.xql";
+
 
 declare namespace output = "http://www.w3.org/2010/xslt-xquery-serialization";
 
 declare option output:method "html5";
 declare option output:media-type "text/html";
 
+let $config := map {
+    $templates:CONFIG_APP_ROOT := $config:app-root
+}
 let $lookup := function($functionName as xs:string, $arity as xs:int) {
     try {
         function-lookup(xs:QName($functionName), $arity)
@@ -24,4 +29,4 @@ let $lookup := function($functionName as xs:string, $arity as xs:int) {
 }
 let $content := request:get-data()
 return
-    templates:apply($content, $lookup, ())
+    templates:apply($content, $lookup, (), $config)

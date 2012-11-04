@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<article class="templates:surround?with=templates/page.html&amp;at=content">
+    <h1>Templating</h1>
+    <p>The templating module is used throughout this and most of the other applications which ship with
+        eXist. Its design has one goal: a clean separation of concerns. All views are plain, valid HTML5. They do 
+        not include any XQuery or other executable code. Application code should go into separate XQuery modules
+        and will be called automagically by the templating framework.</p>
+    <p>The templating module scans the HTML for elements with class attributes following a simple convention
+        and tries to translate them into XQuery function calls. In the simplest case,
+        a class attribute which triggers a function call just contains the name of a function in an XQuery library
+        known to the system. For example:</p>
+    <div class="code" data-language="xml">&lt;div class="ex:hello"&gt;&lt;/div&gt;</div>
+    <p>The expanded output of this template call is shown below:</p>
+    <div class="example-output">
+        <div class="ex:hello"/>
+    </div>
+    <p>Here's the code for the templating function. The two parameters are required for any function
+        to be used by the templating framework:</p>
+    <dl>
+        <dt>$node</dt>
+        <dd>The HTML node being processed. This is the node with the class attribute which triggered the
+                templating call.</dd>
+        <dt>$model</dt>
+        <dd>Application data which may have been provided by template functions further up in the document (see below)</dd>
+    </dl>
+    <div class="code" data-language="xquery"><![CDATA[
+declare function ex:hello($node as node()*, $model as map(*)) as element(span) {
+    <span>Hello World!</span>
+};]]></div>
+    <section>
+        <h2>Parameter Injection</h2>
+        <p>Very often, you will also need to pass static parameters to the template. This is done by appending
+        a query string to the template call:</p>
+        <div class="code" data-language="xml">&lt;div class="ex:multiply?n1=5&amp;n2=8"&gt;&lt;/div&gt;</div>
+        <p>This calls the following function:</p>
+        <div class="code" data-language="xquery"><![CDATA[declare function ex:multiply($node as node()*, $model as map(*), $n1 as xs:int, $n2 as xs:int) {
+    $n1 * $n2
+};]]></div>
+        <p>Parameters can be static or dynamic. Static parameters are specified in the HTML as in the example above.
+        Dynamic parameters are read from the HTTP request or HTTP session. The templating framework automatically
+        tries to determine a value for a given function parameter by looking at those alternatives in turn. If you add
+        "?n1=2&amp;n2=4" to the location URL of this page in your browser, you'll see how the output below will change:</p>
+        <p>Again, the expanded output is shown below:</p>
+        <div class="example-output">
+            <div class="ex:multiply?n1=5&amp;n2=8"/>
+        </div>
+    </section>
+    <section>
+        <h2>Annotations</h2>
+        <p>By default, the return value of a templating function will replace the HTML node it was called for. This means the
+        element will be lost unless you copy it. To avoid manually copying the wrapper element, the <code>%templates:wrap</code>
+        annotation does just that.</p>
+        <p>There's also an annotation <code>%templates:default</code> to define a fallback value for a parameter.</p>
+        <div class="code" data-language="xquery"><![CDATA[declare 
+    %templates:wrap %templates:default("language", "en")
+function ex:hello-world($node as node(), $model as map(*), $language as xs:string, $user as xs:string) as xs:string {
+    switch($language)
+        case "de" return
+            "Hallo " || $user
+        case "it" return
+            "Ciao " || $user
+        default return
+            "Hello " || $user
+};]]></div>
+        <p>This function could be called with:</p>
+        <div class="code" data-language="xml"><![CDATA[<div class="hi ex:hello-world?user=Mary></div>]]></div>
+        <p>Please note the extra class "hi", which should color the div. Without %templates:wrap,
+        it would have been lost. Output below:</p>
+        <div class="example-output hi ex:hello-world?user=Mary"/>
+    </section>
+    <section>
+        <h2>Nested Template Calls</h2>
+        <p>Templating calls can be nested, which enables us to build more complex HTML structures. For example:</p>
+        <div class="code" data-language="xml"><![CDATA[
+<table class="ex:addresses">
+    <tr class="templates:each?from=addresses&amp;to=address">
+        <td class="ex:print-name"></td>
+        <td class="ex:print-street"></td>
+        <td class="ex:print-city"></td>
+    </tr>
+</table>]]></div>
+        <p>
+            <code>ex:addresses</code> retrieves a set of addresses from the database and puts them into the <code>$model</code>.
+        <code>templates:each</code> iterates through the model items and processes its inner HTML once for each item. 
+        Finally, the <code>ex:print-name</code> and friends print out a specific field of the address.</p>
+        <p>The corresponding XQuery functions are:</p>
+        <div class="code" data-language="xquery"><![CDATA[
+declare
+    %templates:wrap
+function ex:addresses($node as node(), $model as map(*)) as map(*) {
+    map { "addresses" := collection($config:app-root || "/data/addresses")/address }
+};
+
+declare 
+    %templates:wrap
+function ex:print-name($node as node(), $model as map(*)) {
+    $model("address")/name/string()
+};
+
+declare 
+    %templates:wrap
+function ex:print-city($node as node(), $model as map(*)) {
+    $model("address")/city/string()
+};
+
+declare 
+    %templates:wrap
+function ex:print-street($node as node(), $model as map(*)) {
+    $model("address")/street/string()
+};
+]]></div>
+        <p>Again, the HTML output is displayed below:</p>
+        <div class="example-output">
+            <table class="ex:addresses">
+                <tr class="templates:each?from=addresses&amp;to=address">
+                    <td class="ex:print-name"/>
+                    <td class="ex:print-street"/>
+                    <td class="ex:print-city"/>
+                </tr>
+            </table>
+        </div>
+    </section>
+    <section>
+        <h2>Source Links</h2>
+        <ul>
+            <li>The <a href="modules/view.xql" class="templates:load-source">main XQuery</a> which triggers the
+            templating in this app.</li>
+            <li>Shakespeare app: the <a href="examples/web/shakespeare.html" class="templates:load-source">HTML</a>
+            and the <a href="examples/web/shakespeare.xql" class="templates:load-source">XQuery module</a> implementing
+            the templating functions.</li>
+            <li>The source code of the <a href="modules/templates.xql" class="templates:load-source">templating module</a>
+            itself.</li>
+        </ul>
+    </section>
+</article>
