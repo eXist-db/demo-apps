@@ -2,7 +2,7 @@
 <project xmlns:xdb="http://exist-db.org/ant" default="xar" name="Demo Apps">
     <property name="build.dir" value="build"/>
     <property name="project.app" value="demo"/>
-    <property name="project.version" value="0.1"/>
+    <property name="project.version" value="0.2"/>
     <property name="server.url" value="http://demo.exist-db.org/exist/apps/public-repo/public/"/>
     <target name="xar">
         <mkdir dir="${build.dir}"/>
