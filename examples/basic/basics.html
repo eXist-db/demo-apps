@@ -140,7 +140,7 @@ declare option exist:serialize "method=html5 media-type=text/html";
 
 &lt;html&gt;
     &lt;body&gt;{
-        for $act in doc("/db/demo/data/hamlet.xml")/PLAY/ACT
+        for $act in doc("/db/apps/demo/data/hamlet.xml")/PLAY/ACT
         return
             &lt;ul&gt;
                 &lt;li&gt;
@@ -199,7 +199,7 @@ return
             <pre class="demo:display-source">
 xquery version "1.0";
 
-let $country := collection("/db/demo/data")/mondial/country[name = 'Spain']
+let $country := /mondial/country[name = 'Spain']
 for $province in $country/province
 order by $province/name
 return
