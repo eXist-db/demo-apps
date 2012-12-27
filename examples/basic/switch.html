@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<article xmlns="http://www.w3.org/1999/xhtml" class="templates:surround?with=templates/page.html&amp;at=content">
+    <h1>Switch statements</h1>
+    <pre class="demo:display-source">
+xquery version "3.0";
+
+let $animal := "Duck"
+return
+switch ($animal)
+   case "Cow" return "Moo"
+   case "Cat" return "Meow"
+   case "Duck" return "Quack"
+   case "Dog" case "Pitbull" return "Wuff"
+   default return "What's that odd noise?"
+    </pre>
+</article>

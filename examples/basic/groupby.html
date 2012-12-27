@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<article xmlns="http://www.w3.org/1999/xhtml" class="templates:surround?with=templates/page.html&amp;at=content">
+    <h1>Group by</h1>
+    <section>
+        <h3>Run full text search on Shakespeare and group results by speaker</h3>
+        <pre class="demo:display-source">xquery version "3.0";
+
+let $query := "king"
+for $speechBySpeaker in //SPEECH[ft:query(., $query)]
+group by $speaker := $speechBySpeaker/SPEAKER
+order by $speaker
+return
+    &lt;speaker name="{$speaker}"&gt;
+    { $speechBySpeaker }
+    &lt;/speaker&gt;</pre>
+    </section>
+    <section>
+        <h3>Group results by speaker and scene</h3>
+        <pre class="demo:display-source?type=html">xquery version "3.0";
+
+let $query := "poison"
+for $speechBySpeaker in //SPEECH[ft:query(., $query)]
+group by $speaker := $speechBySpeaker/SPEAKER
+order by $speaker
+return
+    &lt;ul&gt;
+        &lt;li&gt;
+            &lt;h3&gt;{$speaker/text()}&lt;/h3&gt;
+            &lt;ul&gt;
+            {
+                for $speech in $speechBySpeaker
+                group by $scene := $speech/ancestor::SCENE/TITLE
+                return
+                    &lt;li&gt;
+                        &lt;h4&gt;{$scene/text()}&lt;/h4&gt;
+                        &lt;ul&gt;
+                        {
+                            for $line in util:expand($speech)/LINE[exist:match]
+                            return
+                                &lt;li&gt;
+                                {
+                                    for $node in $line/node()
+                                    return
+                                        typeswitch($node)
+                                            case element(exist:match) return
+                                                &lt;mark&gt;{$node/text()}&lt;/mark&gt;
+                                            default return
+                                                $node
+                                }
+                                &lt;/li&gt;
+                        }
+                        &lt;/ul&gt;
+                    &lt;/li&gt;
+            }
+            &lt;/ul&gt;
+        &lt;/li&gt;
+    &lt;/ul&gt;</pre>
+    </section>
+</article>

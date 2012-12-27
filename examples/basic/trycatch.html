@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<article xmlns="http://www.w3.org/1999/xhtml" class="templates:surround?with=templates/page.html&amp;at=content">
+    <h1>Try/Catch</h1>
+    <section>
+        <h3>Basic example catching any errors:</h3>
+        <pre class="demo:display-source">xquery version "3.0";
+
+    let $x := "Hello"
+    return
+    try {
+        $x cast as xs:integer
+    } catch * {
+        &lt;error&gt;Caught error {$err:code}: {$err:description}&lt;/error&gt;
+        }</pre>
+    </section>
+    <section>
+        <h3>Generating your own errors:</h3>
+        <pre class="demo:display-source">xquery version "3.0";
+    
+declare namespace app="http://exist-db.org/myapp";
+
+declare variable $app:ERROR := xs:QName("app:error");
+
+try {
+    error($app:ERROR, "Ooops", "any data")
+} catch app:error {
+    &lt;error&gt;Caught error {$err:code}: {$err:description}. Data: {$err:value}.&lt;/error&gt;
+}</pre>
+    </section>
+</article>

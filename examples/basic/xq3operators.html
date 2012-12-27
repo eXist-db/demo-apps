@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<article xmlns="http://www.w3.org/1999/xhtml" class="templates:surround?with=templates/page.html&amp;at=content">
+    <h1>String concatenation and bang operators</h1>
+    <section>
+        <h2>String concatenation</h2>
+        <pre class="demo:display-source">xquery version "3.0";
+
+let $who := "world"
+return
+    "Hello " || $who || "!"
+        </pre>
+    </section>
+    <section>
+        <h2>Bang operator</h2>
+        <p>Can be used instead of simple for expressions. The expression to the right of the operator is evaluated once for
+            each item in the left-hand sequence, setting the context item to the current item.</p>
+        <pre class="demo:display-source">xquery version "3.0";
+
+("Hello", "world") ! upper-case(.)</pre>
+    </section>
+</article>
