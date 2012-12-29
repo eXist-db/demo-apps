@@ -244,6 +244,8 @@ input:required:valid {
 
 .output {
     margin: 8px 0;
+    max-height: 500px;
+    overflow: auto;
 }
 
 .output .code {
@@ -284,4 +286,9 @@ input:required:valid {
 
 .switch-endpoints td {
     padding-right: 1em;
+}
+
+.load-indicator {
+    margin-left: 30px;
+    display: none;
 }

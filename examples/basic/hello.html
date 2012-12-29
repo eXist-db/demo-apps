@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<div xmlns="http://www.w3.org/1999/xhtml" class="templates:surround?with=templates/page.html&amp;at=content">
+    <h1>Basic XQuery</h1>
+    <section>
+        <h3>Basic Hello World</h3>
+        <pre class="demo:display-source"><![CDATA[xquery version "3.0" encoding "UTF-8";
+
+let $msg := 'Hello XQuery'
+return
+  <results timestamp="{current-dateTime()}">
+     <message>{$msg}</message>
+  </results>]]></pre>
+    </section>
+    <section>
+        <h3>Querying a Document</h3>
+        <pre class="demo:display-source"><![CDATA[xquery version "3.0";
+
+doc("@@path/data/hamlet.xml")/PLAY/TITLE]]></pre>
+    </section>
+    <section>
+        <h3>Querying a Collection</h3>
+        <pre class="demo:display-source"><![CDATA[xquery version "3.0";
+
+collection("@@path/data")/PLAY/TITLE]]></pre>
+    </section>
+    <section>
+        <h3>Find all speech elements in Shakespeare with a line containing "hurlyburly"</h3>
+        <pre class="demo:display-source"><![CDATA[xquery version "3.0";
+collection("@@path/data")//SPEECH[contains(LINE, "hurlyburly")]]]></pre>
+    </section>
+    <section>
+        <h3>List all speakers appearing in scene 2 of the first act of Hamlet</h3>
+        <pre class="demo:display-source"><![CDATA[xquery version "3.0";
+distinct-values(doc("/db/apps/demo/data/hamlet.xml")//ACT[1]/SCENE[2]//SPEAKER)]]></pre>
+    </section>
+</div>

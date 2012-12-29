@@ -2,7 +2,26 @@
 <div xmlns="http://www.w3.org/1999/xhtml" class="templates:surround?with=templates/page.html&amp;at=content">
     <h1>Functions and recursion</h1>
     <section>
-        <h3>Compute the factorial of a given integer</h3>
+        <h3>Simple function with two parameters</h3>
+        <pre class="demo:display-source">
+xquery version "3.0";
+
+declare function local:greet($name as xs:string, $lang as xs:string?) as xs:string {
+    if ($lang = "de") then
+        "Hallo " || $name
+    else if ($lang = "es") then
+        "Hola " || $name
+    else
+        "Hello " || $name
+};
+
+local:greet("Susi", "de"),
+local:greet("Susi", "es"),
+local:greet("Susi", "en"),
+local:greet("Susi", ())</pre>
+    </section>
+    <section>
+        <h3>Recursion: compute the factorial of a given integer</h3>
         <pre class="demo:display-source">
 xquery version "1.0";
 

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns="http://exist-db.org/demonamespace" xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified" version="1.0" targetNamespace="http://exist-db.org/demonamespace">
+    <xs:annotation>
+        <xs:documentation>Very simple schema to demonstrate eXist's validation capabilities</xs:documentation>
+    </xs:annotation>
+    <xs:element name="DemoValidation">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element maxOccurs="unbounded" name="Line" type="xs:string"/>
+            </xs:sequence>
+            <xs:attribute fixed="1.0" name="version" type="xs:string" use="required"/>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>

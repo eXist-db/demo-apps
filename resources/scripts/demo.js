@@ -7,6 +7,7 @@ $(document).ready(function() {
         var type = $(this).data("type") || "xml";
         var text = $(this).parent().parent().find(".code").highlight("getText");
         var output = $(this).parent().find(".output");
+        var indicator = $(this).parent().find(".load-indicator");
         var query = 
             "<query xmlns=\"http://exist.sourceforge.net/NS/exist\" " +
             "   method=\"json\" start=\"1\" indent=\"yes\">\n" +
@@ -14,6 +15,7 @@ $(document).ready(function() {
             "</query>";
         
         function run() {
+            indicator.show();
             output.hide();
             $.ajax({
                 url: "/exist/rest/db/",
@@ -22,6 +24,7 @@ $(document).ready(function() {
                 data: query,
                 dataType: "json",
                 success: function(result) {
+                    indicator.hide();
                     var data;
                     if (Array.isArray(result.data))
                         data = result.data.join("\n");

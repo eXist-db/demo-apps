@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<div xmlns="http://www.w3.org/1999/xhtml" class="templates:surround?with=templates/page.html&amp;at=content">
+    <h1>Calling XSLT transformation</h1>
+    <section>
+        <h3>Simple Transformation</h3>
+        <pre class="demo:display-source?type=html">
+xquery version "3.0";
+
+let $input := doc("@@path/examples/basic/Items.xml")
+let $xsl := doc("@@path/examples/basic/ConvertItems.xsl")
+return
+    transform:transform($input, $xsl, ())</pre>
+        <p>View source: <a class="templates:load-source" href="examples/basic/Items.xml">Items.xml</a>,
+        <a class="templates:load-source" href="examples/basic/ConvertItems.xsl">ConvertItems.xsl</a>
+        </p>
+    </section>
+    <section>
+        <h3>Transform Shakespeare's Hamlet to HTML</h3>
+        <pre class="demo:display-source?type=html">
+xquery version "3.0";
+
+let $input := doc("@@path/data/hamlet.xml")
+let $xsl := doc("@@path/data/shakes.xsl")
+return
+    transform:transform($input, $xsl, ())</pre>
+        <p>View source: <a class="templates:load-source" href="data/shakes.xsl">shakes.xsl</a>,
+        <a class="templates:load-source" href="data/hamlet.xml">hamlet.xml</a>
+        </p>
+    </section>
+</div>
