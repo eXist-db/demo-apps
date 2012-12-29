@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<div xmlns="http://www.w3.org/1999/xhtml" class="templates:surround?with=templates/page.html&amp;at=content">
+    <h1>Functions and recursion</h1>
+    <section>
+        <h3>Compute the factorial of a given integer</h3>
+        <pre class="demo:display-source">
+xquery version "1.0";
+
+declare function local:fact($n as xs:integer) {
+    if ($n eq 1) then
+        $n
+    else
+        $n * local:fact($n - 1)
+};
+
+local:fact(6)
+        </pre>
+    </section>
+</div>

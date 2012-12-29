@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<div xmlns="http://www.w3.org/1999/xhtml" class="templates:surround?with=templates/page.html&amp;at=content">
+    <h1>Simple expressions using the full-text index</h1>
+    <section>
+        <h3>Find out where Juliet talks about love</h3>
+        <p>In the following, Jon Bosak's edition of the Shakespeare's Hamlet, Macbeth, and Romeo and Juilet are queried..</p>
+        <pre class="demo:display-source">
+    //SPEECH[ft:query(., 'love')][SPEAKER = "JULIET"]
+            </pre>
+    </section>
+    <section>
+        <h3>Search for a phrase</h3>
+        <pre class="demo:display-source">
+    //SPEECH[ft:query(., '"fenny snake"')]
+</pre>
+    </section>
+    <section>
+        <h3>Find speeches in which "love" and "father" occur closely together, using XML query syntax:</h3>
+        <pre class="demo:display-source">
+let $query :=
+    &lt;query&gt;
+        &lt;near slop="20"&gt;&lt;term&gt;love&lt;/term&gt;&lt;near&gt;father&lt;/near&gt;&lt;/near&gt;
+    &lt;/query&gt;
+return //SPEECH[ft:query(., $query)]
+            </pre>
+    </section>
+    <section>
+        <h3>Find speeches in which "boil" and "bubble" occur, ordering them by full-text match score</h3>
+        <pre class="demo:display-source">
+for $m in //SPEECH[ft:query(., "boil bubble")]
+let $score := ft:score($m)
+order by $score descending
+return &lt;m score="{$score}"&gt;{$m}&lt;/m&gt;
+</pre>
+    </section>
+</div>

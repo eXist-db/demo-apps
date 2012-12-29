@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<div xmlns="http://www.w3.org/1999/xhtml" class="templates:surround?with=templates/page.html&amp;at=content">
+    <h1>Analyze Data</h1>
+    <p>The following queries use the <a href="http://dbis.informatik.uni-goettingen.de/Mondial/">Mondial</a>
+        database, a data set compiled by the Universität Göttingen.</p>
+    <section>
+        <h3>For each country, list the 3 cities with the highest population</h3>
+        <pre class="demo:display-source">
+(:  This script accesses the mondial database, which can be
+    found at http://dbis.informatik.uni-goettingen.de/Mondial/ :)
+for $country in /mondial/country
+let $cities := 
+    (for $city in $country//city[population] 
+    order by xs:integer($city/population[1]) descending 
+    return $city)
+order by $country/name
+return
+    &lt;country name="{$country/name}"&gt;
+    {
+        subsequence($cities, 1, 3)
+    }
+    &lt;/country&gt;</pre>
+    </section>
+    <section>
+        <h3>Find all Spanish provinces and their cities</h3>
+        <pre class="demo:display-source">
+xquery version "1.0";
+
+let $country := /mondial/country[name = 'Spain']
+for $province in $country/province
+order by $province/name
+return
+    &lt;province&gt;
+        {$province/name}
+		{
+			for $city in $country//city[@province=$province/@id]
+			order by $city/name
+			return $city
+		}
+	&lt;/province&gt;
+            </pre>
+    </section>
+    <section>
+        <h3>Find the countries with the largest Roman Catholic population</h3>
+        <pre class="demo:display-source">
+for $country in /mondial/country
+where some $r in $country/religions satisfies $r = "Roman Catholic"
+order by $country/religions[. = "Roman Catholic"]/@percentage cast as xs:double descending
+return
+  &lt;country name="{$country/name}"&gt;
+    {$country/religions}
+  &lt;/country&gt;
+</pre>
+    </section>
+</div>

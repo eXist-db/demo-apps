@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<div xmlns="http://www.w3.org/1999/xhtml" class="templates:surround?with=templates/page.html&amp;at=content">
+    <h1>Generating HTML</h1>
+    <section>
+        <h3>Create a 10x10 table and color the cells</h3>
+        <pre class="demo:display-source?type=html">
+xquery version "1.0";
+(: $Id: table.xq 6434 2007-08-28 18:59:23Z ellefj $ :)
+(: An example found in Saxon: creates a table with 10x10 cells :)
+
+declare namespace f="http://my-namespaces.org";
+
+declare function f:background-color($x as xs:double, $y as xs:integer)
+as xs:string {    
+    if($x mod 2 + $y mod 2 &lt;= 0) then "lightgreen"
+	else if($y mod 2 &lt;= 0) then "yellow"
+	else if($x mod 2 &lt;= 0) then "lightblue"
+	else "white"
+};
+
+&lt;body&gt;
+	&lt;table&gt;{
+	for $y in 1 to 10 return
+		&lt;tr&gt;
+		{
+			for $x in 1 to 10 return
+				let $bg := f:background-color($x, $y),
+					$prod := $x * $y
+				return
+					&lt;td bgcolor="{$bg}"&gt;
+						{if ($y &gt; 1 and $x &gt; 1) then $prod else &lt;b&gt;{$prod}&lt;/b&gt;}
+					&lt;/td&gt;
+		}
+		&lt;/tr&gt;
+	}&lt;/table&gt;
+&lt;/body&gt;
+            </pre>
+    </section>
+    <section>
+        <h3>Create a multiplication table</h3>
+        <pre class="demo:display-source?type=html">
+xquery version "1.0";
+declare option exist:serialize "method=html5 media-type=text/html";
+declare variable $max := 20;
+
+&lt;table border="1" width="100%"&gt;
+    &lt;th&gt;1 x 1&lt;/th&gt;
+    {
+        for $i in (1 to $max)
+        return
+            &lt;th&gt;{ $i}&lt;/th&gt;
+    }
+      
+    {
+        for $a in (1 to $max)  
+        return 
+            &lt;tr&gt;
+                &lt;th&gt;{ $a,"*"}&lt;/th&gt;
+                
+                {
+                    for $b in (1 to $max)
+                    return
+                        if ($a = $b) then
+                            &lt;td bgcolor="#F46978"&gt;{$a * $b}&lt;/td&gt;
+                        else if ($a mod 2) then
+                            &lt;td bgcolor="#A46978"&gt;{$a * $b}&lt;/td&gt; 
+                        else
+                            &lt;td bgcolor="#A09224"&gt;{$a * $b}&lt;/td&gt; 
+                }            
+            &lt;/tr&gt;
+  
+    }
+&lt;/table&gt;</pre>
+    </section>
+    <section>
+        <h3>Generate a list of the acts and scenes in Hamlet, with the roles appearing in each scene</h3>
+        <pre class="demo:display-source?type=html">
+declare option exist:serialize "method=html5 media-type=text/html";
+
+&lt;html&gt;
+    &lt;body&gt;{
+        for $act in doc("/db/apps/demo/data/hamlet.xml")/PLAY/ACT
+        return
+            &lt;ul&gt;
+                &lt;li&gt;
+                    &lt;h2&gt;{$act/TITLE/text()}&lt;/h2&gt;
+                    &lt;ul&gt;
+                    {
+                        for $scene in $act/SCENE return
+                            &lt;li&gt;
+                                &lt;h3&gt;{$scene/TITLE/text()}&lt;/h3&gt;
+                                &lt;ul&gt;
+                                {
+                                    for $speaker in distinct-values($scene//SPEAKER)
+                                    order by $speaker return
+                                        &lt;li&gt;{$speaker}&lt;/li&gt;
+                                }
+                                &lt;/ul&gt;
+                            &lt;/li&gt;
+                    }
+                    &lt;/ul&gt;
+                &lt;/li&gt;
+            &lt;/ul&gt;
+    }&lt;/body&gt;
+&lt;/html&gt;
+</pre>
+    </section>
+</div>
