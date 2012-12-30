@@ -1,34 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<repo:meta xmlns="http://exist-db.org/xquery/repo" xmlns:repo="http://exist-db.org/xquery/repo">
-    <repo:description>Various small demo applications.</repo:description>
-    <repo:author>Wolfgang Meier</repo:author>
-    <repo:website/>
-    <repo:status>beta</repo:status>
-    <repo:license>GNU-LGPL</repo:license>
-    <repo:copyright>true</repo:copyright>
-    <repo:type>application</repo:type>
-    <repo:target>demo</repo:target>
-    <repo:prepare>pre-install.xql</repo:prepare>
-    <repo:finish/>
-    <repo:permissions user="admin" password="" group="dba" mode="0775"/>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<deployed>2012-11-15T20:38:28.275+01:00</deployed>
-</repo:meta>
+<meta xmlns="http://exist-db.org/xquery/repo">
+    <description>Various small demo applications.</description>
+    <author>Wolfgang Meier</author>
+    <website/>
+    <status>beta</status>
+    <license>GNU-LGPL</license>
+    <copyright>true</copyright>
+    <type>application</type>
+    <target>demo</target>
+    <prepare>pre-install.xql</prepare>
+    <finish>post-install.xql</finish>
+    <permissions user="admin" password="" group="dba" mode="0775"/>
+    <deployed>2012-12-29T22:04:10.121+01:00</deployed>
+</meta>

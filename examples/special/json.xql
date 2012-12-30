@@ -36,7 +36,7 @@ declare function local:collections($root as xs:string, $label as xs:string) {
     )
 };
 
-let $collection := request:get-parameter("root", "/db")
+let $collection := request:get-parameter("root", "/db/apps")
 return
     <collection json:array="true">
     {local:collections($collection, replace($collection, "^.*/([^/]+$)", "$1"))}

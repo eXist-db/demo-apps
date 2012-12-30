@@ -49,7 +49,7 @@ function demo:addresses() {
 declare 
     %rest:GET
     %rest:path("/address/{$id}")
-function demo:get-address($id as xs:string) {
+function demo:get-address($id as xs:string*) {
     collection($demo:data)/address[@id = $id]
 };
 
@@ -61,7 +61,7 @@ declare
     %rest:path("/search")
     %rest:form-param("query", "{$query}", "")
     %rest:form-param("field", "{$field}", "name")
-function demo:search-addresses($query as xs:string, $field as xs:string) {
+function demo:search-addresses($query as xs:string*, $field as xs:string*) {
     <addresses>
     {
         if ($query != "") then
@@ -87,7 +87,7 @@ function demo:search-addresses($query as xs:string, $field as xs:string) {
 declare
     %rest:PUT("{$content}")
     %rest:path("/address")
-function demo:create-or-edit-address($content as node()) {
+function demo:create-or-edit-address($content as node()*) {
     let $id := ($content/address/@id, util:uuid())[1]
     let $data :=
         <address id="{$id}">
@@ -105,7 +105,7 @@ function demo:create-or-edit-address($content as node()) {
 declare
     %rest:DELETE
     %rest:path("/address/{$id}")
-function demo:delete-address($id as xs:string) {
+function demo:delete-address($id as xs:string*) {
     xmldb:remove($demo:data, $id || ".xml"),
     demo:addresses()
 };

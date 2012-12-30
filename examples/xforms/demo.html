@@ -75,6 +75,14 @@
                             <xf:send submission="search" ev:event="xforms-value-changed"/>
                         </xf:input>
                     </td>
+                    <td>
+                        <xf:trigger class="search">
+                            <xf:label>Clear</xf:label>
+                            <xf:action>
+                                <xf:setvalue ref="instance('search')/query"/>
+                            </xf:action>
+                        </xf:trigger>
+                    </td>
                 </tr>
             </table>
             <table class="addresses">
@@ -147,7 +155,7 @@
                     </tr>
                     <tr>
                         <td>
-                            <a href="demo.html" class="btn btn-small">RestXQ XQuery</a>
+                            <a href="demo.html?restxq=" class="btn btn-small">RestXQ XQuery</a>
                         </td>
                         <td>RestXQ implemented in XQuery</td>
                     </tr>

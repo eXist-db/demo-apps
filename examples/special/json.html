@@ -16,7 +16,7 @@
                     initAjax: {url: "json.xql" },
                     clickFolderMode: 1,
                     onPostInit: function(isReloading, isError) {
-                        var dbNode = this.getNodeByKey("/db");
+                        var dbNode = this.getNodeByKey("/db/apps");
                         dbNode.activate();
                     	dbNode.expand(true);
                     }

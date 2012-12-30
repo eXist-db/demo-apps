@@ -2,22 +2,22 @@
 <project xmlns:xdb="http://exist-db.org/ant" default="xar" name="Demo Apps">
     <property name="build.dir" value="build"/>
     <property name="project.app" value="demo"/>
-    <property name="project.version" value="0.2.1"/>
+    <property name="project.version" value="0.2.3"/>
     <property name="server.url" value="http://demo.exist-db.org/exist/apps/public-repo/public/"/>
     <target name="xar">
         <mkdir dir="${build.dir}"/>
         <zip basedir="." destfile="${build.dir}/${project.app}-${project.version}.xar" excludes="${build.dir}/*"/>
     </target>
-	<target name="clean">
-		<delete dir="${build.dir}"/>
-	</target>
-	<target name="upload">
+    <target name="clean">
+        <delete dir="${build.dir}"/>
+    </target>
+    <target name="upload">
         <input message="Enter password:" addproperty="server.pass" defaultvalue="">
             <handler type="secure"/>
         </input>
-    	<property name="xar" value="${project.app}-${project.version}.xar"/>
-    	<exec executable="curl">
-    		<arg line="-T ${build.dir}/${xar} -u admin:${server.pass} ${server.url}/${xar}"/>
-    	</exec>
+        <property name="xar" value="${project.app}-${project.version}.xar"/>
+        <exec executable="curl">
+            <arg line="-T ${build.dir}/${xar} -u admin:${server.pass} ${server.url}/${xar}"/>
+        </exec>
     </target>
 </project>
