@@ -1,21 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <div xmlns="http://www.w3.org/1999/xhtml" class="templates:surround?with=templates/page.html&amp;at=content">
     <h1 class="rounded">URL Rewriting Demos</h1>
-    <form method="POST" class="login">
-        <fieldset>
-            <label for="user">User:</label>
-            <input type="text" name="user" required="required"/>
-        </fieldset>
-        <fieldset>
-            <label for="passord">Password:</label>
-            <input type="password" name="password"/>
-        </fieldset>
-        <fieldset>
-            <input type="checkbox" name="duration" value="P14D"/> Remember me for 2 weeks
-        </fieldset>
-        <fieldset>
-            <button type="submit">Login</button>
-        </fieldset>
+    <form method="POST" class="form-horizontal">
+        <div class="control-group">
+            <label class="control-label" for="user">User:</label>
+            <div class="controls">
+                <input type="text" name="user" required="required"/>
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-label" for="passord">Password:</label>
+            <div class="controls">
+                <input type="password" name="password"/>
+            </div>
+        </div>
+        <div class="control-group">
+            <div class="controls">
+                <label class="checkbox">
+                    <input type="checkbox" name="duration" value="P14D"/> Remember me for 2 weeks
+                </label>
+            </div>
+        </div>
+        <div class="form-actions">
+            <button class="btn btn-primary" type="submit">Login</button>
+        </div>
     </form>
     <div class="source-links">
         <p>View source: <a href="examples/urlrewriting/login.html" class="templates:load-source">this page</a>.</p>
