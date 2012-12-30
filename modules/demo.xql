@@ -30,7 +30,7 @@ declare function demo:run-tests($node as node(), $model as map(*)) {
 declare function demo:display-source($node as node(), $model as map(*), $lang as xs:string?, $type as xs:string?) {
     let $source := replace($node/string(), "^\s*(.*)\s*$", "$1")
     let $expanded := replace($source, "@@path", $config:app-root)
-    let $eXideLink := templates:link-to-app("http://exist-db.org/apps/eXide", "index.html?snip=" || encode-for-uri($source))
+    let $eXideLink := templates:link-to-app("http://exist-db.org/apps/eXide", "index.html?snip=" || encode-for-uri($expanded))
     return
         <div xmlns="http://www.w3.org/1999/xhtml" class="source">
             <div class="code" data-language="{if ($lang) then $lang else 'xquery'}">{ $expanded }</div>
