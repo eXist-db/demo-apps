@@ -231,13 +231,13 @@ input:required:valid {
 .output {
     margin: 8px 0;
     max-height: 500px;
-    overflow: auto;
 }
 
 .output .code {
     max-height: 200px;
     overflow: auto;
     background: #ffffff;
+    padding: 0 8px;
 }
     
 .testresult td {
