@@ -36,7 +36,8 @@ declare function demo:display-source($node as node(), $model as map(*), $lang as
             <div class="code" data-language="{if ($lang) then $lang else 'xquery'}">{ $expanded }</div>
             <div class="toolbar">
                 <a class="btn run" href="#" data-type="{if ($type) then $type else 'xml'}">Run</a>
-                <a class="btn" href="{$eXideLink}" target="eXide"
+                <a class="btn eXide-open" href="{$eXideLink}" target="eXide"
+                    data-exide-create="{$expanded}"
                     title="Opens the code in eXide in new tab or existing tab if it is already open.">Edit</a>
                 <img class="load-indicator" src="resources/images/ajax-loader.gif"/>
                 <div class="output"></div>

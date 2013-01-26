@@ -1,7 +1,9 @@
 
 $(document).ready(function() {
-    
+    // Enable code highlighting
     $(".code").highlight();
+    
+    // Enable "Run" buttons
     $(".run").click(function(ev) {
         ev.preventDefault();
         var type = $(this).data("type") || "xml";
