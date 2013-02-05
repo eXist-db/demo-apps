@@ -35,7 +35,7 @@
         </xf:submission>
         <!-- Search addresses -->
         <xf:submission id="search" resource="{$restxq}search" method="get" serialization="application/x-www-form-urlencoded" ref="instance('search')" targetref="instance('all')" replace="instance">
-            <xf:message ev:event="xforms-submit-done" level="ephemeral">Address list loaded.</xf:message>
+            <!--xf:message ev:event="xforms-submit-done" level="ephemeral">Address list loaded.</xf:message-->
         </xf:submission>
         <!-- Initial loading of the address list when form is ready -->
         <xf:action ev:event="xforms-ready">
@@ -45,7 +45,7 @@
     <div class="row-fluid">
         <div id="content" class="span8">
             <div class="page-header">
-                <h1>XForms with RestXQ Demo</h1>
+                <h1>XForms Demo</h1>
             </div>
             <h2>Manage Addresses</h2>
             <table>
@@ -151,7 +151,7 @@
                         <td>
                             <a href="demo.html?restxq=/exist/restxq/" class="btn btn-small">Java RestXQ</a>
                         </td>
-                        <td>RestXQ implemented in Java</td>
+                        <td>Default: RestXQ implemented in Java</td>
                     </tr>
                     <tr>
                         <td>

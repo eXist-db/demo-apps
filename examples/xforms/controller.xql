@@ -37,11 +37,10 @@ else if (ends-with($exist:resource, ".html")) then
 
 else if (starts-with($exist:path, ("/address", "/search"))) then
     let $functions := util:list-functions("http://exist-db.org/apps/restxq/demo")
-    let $log := util:log-system-out("restxq: xquery")
     return
         (: All URL paths are processed by the restxq module :)
         restxq:process($exist:path, $functions)
-    
+
 else if (starts-with($exist:path, "/resources")) then
     (: images, css are contained in the top /resources/ collection. :)
     (: Relative path requests from sub-collections are redirected there :)

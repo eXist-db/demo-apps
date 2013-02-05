@@ -30,6 +30,11 @@
 declare function ex:hello($node as node()*, $model as map(*)) as element(span) {
     &lt;span&gt;Hello World!&lt;/span&gt;
 };</div>
+    <p>Note: instead of putting template calls into class attributes, you can also use the HTML5-compliant method: specify the template call as well
+        as any optional parameters (see the section below) in data attributes:
+    </p>
+    <div class="code" data-language="xquery">
+        <![CDATA[<div data-template="ex:hello-world" data-template-language="de"></div>]]></div>
     <section>
         <h2>Parameter Injection</h2>
         <p>Very often, you will also need to pass static parameters to the template. This is done by appending
@@ -133,8 +138,6 @@ function ex:print-street($node as node(), $model as map(*)) {
             <li>Shakespeare app: the <a href="examples/web/shakespeare.html" class="templates:load-source">HTML</a>
             and the <a href="examples/web/shakespeare.xql" class="templates:load-source">XQuery module</a> implementing
             the templating functions.</li>
-            <li>The source code of the <a href="modules/templates.xql" class="templates:load-source">templating module</a>
-            itself.</li>
         </ul>
     </section>
 </article>

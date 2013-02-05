@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <div class="templates:surround?with=templates/page.html&amp;at=content">
     <h1>Content Extraction and Binary Resource Indexing</h1>
     <div class="templates:if-module-missing?uri=http://exist-db.org/xquery/contentextraction&amp;at=java:org.exist.contentextraction.xquery.ContentExtractionModule">
@@ -15,9 +16,9 @@ include.feature.contentextraction = true</pre>
     their text content has been extracted. The app defines a trigger on the "binary" collection below the "data" collection in the
     app root collection. To test the indexing, upload a pdf to the collection and its contents
     will be extracted and indexed automatically.</p>
-    <form action="" method="GET">
-        <input id="query" type="text" size="40" name="query" class="templates:form-control"/>
-        <button type="submit">Query</button>
+    <form action="" method="GET" class=".form-search">
+        <input id="query" type="text" size="40" name="query" class="search-query templates:form-control"/>
+        <button class="btn" type="submit">Query</button>
     </form>
     <div class="templates:if-parameter-set?param=query">
         <div class="cex:query"/>
