@@ -41,6 +41,13 @@ else if (starts-with($exist:path, ("/address", "/search"))) then
         (: All URL paths are processed by the restxq module :)
         restxq:process($exist:path, $functions)
 
+else if (contains($exist:path, "/$shared/")) then
+    <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
+        <forward url="/shared-resources/{substring-after($exist:path, '/$shared/')}">
+            <set-header name="Cache-Control" value="max-age=3600, must-revalidate"/>
+        </forward>
+    </dispatch>
+
 else if (starts-with($exist:path, "/resources")) then
     (: images, css are contained in the top /resources/ collection. :)
     (: Relative path requests from sub-collections are redirected there :)
