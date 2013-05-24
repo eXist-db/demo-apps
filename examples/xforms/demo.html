@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<div xmlns="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:xf="http://www.w3.org/2002/xforms" class="templates:surround?with=templates/page.html&amp;at=main">
+<div xmlns="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:xf="http://www.w3.org/2002/xforms" data-template="templates:surround" data-template-with="templates/page.html" data-template-at="main" data-template-options="noscript=yes">
     <xf:model>
         <xf:instance xmlns="" id="all">
             <addresses/>
@@ -18,26 +18,18 @@
             </parameters>
         </xf:instance>
         <xf:bind id="address-id" nodeset="//address/@id" relevant="true()"/>
-        <!-- Submissions -->
-        <!-- Load list of addresses -->
         <xf:submission id="load" resource="{$restxq}address" method="get" replace="instance">
             <xf:message ev:event="xforms-submit-done" level="ephemeral">Address list loaded.</xf:message>
         </xf:submission>
-        <!-- Save an address -->
         <xf:submission id="save" resource="{$restxq}address" method="put" replace="instance" ref="//address[index('address-repeat')]">
             <xf:message ev:event="xforms-submit-done" level="ephemeral">Address saved.</xf:message>
             <xf:message ev:event="xforms-submit-error" level="ephemeral">An error occurred.</xf:message>
         </xf:submission>
-        <!-- Delete an address -->
         <xf:submission id="delete" resource="{$restxq}address/{instance('all')//address[index('address-repeat')]/@id}" method="delete" replace="instance">
             <xf:message ev:event="xforms-submit-done" level="ephemeral">Address deleted.</xf:message>
             <xf:message ev:event="xforms-submit-error" level="ephemeral">An error occurred.</xf:message>
         </xf:submission>
-        <!-- Search addresses -->
-        <xf:submission id="search" resource="{$restxq}search" method="get" serialization="application/x-www-form-urlencoded" ref="instance('search')" targetref="instance('all')" replace="instance">
-            <!--xf:message ev:event="xforms-submit-done" level="ephemeral">Address list loaded.</xf:message-->
-        </xf:submission>
-        <!-- Initial loading of the address list when form is ready -->
+        <xf:submission id="search" resource="{$restxq}search" method="get" serialization="application/x-www-form-urlencoded" ref="instance('search')" targetref="instance('all')" replace="instance"/>
         <xf:action ev:event="xforms-ready">
             <xf:send submission="load"/>
         </xf:action>

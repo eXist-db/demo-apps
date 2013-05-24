@@ -188,6 +188,10 @@ blockquote p { padding: 0 0 10px; }
 /* ---------------------------------------- Local styles ----------------------------------- */
 form { margin: 20px 0; }
 
+#formWrapper form {
+    margin: 0;
+}
+
 .inputrow {
     margin-top: 8px;
 }
