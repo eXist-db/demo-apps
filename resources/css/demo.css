@@ -1,0 +1,103 @@
+@import url('$shared/resources/css/exist.css');
+
+#formWrapper form {
+    margin: 0;
+}
+
+dl {
+    margin: 10px 20px;
+}
+
+dl dd {
+    margin: 4px 20px;
+}
+
+.itemhead { background: #E0E0E0; padding-left: 8px; }
+
+.scene {
+    margin-bottom: 1em;
+}
+
+.scene .number {
+    float: right;
+}
+
+.scene h3, .scene h4 {
+    border: 0;
+    margin: 0;
+    padding: 0;
+}
+
+.scene h4 {
+    margin-left: 1em;
+}
+
+table .previous {
+    text-align: right;
+    padding-right: 1em;
+}
+
+table .following {
+    padding-left: 1em;
+}
+
+#collection-tree ul li, #collection-tree ul li ul li {
+    list-style-type: none;
+}
+
+.source .toolbar, .example-output {
+    padding-left: 18px;
+    border-left: 4px solid #C7C7C7;
+}
+
+.output {
+    margin: 8px 0;
+    max-height: 500px;
+    overflow: auto;
+}
+
+.output .code {
+    max-height: 200px;
+    overflow: auto;
+    background: #ffffff;
+    padding: 0 8px;
+}
+    
+.testresult td {
+    margin: 2px 4px;
+    padding: 8px 10px;
+}
+
+.testresult .fail {
+    background-color: #D7394C;
+    color: white;
+}
+
+.testresult .pass {
+    background-color: #69EB7F;
+}
+
+.addresses {
+    width: 100%;
+    margin: 10px 0;
+    border-top: 1px solid #777;
+    border-bottom: 1px solid #777;
+    padding: 10px 0;
+}
+
+.addresses th {
+    font-weight: bold;
+}
+
+.search {
+    margin-bottom: 4px;
+}
+
+.switch-endpoints td {
+    padding-right: 1em;
+}
+
+.load-indicator {
+    margin-left: 30px;
+    display: none;
+}
