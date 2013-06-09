@@ -66,8 +66,8 @@ declare function local:main() as node()?
         </style>
     </head>
     <body>
-        <p>
-            <a href="{request:get-context-path()}/eXide/index.html?open={$config:app-root}/examples/web/guess.xql" 
+        <p> 
+            <a href="{request:get-context-path()}/apps/eXide/index.html?open={$config:app-root}/examples/web/guess.xql" 
                 target="eXide">View/edit source</a>
         </p>
         <h1>Guess a Number</h1>
