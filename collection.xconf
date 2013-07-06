@@ -3,6 +3,9 @@
     <index>
         <fulltext default="none" attributes="false"/>
         <lucene>
+            <analyzer class="org.apache.lucene.analysis.standard.StandardAnalyzer">
+                <param name="stopwords" type="java.util.Set"/>
+            </analyzer>
             <text qname="SCENE">
                 <ignore qname="SPEAKER"/>
             </text>
