@@ -26,7 +26,7 @@ declare function ex:hello($node as node()*, $model as map(*)) as element(span) {
  : <ol>
  :    <li>if there's a (non-empty) request parameter with the same name as the variable, use it</li>
  :    <li>else if there's a (non-empty) session attribute with the same name as the variable, use it</li>
- :    <li>test if there's an annotation %templating:default(name, value) whose first parameter matches
+ :    <li>test if there's an annotation %templates:default(name, value) whose first parameter matches
  :    the name of the parameter variable. Use the second parameter as value if it does.</li>
  : </ol>
  :)
