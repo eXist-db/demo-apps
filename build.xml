@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns:xdb="http://exist-db.org/ant" default="all" name="eXist-db Demo Apps">
+<project default="all" name="eXist-db Demo Apps">
     <property file="local.build.properties"/>
     <property file="build.properties"/>
     <property name="project.app" value="demo"/>
@@ -28,19 +28,11 @@
             </filterset>
         </copy>
         <zip basedir="." destfile="${build}/${project.app}-${project.version}${git.commit}.xar">
-            <fileset dir=".">
-                <include name="*.*"/>
-                <include name="modules/**"/>
-                <include name="resources/**"/>
-                <include name="templates/**"/>
-                <include name="${data}/**"/>
-                <include name="${examples}/**"/>
-                <exclude name="${build}/*"/>
-                <exclude name=".git*"/>
-                <exclude name="*.tmpl"/>
-                <exclude name="*.properties"/>
-            </fileset>
-	</zip>
+            <exclude name="${build}/*"/>
+            <exclude name=".git*"/>
+            <exclude name="*.tmpl"/>
+            <exclude name="*.properties"/>
+        </zip>
     </target>
     <target name="upload">
         <input message="Enter password:" addproperty="server.pass" defaultvalue="">
