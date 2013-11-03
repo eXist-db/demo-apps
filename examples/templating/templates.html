@@ -34,7 +34,7 @@ declare function ex:hello($node as node()*, $model as map(*)) as element(span) {
         as any optional parameters (see the section below) in data attributes:
     </p>
     <div class="code" data-language="xquery">
-        <![CDATA[<div data-template="ex:hello-world" data-template-language="de"></div>]]></div>
+        &lt;div data-template="ex:hello-world" data-template-language="de"&gt;&lt;/div&gt;</div>
     <section>
         <h2>Parameter Injection</h2>
         <p>Very often, you will also need to pass static parameters to the template. This is done by appending
@@ -127,6 +127,17 @@ function ex:print-street($node as node(), $model as map(*)) {
                 </tr>
             </table>
         </div>
+    </section>
+    <section>
+        <h2>Use the Templating from other Contexts</h2>
+        <p>The HTML templating module can also be used outside eXist's default app setup. For example, one may want
+            to call the templating from within a RestXQ module. Because RestXQ uses a separate module for access to
+            HTTP request parameters, you have to supply one additional lookup function for resolving parameters when
+            initializing the templating. The code below demonstrates this:</p>
+        <p>
+            <a href="../../../../restxq/page?user=Sam&amp;language=it">Demo</a>
+            (<a href="examples/templating/restxq-demo.xql" class="templates:load-source">Source code</a>)
+        </p>
     </section>
     <section>
         <h2>Source Links</h2>
