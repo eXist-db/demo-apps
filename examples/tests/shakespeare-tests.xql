@@ -41,9 +41,10 @@ function t:query($queryStr as xs:string?, $mode as xs:string) {
 declare
     %test:args('"fenny snake"', "all")
     %test:assertXPath("count($result[@class='scene']) = 2")
-    %test:assertXPath("$result/table/tr/td[@class='hi'] = 'fenny'")
+    %test:assertXPath("//*[@class='hi'] = 'fenny'")
 function t:show-hits($queryStr as xs:string?, $mode as xs:string) {
     let $result := shakes:do-query($queryStr, $mode)
+    let $model := map:entry("hits", $result)
     return
-        shakes:show-hits((), (), $result)
+        shakes:show-hits((), $model, 1)
 };
