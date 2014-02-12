@@ -3,19 +3,16 @@
     <property file="local.build.properties"/>
     <property file="build.properties"/>
     <property name="project.app" value="demo"/>
-    <property name="project.version" value="0.2.8"/>
-    <property name="build" value="./build"/>
+    <property name="project.version" value="0.2.9"/>
+    <property name="build" value="build"/>
     <property name="data" value="./data"/>
     <property name="examples" value="./examples"/>
     <property name="server.url" value="http://demo.exist-db.org/exist/apps/public-repo/public/"/>
-
     <condition property="git.commit" value="${git.commit}" else="">
         <isset property="git.commit"/>
     </condition>
-
     <target name="all" depends="xar"/>
     <target name="rebuild" depends="clean,all"/>
-
     <target name="clean">
         <delete dir="${build}"/>
         <delete file="expath-pkg.xml"/>
