@@ -17,6 +17,12 @@
                 <field>name</field>
             </parameters>
         </xf:instance>
+        <!-- 
+            $restxq contains the restxq endpoint, usually /exist/restxq on a default instance.
+            It is set as an URL parameter by the controller.
+            While it could be hardcoded, we want to make sure it always works if the context changes, e.g. to
+            /exist-test/restxq.
+        -->
         <xf:bind id="address-id" nodeset="//address/@id" relevant="true()"/>
         <xf:submission id="load" resource="{$restxq}address" method="get" replace="instance">
             <xf:message ev:event="xforms-submit-done" level="ephemeral">Address list loaded.</xf:message>
@@ -137,21 +143,6 @@
                 <p>The XForms code is in <a href="examples/xforms/demo.html" class="templates:load-source">demo.html</a>. The RestXQ endpoints
                     are defined in <a href="examples/xforms/restxq-demo.xql" class="templates:load-source">restxq-demo.xql</a>.
                 </p>
-                <p>The form can transparently switch between two RestXQ implementations:</p>
-                <table class="switch-endpoints">
-                    <tr>
-                        <td>
-                            <a href="demo.html?restxq=/exist/restxq/" class="btn btn-small">Java RestXQ</a>
-                        </td>
-                        <td>Default: RestXQ implemented in Java</td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <a href="demo.html?restxq=" class="btn btn-small">RestXQ XQuery</a>
-                        </td>
-                        <td>RestXQ implemented in XQuery</td>
-                    </tr>
-                </table>
             </div>
         </div>
     </div>

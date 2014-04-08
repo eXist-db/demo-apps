@@ -4,12 +4,7 @@ xquery version "1.0";
  : Main controller. Uses restxq to keep the code clean. This only works with the XQuery
  : implementation of RestXQ though.
  :)
-import module namespace restxq="http://exist-db.org/xquery/restxq" at "../../modules/restxq.xql";
 import module namespace demo="http://exist-db.org/apps/restxq/demo" at "restxq-demo.xql";
-
-(: Need to use a different namespace here to prevent the restxq java triggger 
- : from evaluating the annotations. :)
-declare namespace restx="http://exist-db.org/ns/rest/annotation/xquery";
 
 declare variable $exist:path external;
 declare variable $exist:resource external;
@@ -33,13 +28,6 @@ else if (ends-with($exist:resource, ".html")) then
 			<forward url="../../modules/view.xql"/>
 		</error-handler>
     </dispatch>
-
-
-else if (starts-with($exist:path, ("/address", "/search"))) then
-    let $functions := util:list-functions("http://exist-db.org/apps/restxq/demo")
-    return
-        (: All URL paths are processed by the restxq module :)
-        restxq:process($exist:path, $functions)
 
 else if (contains($exist:path, "/$shared/")) then
     <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
