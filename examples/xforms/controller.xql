@@ -1,8 +1,7 @@
 xquery version "1.0";
 
 (: 
- : Main controller. Uses restxq to keep the code clean. This only works with the XQuery
- : implementation of RestXQ though.
+ : Main controller.
  :)
 import module namespace demo="http://exist-db.org/apps/restxq/demo" at "restxq-demo.xql";
 
