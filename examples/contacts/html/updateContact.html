@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<form name="contact2">
+    <div class="container">
+        <h2>Update Contact</h2>
+        <img width="240" ng-src="{{getContactIconRel(contact)}}"/>
+        <br/>
+        <label for="name">Name : </label>
+        <input id="name" type="text" value="{{contact.name}}" ng-model="contact.name" required=""/>
+        <br/>
+        <label for="phone">Phone : </label>
+        <input id="phone" type="text" value="{{contact.phone}}" ng-model="contact.phone" required=""/>
+        <br/>
+        <label for="email">Email : </label>
+        <input id="email" type="email" value="{{contact.email}}" ng-model="contact.email" required=""/>
+        <br/>
+        <label for="image">Image URL : </label>
+        <input id="image" type="url" ng-model="contact.image"/>
+        <br/>
+        <br/>
+        <button id="update" ng-click="update(contact)">Update</button>
+        <button id="cancel" ng-click="cancel()">Cancel</button>
+    </div>
+</form>

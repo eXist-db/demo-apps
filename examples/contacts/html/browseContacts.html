@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<div class="container">
+    <h2>Browse Contacts</h2>
+    <button id="new" ng-click="new()">New</button>
+    <br/>
+    <br/>
+    <span ng-show="!contacts.length">No data...</span>
+    <table ng-hide="!contacts.length">
+        <th/>
+        <th>Name</th>
+        <th>Phone</th>
+        <th>Email</th>
+        <th/>
+        <tbody ng-repeat="contact in contacts">
+            <div>
+                <tr>
+                    <td>
+                        <img width="60" ng-src="{{getContactIconRel(contact)}}"/>
+                    </td>
+                    <td>{{contact.name}}</td>
+                    <td>{{contact.phone}}</td>
+                    <td>{{contact.email}}</td>
+                    <td>
+                        <div>
+                            <span ng-click="delete(contact)" style="margin:0 10px 0 10px;">
+                                <a href="#">Delete</a>
+                            </span>
+                            <span ng-click="update(contact)" onclick="return false;">
+                                <a href="#">Update</a>
+                            </span>
+                        </div>
+                    </td>
+                </tr>
+            </div>
+        </tbody>
+    </table>
+    <br/>
+    <br/>
+    <button id="previous" ng-click="previousPage()">Previous 5</button>
+    <button id="refresh" ng-click="refreshPage()">Refresh</button>
+    <button id="next" ng-click="nextPage()">Next 5</button>
+</div>
