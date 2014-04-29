@@ -8,6 +8,8 @@ import module namespace xdb="http://exist-db.org/xquery/xmldb";
 declare variable $target external;
 
 (: Allow uploads to binary collection :)
+sm:chmod(xs:anyURI($target || "/examples/contacts/data"), "rwxrwxrwx"),
+(: Allow uploads to binary collection :)
 sm:chmod(xs:anyURI($target || "/data/binary"), "rwxrwxrwx"),
 (: Allow changes to addresses collection :)
 sm:chmod(xs:anyURI($target || "/data/addresses"), "rwxrwxrwx"),
