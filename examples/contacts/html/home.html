@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml" data-ng-app="contactsApp">
+    <head>
+        <title data-template="config:app-title"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <meta data-template="config:app-meta"/>
+        <script type="text/javascript" src="../js/angular.min.js"/>
+        <script type="text/javascript" src="../js/angular-animate.min.js"/>
+        <script type="text/javascript" src="../js/angular-route.min.js"/>
+        <script type="text/javascript" src="../js/angular-resource.min.js"/>
+        <script type="text/javascript" src="../js/jquery-2.1.0.min.js"/>
+        <script type="text/javascript" src="../js/spin.min.js"/>
+        <script type="text/javascript" src="../js/angular-spinner.min.js"/>
+        <script type="text/javascript" src="../js/app.js"/>
+    </head>
+    <body>
+        <div data-app-header="" data-media-screen="">
+            <h1>eXist-db Contacts RestXQ Demo</h1>
+        </div>
+        <div data-ng-view=""/>
+        <span us-spinner="{radius:30, width:8, length: 16}" spinner-key="spinner-1"/>
+    </body>
+</html>
