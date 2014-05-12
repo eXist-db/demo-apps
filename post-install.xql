@@ -7,7 +7,8 @@ import module namespace xdb="http://exist-db.org/xquery/xmldb";
 (: the target collection into which the app is deployed :)
 declare variable $target external;
 
-(: Allow uploads to binary collection :)
+(: Create 'contacts/data' collection and then make writable :)
+xmldb:create-collection($target || "examples/contacts", "data"),
 sm:chmod(xs:anyURI($target || "/examples/contacts/data"), "rwxrwxrwx"),
 (: Allow uploads to binary collection :)
 sm:chmod(xs:anyURI($target || "/data/binary"), "rwxrwxrwx"),
