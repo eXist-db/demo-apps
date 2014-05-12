@@ -8,7 +8,7 @@ import module namespace xdb="http://exist-db.org/xquery/xmldb";
 declare variable $target external;
 
 (: Create 'contacts/data' collection and then make writable :)
-xmldb:create-collection($target || "examples/contacts", "data"),
+xmldb:create-collection($target || "/examples/contacts", "data"),
 sm:chmod(xs:anyURI($target || "/examples/contacts/data"), "rwxrwxrwx"),
 (: Allow uploads to binary collection :)
 sm:chmod(xs:anyURI($target || "/data/binary"), "rwxrwxrwx"),
