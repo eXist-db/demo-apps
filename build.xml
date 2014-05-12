@@ -3,7 +3,7 @@
     <property file="local.build.properties"/>
     <property file="build.properties"/>
     <property name="project.app" value="demo"/>
-    <property name="project.version" value="0.2.9"/>
+    <property name="project.version" value="0.3.0"/>
     <property name="build" value="build"/>
     <property name="data" value="./data"/>
     <property name="examples" value="./examples"/>
