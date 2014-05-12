@@ -14,5 +14,6 @@ This application contains various small demos for particular eXist features:
 - Content Extraction
 - Unit Testing
 - XForms and RestXQ
+- RestXQ and AngularJS
 
 Live demo on http://demo.exist-db.org/exist/apps/demo/ 
