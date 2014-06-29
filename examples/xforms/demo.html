@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<div xmlns="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:xf="http://www.w3.org/2002/xforms" data-template="templates:surround" data-template-with="templates/page.html" data-template-at="content" data-template-options="noscript=yes">
+<div xmlns="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:xf="http://www.w3.org/2002/xforms" data-template="templates:surround" data-template-with="templates/page.html" data-template-at="container-body" data-template-options="noscript=yes">
     <xf:model>
         <xf:instance xmlns="" id="all">
             <addresses/>
@@ -40,8 +40,8 @@
             <xf:send submission="load"/>
         </xf:action>
     </xf:model>
-    <div class="row-fluid">
-        <div id="content" class="span8">
+    <div class="row">
+        <div id="content" class="col-md-8">
             <div class="page-header">
                 <h1>XForms Demo</h1>
             </div>
@@ -83,7 +83,7 @@
                     </td>
                 </tr>
             </table>
-            <table class="addresses">
+            <table class="addresses table table">
                 <thead>
                     <th>Name</th>
                     <th>Street</th>
@@ -129,7 +129,7 @@
                 <xf:label>Save</xf:label>
             </xf:submit>
         </div>
-        <div class="span4">
+        <div class="col-md-4">
             <div class="well">
                 <p>A simple XForms application which talks to a RESTXQ service defining the following endpoints:</p>
                 <ul>

@@ -1,4 +1,4 @@
-@import url('$shared/resources/css/exist.css');
+@import url('$shared/resources/css/exist-2.2.css');
 
 #formWrapper form {
     margin: 0;
@@ -87,6 +87,16 @@ table .following {
 
 .addresses th {
     font-weight: bold;
+}
+
+.addresses td:nth-child(1) {
+    width: 30%;
+}
+.addresses td:nth-child(2) {
+    width: 40%;
+}
+.addresses td:nth-child(3) {
+    width: 30%;
 }
 
 .search {

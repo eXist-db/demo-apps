@@ -6,22 +6,30 @@
         <p>View source: <a href="examples/web/shakespeare.html" class="templates:load-source">this page</a>,
         <a href="examples/web/shakespeare.xql" class="templates:load-source">shakespeare.xql</a>.</p>
     </div>
-    <form action="" method="POST">
-        <div class="inputrow">
-            <label for="query">Query:</label>
-            <input id="query" type="text" size="40" name="query" class="templates:form-control"/>
+    <form action="" method="POST" class="form form-horizontal">
+        <div class="form-group">
+            <label for="mode" class="col-md-1 hidden-xs control-label">Query:</label>
+            <div class="col-md-4 col-xs-12">
+                <span class="input-group">
+                    <input name="query" type="search" data-template="templates:form-control" class="form-control" placeholder="Search string"/>
+                    <span class="input-group-btn">
+                        <button id="f-btn-search" type="submit" class="btn btn-primary">
+                            <span class="glyphicon glyphicon-search"/>
+                        </button>
+                    </span>
+                </span>
+            </div>
         </div>
-        <div class="inputrow">
-            <label for="mode">Mode:</label>
-            <select name="mode" class="templates:form-control">
-                <option value="all">All</option>
-                <option value="any">Any</option>
-                <option value="phrase">Phrase</option>
-                <option value="near">Near</option>
-            </select>
-        </div>
-        <div class="inputrow">
-            <button class="btn" type="submit">Query</button>
+        <div class="form-group">
+            <label for="mode" class="col-md-1 hidden-xs control-label">Mode:</label>
+            <div class="col-md-4 col-xs-12">
+                <select name="mode" data-template="templates:form-control" class="form-control">
+                    <option value="all">All</option>
+                    <option value="any">Any</option>
+                    <option value="phrase">Phrase</option>
+                    <option value="near">Near</option>
+                </select>
+            </div>
         </div>
     </form>
     <div id="results" class="shakespeare:query">

@@ -4,14 +4,18 @@
     <p>Submitting the form below should trigger a cast error in the XQuery script
     on the server side (it expects a number). You should be redirected to the error handler
     page.</p>
-    <form method="GET">
-        <fieldset>
-            <label for="number">Enter a number</label>
-            <input name="number" size="20" value="ABCDEFG"/>
-        </fieldset>
-        <fieldset>
-            <button type="submit">Run</button>
-        </fieldset>
+    <form method="GET" class="form form-horizontal">
+        <div class="form-group">
+            <label for="number" class="control-label col-md-2">Enter a number</label>
+            <div class="col-md-2">
+                <input name="number" size="20" value="ABCDEFG" class="form-control"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-2 col-md-offset-2">
+                <button type="submit" class="btn btn-primary">Run</button>
+            </div>
+        </div>
     </form>
     <div class="demo:error-handler-test"/>
     <div class="source-links">

@@ -1,28 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <div xmlns="http://www.w3.org/1999/xhtml" class="templates:surround?with=templates/page.html&amp;at=content">
     <h1 class="rounded">URL Rewriting Demos</h1>
-    <form method="POST" class="form-horizontal">
-        <div class="control-group">
-            <label class="control-label" for="user">User:</label>
-            <div class="controls">
-                <input type="text" name="user" required="required"/>
+    <form method="POST" class="form form-horizontal">
+        <div class="form-group">
+            <label class="control-label col-md-1" for="user">User:</label>
+            <div class="col-md-3">
+                <input type="text" name="user" required="required" class="form-control"/>
             </div>
         </div>
-        <div class="control-group">
-            <label class="control-label" for="passord">Password:</label>
-            <div class="controls">
-                <input type="password" name="password"/>
+        <div class="form-group">
+            <label class="control-label col-md-1" for="password">Password:</label>
+            <div class="col-md-3">
+                <input type="password" name="password" class="form-control"/>
             </div>
         </div>
-        <div class="control-group">
-            <div class="controls">
+        <div class="form-group">
+            <div class="col-md-4 col-md-offset-1">
                 <label class="checkbox">
                     <input type="checkbox" name="duration" value="P14D"/> Remember me for 2 weeks
                 </label>
             </div>
         </div>
-        <div class="form-actions">
-            <button class="btn btn-primary" type="submit">Login</button>
+        <div class="form-group">
+            <div class="col-md-offset-1 col-sm-12">
+                <button class="btn btn-primary" type="submit">Login</button>
+            </div>
         </div>
     </form>
     <div class="source-links">

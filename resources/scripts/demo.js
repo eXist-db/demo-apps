@@ -7,9 +7,9 @@ $(document).ready(function() {
     $(".run").click(function(ev) {
         ev.preventDefault();
         var type = $(this).data("type") || "xml";
-        var text = $(this).parent().parent().find(".code").highlight("getText");
-        var output = $(this).parent().find(".output");
-        var indicator = $(this).parent().find(".load-indicator");
+        var text = $(this).parent().parent().parent().find(".code").highlight("getText");
+        var output = $(this).parent().parent().find(".output");
+        var indicator = $(this).parent().parent().find(".load-indicator");
         var query = 
             "<query xmlns=\"http://exist.sourceforge.net/NS/exist\" " +
             "   method=\"json\" start=\"1\" indent=\"yes\">\n" +
