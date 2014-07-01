@@ -22,10 +22,10 @@ xquery version "3.0";
 
 module namespace contacts="http://exist-db.org/apps/demo/restxq/contacts";
 
-import module namespace functx = "http://www.functx.com";
 import module namespace xqjson="http://xqilla.sourceforge.net/lib/xqjson";
 
 declare namespace output="http://www.w3.org/2010/xslt-xquery-serialization";
+declare namespace functx = "http://www.functx.com";
 
 (: where we store the models :)
 declare variable $contacts:DATA-STORE as xs:string := '/db/apps/demo/examples/contacts/data/';
@@ -877,3 +877,11 @@ function contacts:get-image-from-uri-xml($uri as xs:string*)
     }
 };
 
+declare function functx:if-empty
+  ( $arg as item()? ,
+    $value as item()* )  as item()* {
+
+  if (string($arg) != '')
+  then data($arg)
+  else $value
+ } ;
