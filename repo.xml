@@ -10,6 +10,5 @@
     <target>demo</target>
     <prepare>pre-install.xql</prepare>
     <finish>post-install.xql</finish>
-    <permissions user="admin" password="" group="dba" mode="0775"/>
-    <deployed>2012-12-29T22:04:10.121+01:00</deployed>
+    <permissions xmlns:repo="http://exist-db.org/xquery/repo" password="demo" user="demo" group="demo" mode="0775"/>
 </meta>
