@@ -6,18 +6,23 @@
         Compare it to the <a href="guess.xql">simple</a> version.
     </p>
     <h1>Guess a Number</h1>
-    <form action="">
-        <div class="inputrow">
-            <label for="guess">Number:</label>
-            <input type="text" name="guess" size="3" autofocus="autofocus" required="required"/>
+    <form action="" class="form form-horizontal">
+        <div class="form-group">
+            <label for="guess" class="control-label col-md-1">Number:</label>
+            <div class="col-2-md">
+                <input type="text" name="guess" size="3" autofocus="autofocus" required="required"/>
+            </div>
         </div>
-        <div class="inputrow">
-            <input type="submit"/>
+        <div class="form-group">
+            <input type="submit" class="btn btn-primary col-md-offset-1"/>
         </div>
     </form>
     <div class="guess:init">
         <p class="guess:evaluate-guess">Evaluation result will be shown here</p>
     </div>
+    <p>
+        <a href="index.html">Back to examples</a>
+    </p>
     <div class="source-links">
         <p>View source: <a href="examples/web/guess.html" class="templates:load-source">HTML page</a>,
         <a href="examples/web/guess-templates.xql" class="templates:load-source">XQuery module</a>.</p>
