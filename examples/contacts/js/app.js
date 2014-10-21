@@ -168,7 +168,7 @@ contactsApp.controller('browseContacts',
         $scope.getContactIconRel = function(contact)
         {
             return ( getLinkByRel(contact.links,'icon') === undefined ) ? 
-                        'http://placekitten.com/59/59' : 
+                        'http://placekitten.com/g/59/59' : 
                         getLinkByRel(contact.links,'icon').href;
         }
         
