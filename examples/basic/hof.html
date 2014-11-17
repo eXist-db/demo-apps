@@ -56,23 +56,23 @@ return
     </section>
     <section>
         <h2>Basic higher-order functions</h2>
-        <p>The default function library provides a number of basic functions which take function items as arguments:</p>
+        <p>The <a href="{fundocs}/view.html?uri=http://www.w3.org/2005/xpath-functions&amp;location=java:org.exist.xquery.functions.fn.FnModule">default function library</a> provides a number of basic functions which take function items as arguments:</p>
         <ul>
-            <li>map</li>
+            <li>for-each</li>
             <li>filter</li>
             <li>fold-left</li>
             <li>fold-right</li>
-            <li>map-pairs</li>
+            <li>for-each-pair</li>
         </ul>
         <section>
-            <h3>fn:map</h3>
+            <h3>fn:for-each</h3>
             <pre class="demo:display-source">
-map(function($a) { $a * $a }, 1 to 5)
+for-each(1 to 5, function($a) { $a * $a })
             </pre>
         </section>
         <section>
             <h3>fn:filter</h3>
-            <pre class="demo:display-source">fn:filter(function($a) {$a mod 2 = 0}, 1 to 10)</pre>
+            <pre class="demo:display-source">fn:filter(1 to 10, function($a) {$a mod 2 = 0})</pre>
         </section>
     </section>
     <section>
@@ -115,7 +115,7 @@ declare function ex:multiply($base, $number) {
 
 let $fMultiply := ex:multiply(10, ?)
 return
-    map($fMultiply, 1 to 10)
+    for-each(1 to 10, $fMultiply)
             </pre>
         </section>
     </section>

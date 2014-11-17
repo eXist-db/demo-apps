@@ -32,7 +32,10 @@ declare function local:collections($root as xs:string, $label as xs:string) {
         <title>{$label}</title>,
         <isFolder json:literal="true">true</isFolder>,
         <key>{$root}</key>,
-        local:sub-collections($root)
+        if (sm:has-access($root, "rx")) then
+            local:sub-collections($root)
+        else
+            ()
     )
 };
 

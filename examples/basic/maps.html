@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<article xmlns="http://www.w3.org/1999/xhtml" class="templates:surround?with=templates/page.html&amp;at=content">
+    <h1>Maps in XQuery 3.1</h1>
+    <p>Please note that maps are part of the XQuery 3.1 specification, which is still subject to change. eXist is trying to preserve
+    backwards compatibility as far as possible. You may thus find that some apps are still using the older notation "key:=value"
+    instead of "key:value" for the map constructor.</p>
+    <p>See the <a href="{fundocs}/view.html?uri=http://www.w3.org/2005/xpath-functions/map&amp;location=java:org.exist.xquery.functions.map.MapModule">function documentation</a>
+        for a list of all functions.</p>
+    <section>
+        <h3>Day of week</h3>
+        <pre class="demo:display-source">let $week := map {0: "Sonntag", 1: "Montag", 2: "Dienstag", 3: "Mittwoch", 4: "Donnerstag", 5: "Freitag", 6: "Samstag"}
+return
+    $week(3)</pre>
+    </section>
+    <section>
+        <h3>Lookup operator</h3>
+        <pre class="demo:display-source">xquery version "3.0";
+
+let $week := map 
+    {"sunday": "Sonntag", "monday": "Montag", "tuesday": "Dienstag", 
+    "wednesday": "Mittwoch", "thursday": "Donnerstag", 
+    "friday": "Freitag", "saturday": "Samstag"}
+return
+    $week?thursday</pre>
+    </section>
+    <section>
+        <h3>Map using date as key</h3>
+        <pre class="demo:display-source?type=html">&lt;table class="table table-striped"&gt;
+{
+    let $birthdays := map {
+            xs:date("1975-03-19") : "Uschi",
+            xs:date("1980-01-22") : "Verona",
+            xs:date("1960-06-14") : "Heinz",
+            xs:date("1963-10-21") : "Roland"
+    }
+    for $key in map:keys($birthdays)
+    let $name := $birthdays($key)
+    order by $name ascending
+    return
+        &lt;tr&gt;
+            &lt;td&gt;{$name}&lt;/td&gt;
+            &lt;td&gt;{format-date($key, "[MNn] [D00], [Y0000]")}&lt;/td&gt;
+        &lt;/tr&gt;
+}
+&lt;/table&gt;</pre>
+    </section>
+    <section>
+        <h2>map:for-each-entry</h2>
+        <pre class="demo:display-source?type=html">&lt;table class="table table-striped"&gt;
+{
+    let $birthdays := map {
+            xs:date("1975-03-19") : "Uschi",
+            xs:date("1980-01-22") : "Verona",
+            xs:date("1960-06-14") : "Heinz",
+            xs:date("1963-10-21") : "Roland"
+    }
+    return
+        map:for-each-entry($birthdays, function($date, $name) {
+            &lt;tr&gt;
+                &lt;td&gt;{$name}&lt;/td&gt;
+                &lt;td&gt;{format-date($date, "[MNn] [D00], [Y0000]")}&lt;/td&gt;
+            &lt;/tr&gt;
+        })
+}
+&lt;/table&gt;</pre>
+    </section>
+</article>

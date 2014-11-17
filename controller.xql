@@ -55,6 +55,7 @@ else if (ends-with($exist:resource, ".html")) then
                 {login:set-user("org.exist.demo.login", (), false())}
                 <set-attribute name="$exist:prefix" value="{$exist:prefix}"/>
                 <set-attribute name="$exist:controller" value="{$exist:controller}"/>
+                <set-header name="Cache-Control" value="no-cache"/>
             </forward>
         </view>
         <error-handler>
@@ -62,7 +63,12 @@ else if (ends-with($exist:resource, ".html")) then
             <forward url="{$exist:controller}/modules/view.xql"/>
         </error-handler>
     </dispatch>
-        
+
+else if (ends-with($exist:resource, ".xql")) then
+    <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
+        <set-header name="Cache-Control" value="no-cache"/>
+    </dispatch>
+    
 else if (contains($exist:path, "/$shared/")) then
     <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
         <forward url="/shared-resources/{substring-after($exist:path, '/$shared/')}">
