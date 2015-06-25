@@ -17,7 +17,7 @@ declare function cex:query($node as node()*, $model as map(*), $query as xs:stri
             <div class="item">
                 <p class="itemhead">{$title} - Score: {$result/@score/string()}</p>
                 <p class="itemhead">Type: { $contentType }</p>
-                <p class="itemhead">Found matches in {count($fields)} page{if (count($fields) gt 1) then 's' else ''} of the document. {if (count($fields) gt 10) then 'Only matches from the first 10 pages are shown.' else ''}</p>
+                <p class="itemhead">Found matches in {count($fields[.//exist:match])} of the {count($fields)} page{if (count($fields) gt 1) then 's' else ''} of the document. {if (count($fields[.//exist:match]) gt 10) then 'Only matches from the first 10 pages with matches are shown.' else ''}</p>
                 {
                     for $field in subsequence($fields[.//exist:match], 1, 10)
                     let $page := analyze-string($field, "\[\[([0-9]+)")//fn:group/string()
