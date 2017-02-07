@@ -16,7 +16,7 @@ import module namespace ex="http://exist-db.org/apps/demo/templating/examples" a
 
 declare namespace output = "http://www.w3.org/2010/xslt-xquery-serialization";
 
-declare option output:method "html5";
+declare option output:method "xhtml";
 declare option output:media-type "text/html";
 
 let $config := map {
