@@ -16,7 +16,7 @@ declare variable $shakes:SESSION := "shakespeare:results";
  : The templating module copies the current element and its attributes, before processing
  : its children.
  :)
-declare 
+declare
     %templates:wrap
 function shakes:query($node as node()*, $model as map(*), $query as xs:string?, $mode as xs:string?) {
     session:create(),
@@ -37,7 +37,7 @@ declare function shakes:do-query($queryStr as xs:string?, $mode as xs:string?) {
     Read the last query result from the HTTP session and pass it to nested templates
     in the $model parameter.
 :)
-declare 
+declare
     %templates:wrap
 function shakes:from-session($node as node()*, $model as map(*)) {
     map:entry("hits", session:get-attribute($shakes:SESSION))
@@ -49,7 +49,7 @@ function shakes:from-session($node as node()*, $model as map(*)) {
  : to create a new element with the same name and attributes as $node,
  : using the return value of the function as its content.
  :)
-declare 
+declare
     %templates:wrap
 function shakes:hit-count($node as node()*, $model as map(*)) {
     count($model("hits"))
@@ -58,7 +58,7 @@ function shakes:hit-count($node as node()*, $model as map(*)) {
 (:~
  : Output the actual search result as a div, using the kwic module to summarize full text matches.
 :)
-declare 
+declare
     %templates:default("start", 1)
 function shakes:show-hits($node as node()*, $model as map(*), $start as xs:int) {
     for $hit at $p in subsequence($model("hits"), $start, 10)
@@ -75,13 +75,13 @@ function shakes:show-hits($node as node()*, $model as map(*), $start as xs:int) 
 (:~
     Callback function called from the kwic module.
 :)
-declare %private function shakes:filter($node as node(), $mode as xs:string?) as xs:string? {
-  if ($node/parent::SPEAKER or $node/parent::STAGEDIR) then 
+declare %private function shakes:filter($node as node(), $mode as xs:string?) as text()? {
+  if ($node/parent::SPEAKER or $node/parent::STAGEDIR) then
       ()
-  else if ($mode eq 'before') then 
-      concat($node, ' ')
-  else 
-      concat(' ', $node)
+  else if ($mode eq 'before') then
+      text { concat($node, ' ') }
+  else
+      text { concat(' ', $node) }
 };
 
 (:~
