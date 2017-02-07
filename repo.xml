@@ -10,6 +10,5 @@
     <target>demo</target>
     <prepare>pre-install.xql</prepare>
     <finish>post-install.xql</finish>
-    <note>When upgrading, please make sure you also updated the shared-resources package to &gt;= 0.4.0.</note>
     <permissions xmlns:repo="http://exist-db.org/xquery/repo" password="demo" user="demo" group="demo" mode="0775"/>
 </meta>
