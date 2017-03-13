@@ -2,7 +2,7 @@
 <meta xmlns="http://exist-db.org/xquery/repo">
     <description>Various small demo applications.</description>
     <author>Wolfgang Meier</author>
-    <website/>
+    <website>https://github.com/eXist-db/demo-apps</website>
     <status>beta</status>
     <license>GNU-LGPL</license>
     <copyright>true</copyright>
