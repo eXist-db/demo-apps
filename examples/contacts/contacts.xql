@@ -1,17 +1,19 @@
 
-xquery version "3.0";
+xquery version "3.1";
 
 (:~
  :  RESTXQ Contacts Demo
  : 
  :  Exposes XQuery functions as resource functions using the RestXQ function annotations.
- : 
- :  About POST and PUT Content-Type: application/exist+json
+ :
+ :
+ :  About POST and PUT Content-Type: application/json
  :      @discussion: http://comments.gmane.org/gmane.text.xml.exist/44845
  :      Inbound 'application/json' MIME type should be converted to xs:Base64Binary type.
- :      However, my tests show that when 'application/json' MIME type is used, the function parameter is empty.
- :      The workaround is to use a MIME type not present in mime-types.xml database, hence 'application/exist+json'.
- :  
+ :      Previous tests showed that when 'application/json' MIME type is used, the function parameter is empty.
+ :      The workaround was to use a MIME type not present in mime-types.xml database, hence 'application/exist+json'.
+ :      But after switching to XQuery 3.1's JSON support, 'application/json' seemed to work as long as we treat the input as binary.
+ :
  :  @see Postman API : https://www.getpostman.com/collections/828a57e0250dccc16c88
  : 
  :  @model <contact><id>guid</id><name/><phone/><email/></contact> 
@@ -22,10 +24,11 @@ xquery version "3.0";
 
 module namespace contacts="http://exist-db.org/apps/demo/restxq/contacts";
 
-import module namespace xqjson="http://xqilla.sourceforge.net/lib/xqjson";
-
 declare namespace output="http://www.w3.org/2010/xslt-xquery-serialization";
 declare namespace functx = "http://www.functx.com";
+declare namespace hc = "http://expath.org/ns/http-client";
+declare namespace json = "http://www.w3.org/2013/XSL/json";
+declare namespace rest = "http://exquery.org/ns/restxq";
 
 (: where we store the models :)
 declare variable $contacts:DATA-STORE as xs:string := '/db/apps/demo/examples/contacts/data/';
@@ -70,8 +73,8 @@ declare %private function contacts:http-response($http-code as xs:integer, $reso
 {
     (
         <rest:response>
-            <http:response status="{$http-code}">
-            </http:response>
+            <hc:response status="{$http-code}">
+            </hc:response>
         </rest:response>,
         $resource
     )
@@ -108,9 +111,9 @@ declare %private function contacts:http-response-error($http-code, $error-code, 
 {
     (
         <rest:response>
-            <http:response status="{$http-code}">
-                <http:header name="XQ-Exception" value="{$error-code||':'||$error-description(:||' -- '||$error-value:)}"/>
-            </http:response>
+            <hc:response status="{$http-code}">
+                <hc:header name="XQ-Exception" value="{$error-code||':'||$error-description(:||' -- '||$error-value:)}"/>
+            </hc:response>
         </rest:response>
     )
 };
@@ -311,32 +314,32 @@ declare %private function contacts:get-multiple-contacts-by-position-range($skip
 };
 
 
-(: ********************** :)
-(: *** XQJSON SUPPORT *** :)
-(: ********************** :)
+(: ******************** :)
+(: *** JSON SUPPORT *** :)
+(: ******************** :)
 
-(:~ 
- :  Parses JSON string to XML using XQJSON.
- :  THROWS InvalidJson => XQJSON failed to parse.
+(:~
+ :  Parses JSON string to XML using XQuery 3.1's JSON support.
+ :  THROWS InvalidJson => JSON failed to parse.
  :)
-declare %private function contacts:json-to-xml($json as xs:string)
+declare %private function contacts:parse-json($json as item()) (: xs:Base64Binary :)
 {
-    try { xqjson:parse-json($json) }
-    catch * { error(QName('http://exist-db.org/err', 'InvalidJson'), 'JSON document is invalid.') }
+    try { parse-json(util:binary-to-string($json)) }
+    catch * { error(QName('http://exist-db.org/err', 'InvalidJson'), 'JSON document is invalid.' ) }
 };
 
-(:~ 
- :  Convert a XQJSON parsed XML node into a simple Contact Model <contact><id/><name/><phone/><email/></contact>
+(:~
+ :  Convert a JSON parsed XML node into a simple Contact Model <contact><id/><name/><phone/><email/></contact>
  :)
-declare %private function contacts:get-simple-contact-model($xqjson-xml as element(json))
+declare %private function contacts:get-simple-contact-model($json as map(*))
 {
-    let $contact := $xqjson-xml//.[local-name(.) eq 'pair' and @name eq 'contact']/child::*
-    
+    let $contact := $json?contact
+
     return
         <contact>
         {
-            for $pair in $contact
-            return element { lower-case($pair/@name) } { $pair/text() }
+            for $key in map:keys($contact)
+            return element { lower-case($key) } { map:get($contact, $key) }
         }
         </contact>
 };
@@ -497,7 +500,7 @@ function contacts:get($id as xs:string)
 declare
     %rest:POST('{$json-payload}')
     %rest:path("/demo/contacts")
-    %rest:consumes("application/exist+json")
+    %rest:consumes("application/json")
     %rest:produces("application/json")
     %output:media-type("application/json")
     %output:method("json")
@@ -506,9 +509,9 @@ function contacts:post($json-payload as xs:string)
     try
     {
         (: convert json to xml (THROWS) :)
-        let $xml-payload := 
-            contacts:json-to-xml($json-payload)
-        
+        let $parsed-json :=
+            contacts:parse-json($json-payload)
+
         (: get a unique id :)
         let $id := 
             util:uuid()
@@ -522,7 +525,7 @@ function contacts:post($json-payload as xs:string)
         let $contacts := 
             contacts:inject-into
             (
-                contacts:get-simple-contact-model($xml-payload),
+                contacts:get-simple-contact-model($parsed-json),
                 $id-link
             )
         
@@ -572,7 +575,7 @@ function contacts:post($json-payload as xs:string)
 declare
     %rest:PUT('{$json-payload}')
     %rest:path("/demo/contacts/{$id}")
-    %rest:consumes("application/exist+json")
+    %rest:consumes("application/json")
     %rest:produces("application/json")
     %output:media-type("application/json")
     %output:method("json")
@@ -581,17 +584,17 @@ function contacts:put($json-payload as xs:string, $id as xs:string)
     try
     {
         (: convert json to xml (THROWS) :)
-        let $xml-payload := 
-            contacts:json-to-xml($json-payload)
-        
+        let $parsed-json :=
+            contacts:parse-json($json-payload)
+
         (: get existing resource from data store (THROWS) :)
         let $db-contact := 
             contacts:get-single-contact-by-id($id)
         
         (: simplify the xqjson xml :)
-        let $contacts := 
-            contacts:get-simple-contact-model($xml-payload)
-        
+        let $contacts :=
+            contacts:get-simple-contact-model($parsed-json)
+
         (: update it :)
         let $update :=
         (
@@ -664,10 +667,10 @@ function contacts:delete($id as xs:string)
 (: *************************************** :)
 (: *** BINARY IMAGE RESOURCE FUNCTIONS *** :)
 (: *************************************** :)
- 
-(:~ 
- :  Retrieve image from contact by contact's ID.  
- :) 
+
+(:~
+ :  Retrieve image from contact by contact's ID.
+ :)
 declare
     %rest:GET
     %rest:path("/demo/contacts/{$id}")
@@ -679,19 +682,19 @@ function contacts:get-image($id as xs:string)
     try
     {
         (: retrieve the contact model (THROWS) :)
-        let $contacts := 
+        let $contacts :=
             contacts:get-single-contact-by-id($id)
-        
-        let $image-bytes := 
-            try 
-            { 
-                util:get-resource-by-absolute-id($contacts/image/text()) 
-            } 
-            catch * 
-            { 
-                error(QName('http://exist-db.org/err', 'ResourceNotFound'), 'Resource not found.') 
+
+        let $image-bytes :=
+            try
+            {
+                util:get-resource-by-absolute-id($contacts/image/text())
             }
-        
+            catch *
+            {
+                error(QName('http://exist-db.org/err', 'ResourceNotFound'), 'Resource not found.')
+            }
+
         return contacts:http-response($contacts:HTTP-OK, $image-bytes)
     }
     catch ResourceNotFound
@@ -704,9 +707,9 @@ function contacts:get-image($id as xs:string)
     }
 };
 
-(:~ 
- :  Retrieve image from db by image's ID. 
- :) 
+(:~
+ :  Retrieve image from db by image's ID.
+ :)
 declare
     %rest:GET
     %rest:path("/demo/contacts/images/{$resource-id}")
@@ -717,16 +720,16 @@ function contacts:get-image-by-resource-id($resource-id as xs:string)
 {
     try
     {
-        let $image-bytes := 
-            try 
-            { 
-                util:get-resource-by-absolute-id($resource-id) 
-            } 
-            catch * 
-            { 
-                error(QName('http://exist-db.org/err', 'ResourceNotFound'), 'Resource not found.') 
+        let $image-bytes :=
+            try
+            {
+                util:get-resource-by-absolute-id($resource-id)
             }
-        
+            catch *
+            {
+                error(QName('http://exist-db.org/err', 'ResourceNotFound'), 'Resource not found.')
+            }
+
         return contacts:http-response($contacts:HTTP-OK, $image-bytes)
     }
     catch ResourceNotFound
@@ -738,10 +741,10 @@ function contacts:get-image-by-resource-id($resource-id as xs:string)
         contacts:http-response-server-error($err:code,$err:description,$err:value)
     }
 };
- 
-(:~ 
- :  Retrieve image from an external source and store it to contact.  
- :) 
+
+(:~
+ :  Retrieve image from an external source and store it to contact.
+ :)
 declare
     %rest:PUT
     %rest:path("/demo/contacts/{$id}")
@@ -754,17 +757,17 @@ function contacts:put-image-from-uri($id as xs:string, $uri as xs:string*)
     try
     {
         (: get the contact (THROWS) :)
-        let $contacts :=  
+        let $contacts :=
             contacts:get-single-contact-by-id($id)
-        
+
         (: retrieve the image (THROWS):)
-        let $image-bytes := 
+        let $image-bytes :=
             (function()
             {
                 if($uri) then
                 (
                     let $image-response := httpclient:get(xs:anyURI($uri), false(), ())
-                    
+
                     return if
                     (
                         number($image-response/@statusCode) eq $contacts:HTTP-OK and
@@ -774,8 +777,8 @@ function contacts:put-image-from-uri($id as xs:string, $uri as xs:string*)
                     else error(QName('http://exist-db.org/err', 'ExternalResourceNotFound'), 'External resource not found.')
                 )
                 else error(QName('http://exist-db.org/err', 'ExternalResourceNotFound'), 'External resource not found.')
-            }) () 
-        
+            }) ()
+
         (: overwrite the image :)
         let $store-img-resource-id :=
         (
@@ -783,10 +786,10 @@ function contacts:put-image-from-uri($id as xs:string, $uri as xs:string*)
             contacts:delete-png($id),
             contacts:store-png($id, $image-bytes)
         )
-        
+
         let $link-rel-icon :=
             <image link-type='icon'>{$store-img-resource-id}</image>
-        
+
         let $update-contact :=
             if($contacts/image)
             then
@@ -797,7 +800,7 @@ function contacts:put-image-from-uri($id as xs:string, $uri as xs:string*)
             (
                 update insert $link-rel-icon into $contacts
             )
-        
+
         return contacts:http-response($contacts:HTTP-UPDATED,$image-bytes)
     }
     catch ResourceNotFound | ExternalResourceNotFound
@@ -809,13 +812,13 @@ function contacts:put-image-from-uri($id as xs:string, $uri as xs:string*)
         contacts:http-response-server-error($err:code,$err:description,$err:value)
     }
 };
- 
- 
- 
+
+
+
 (: TODO - does not work :)
-(:~ 
+(:~
  :  Upload image and store it to contact.
- :) 
+ :)
 (: declare
     %rest:PUT('{$image-payload}')
     %rest:path("/demo/contacts/{$id}")
@@ -829,15 +832,15 @@ function contacts:put-image-from-body($image-payload as xs:string, $id as xs:str
     {
         contacts:http-response($contacts:HTTP-UPDATED, ())
     }
-    catch * 
+    catch *
     {
         contacts:http-response-server-error($err:code,$err:description,$err:value)
     }
 }; :)
 
-(:~ 
- :  TEST Retrieve image from an external source and return the httpclient response to client.  
- :) 
+(:~
+ :  TEST Retrieve image from an external source and return the httpclient response to client.
+ :)
 declare
     %rest:GET
     %rest:path("/demo/contacts/image-response-test")
@@ -851,14 +854,14 @@ function contacts:get-image-from-uri-json($uri as xs:string*)
     {
         contacts:http-response($contacts:HTTP-OK, <image-response-test>{httpclient:get($uri, false(), ())}</image-response-test>)
     }
-    catch * 
+    catch *
     {
         contacts:http-response-server-error($err:code,$err:description,$err:value)
     }
 };
 
-(:~ 
- :  TEST Retrieve image from an external source and return the httpclient response to client.  
+(:~
+ :  TEST Retrieve image from an external source and return the httpclient response to client.
  :)
 declare
     %rest:GET
@@ -871,7 +874,7 @@ function contacts:get-image-from-uri-xml($uri as xs:string*)
     {
         contacts:http-response($contacts:HTTP-OK, <image-response-test>{httpclient:get($uri, false(), ())}</image-response-test>)
     }
-    catch * 
+    catch *
     {
         contacts:http-response-server-error($err:code,$err:description,$err:value)
     }
