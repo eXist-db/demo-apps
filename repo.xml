@@ -11,4 +11,12 @@
     <prepare>pre-install.xql</prepare>
     <finish>post-install.xql</finish>
     <permissions xmlns:repo="http://exist-db.org/xquery/repo" password="demo" user="demo" group="demo" mode="0775"/>
+    <changelog>
+        <change version="0.4.0">
+            <ul xmlns="http://www.w3.org/1999/xhtml">
+                <li>Fixed RESTXQ and AngularJS demo.</li>
+                <li>Removed dependency on JSONXQ library, replaced with XQuery 3.1 JSON facility.</li>
+            </ul>
+        </change>
+    </changelog>
 </meta>
