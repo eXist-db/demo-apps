@@ -2,7 +2,7 @@
 <meta xmlns="http://exist-db.org/xquery/repo">
     <description>Various small demo applications.</description>
     <author>Wolfgang Meier</author>
-    <website/>
+    <website>https://github.com/eXist-db/demo-apps</website>
     <status>beta</status>
     <license>GNU-LGPL</license>
     <copyright>true</copyright>
@@ -11,4 +11,13 @@
     <prepare>pre-install.xql</prepare>
     <finish>post-install.xql</finish>
     <permissions xmlns:repo="http://exist-db.org/xquery/repo" password="demo" user="demo" group="demo" mode="0775"/>
+    <changelog>
+        <change version="0.4.0">
+            <ul xmlns="http://www.w3.org/1999/xhtml">
+                <li>Improved the display of search results in the content extraction demo.</li>
+                <li>Fixed RESTXQ and AngularJS demo.</li>
+                <li>Removed dependency on JSONXQ library, replaced with XQuery 3.1 JSON facility.</li>
+            </ul>
+        </change>
+    </changelog>
 </meta>

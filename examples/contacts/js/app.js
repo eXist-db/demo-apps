@@ -59,8 +59,8 @@ contactsApp.controller('newContact',
                 $http
                     .defaults
                     .headers
-                    .post['Content-Type'] = 'application/exist+json'; //TODO: fix this non-standard content type
-                
+                    .post['Content-Type'] = 'application/json';
+
                 $http
                     .post('/exist/restxq/demo/contacts',
                     { 
