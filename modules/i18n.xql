@@ -100,7 +100,7 @@ declare function i18n:translateAttribute($attribute as attribute(), $node as nod
 
 
 (: 
- : Get the localized value for a given key from the given catalgue 
+ : Get the localized value for a given key from the given catalogue 
  : if no localized value is available, the default value is used
 :)
 declare function i18n:getLocalizedText($textNode as node(), $selectedCatalogue as node()){
@@ -114,7 +114,7 @@ declare function i18n:getLocalizedText($textNode as node(), $selectedCatalogue a
 (:~
  : function implementing i18n:translate to enable localization of strings containing alphabetical or numerical parameters  
  : 
- : @param $node i18n:translate node eclosing i18n:text and parameters to substitute  
+ : @param $node i18n:translate node enclosing i18n:text and parameters to substitute  
  : @param $text the processed(!) content of i18n:text    
 :)
 declare function i18n:translate($node as node(),$text as xs:string,$selectedCatalogue as node()) {  
@@ -144,7 +144,7 @@ declare function i18n:translate($node as node(),$text as xs:string,$selectedCata
 (:~
  : function replacing the parameter with its (localized) value  
  : 
- : @param $node     i18n:translate node eclosing i18n:text and parameters to substitute  
+ : @param $node     i18n:translate node enclosing i18n:text and parameters to substitute  
  : @param $param    currently processed i18n:param as node()
  : @param $paramKey currently processed parameterKey (numerical or alphabetical)
  : @param $text     the processed(!) content of i18n:text    
@@ -168,7 +168,7 @@ declare function i18n:getLanguageCollection($node as node()*,$selectedLang as xs
         default return $node
         
   let $lang := i18n:getSelectedLanguage($tmpNode,$selectedLang) 
-  let $cataloguePath := i18n:getPathToCatalgogues($tmpNode,$pathToCatalogues)
+  let $cataloguePath := i18n:getPathToCatalogues($tmpNode,$pathToCatalogues)
   return 
      if(exists(collection($cataloguePath)//catalogue[@xml:lang eq $lang])) then
         collection($cataloguePath)//catalogue[@xml:lang eq $lang]
@@ -182,7 +182,7 @@ declare function i18n:getLanguageCollection($node as node()*,$selectedLang as xs
 
 };
 
-declare function i18n:getPathToCatalgogues($node as node()*,$pathToCatalogues as xs:string){
+declare function i18n:getPathToCatalogues($node as node()*,$pathToCatalogues as xs:string){
     if(string-length($pathToCatalogues) gt 0) then        
         $pathToCatalogues
     else if(string-length(request:get-parameter("cataloguesPath", "")) gt 0) then 
