@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<div xmlns:i18n="http://exist-db.org/xquery/i18n" class="templates:surround?with=templates/page.html&amp;at=content">
-    <div class="i18n:translate?lang=es&amp;catalogues=data/i18n">
+<div xmlns:i18n="http://exist-db.org/xquery/i18n" data-template="templates:surround" data-template-with="templates/page.html" data-template-at="content">
+    <div data-template="i18n:translate" data-template-lang="es" data-template-catalogues="data/i18n">
         <h1>i18n Module Examples</h1>
         <p>The i18n XQuery module is a general-purpose library to internationalize an XML document.
         For more information about the supported format read the <a href="i18n-docs.html">documentation</a>.</p>
         <p>This page uses HTML templating. It calls the i18n module through a template instruction as follows:</p>
-        <pre class="brush: xml">&lt;div class="i18n:translate?lang=es&amp;amp;catalogues=data/i18n"&gt;...&lt;/div&gt;</pre>
+        <pre class="brush: xml">&lt;div data-template="i18n:translate" data-template-lang="es" data-template-catalogues="data/i18n"&gt;...&lt;/div&gt;</pre>
         <p>The following files are used:</p>
         <table>
             <tr>
