@@ -15,7 +15,7 @@ declare option output:method "html5";
 declare option output:media-type "text/html";
 
 declare function local:random($max as xs:integer) 
-as empty()
+as empty-sequence()
 {
     let $r := ceiling(util:random() * $max) cast as xs:integer
     return (
