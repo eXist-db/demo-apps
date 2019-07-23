@@ -18,7 +18,7 @@ declare function guess:init($node as node(), $model as map(*)) as map(*){
         else
             guess:random(100)
     return
-        map { "random" := $rand }
+        map { "random": $rand }
 };
 
 (:~

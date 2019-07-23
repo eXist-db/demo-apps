@@ -20,7 +20,7 @@ declare option output:method "xhtml";
 declare option output:media-type "text/html";
 
 let $config := map {
-    $templates:CONFIG_APP_ROOT := $config:app-root
+    $templates:CONFIG_APP_ROOT : $config:app-root
 }
 let $lookup := function($functionName as xs:string, $arity as xs:int) {
     try {

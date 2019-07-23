@@ -49,7 +49,7 @@ function ex:hello-world($node as node(), $model as map(*), $language as xs:strin
 declare
     %templates:wrap
 function ex:addresses($node as node(), $model as map(*)) as map(*) {
-    map { "addresses" := collection($config:app-root || "/data/addresses")/address }
+    map { "addresses": collection($config:app-root || "/data/addresses")/address }
 };
 
 declare 

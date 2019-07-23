@@ -45,19 +45,19 @@ declare variable $contacts:HTTP-SERVER-FAIL as xs:integer := 500; (: server side
 (: map client side exception to http code :)
 declare variable $contacts:CLIENT-EXCEPTION-MAP := map
     {
-        'ResourceNotFound' := $contacts:HTTP-NOT-FOUND,
-        'ExternalResourceNotFound' := $contacts:HTTP-NOT-FOUND,
-        'InvalidJson' := $contacts:HTTP-CLIENT-FAIL,
-        'InvalidModel' := $contacts:HTTP-CLIENT-FAIL,
-        'MissingProperty' := $contacts:HTTP-CLIENT-FAIL,
-        '*' := $contacts:HTTP-CLIENT-FAIL
+        'ResourceNotFound': $contacts:HTTP-NOT-FOUND,
+        'ExternalResourceNotFound': $contacts:HTTP-NOT-FOUND,
+        'InvalidJson': $contacts:HTTP-CLIENT-FAIL,
+        'InvalidModel': $contacts:HTTP-CLIENT-FAIL,
+        'MissingProperty': $contacts:HTTP-CLIENT-FAIL,
+        '*': $contacts:HTTP-CLIENT-FAIL
     };
     
 (: map server side exception to http code :)
 declare variable $contacts:SERVER-EXCEPTION-MAP := map
     {
-        'DatabaseFail' := $contacts:HTTP-SERVER-FAIL,
-        '*' := $contacts:HTTP-SERVER-FAIL
+        'DatabaseFail': $contacts:HTTP-SERVER-FAIL,
+        '*': $contacts:HTTP-SERVER-FAIL
     };
     
 
@@ -132,8 +132,8 @@ declare %private function contacts:skip-take-range($skip as xs:integer, $take as
 {
     map
     {
-        'from' := $skip + 1, 
-        'to' := $skip + $take
+        'from': $skip + 1, 
+        'to': $skip + $take
     }
 };
 

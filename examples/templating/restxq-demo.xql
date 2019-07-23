@@ -21,7 +21,7 @@ function demo:page() {
     let $content := doc("restxq-page.html")
     let $config := map {
         (: The following function will be called to look up template parameters :)
-        $templates:CONFIG_PARAM_RESOLVER := function($param as xs:string) as xs:string* {
+        $templates:CONFIG_PARAM_RESOLVER : function($param as xs:string) as xs:string* {
             req:parameter($param)
         }
     }
