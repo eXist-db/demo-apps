@@ -24,5 +24,10 @@
                 <li>Adopt correct syntax for empty-sequence node test, supported from eXist-db 4.0.0</li>
             </ul>
         </change>
+        <change version="0.4.4">
+            <ul xmlns="http://www.w3.org/1999/xhtml">
+                <li>Updated regular expressionto make app work again.</li>
+            </ul>
+        </change>
     </changelog>
 </meta>
