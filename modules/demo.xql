@@ -1,4 +1,4 @@
-xquery version "3.0";
+xquery version "3.1";
 
 module namespace demo="http://exist-db.org/apps/demo";
 
@@ -28,7 +28,7 @@ declare function demo:run-tests($node as node(), $model as map(*)) {
 };
 
 declare function demo:display-source($node as node(), $model as map(*), $lang as xs:string?, $type as xs:string?) {
-    let $source := replace(replace($node/string(),'\s+$',''),'^\s+','')
+    let $source := $node/string() => replace('^\s+','') => replace('\s+$','')
     let $expanded := replace($source, "@@path", $config:app-root)
     let $eXideLink := templates:link-to-app("http://exist-db.org/apps/eXide", "index.html?snip=" || encode-for-uri($expanded))
     return
